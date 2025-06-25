@@ -592,36 +592,6 @@ export type Database = {
         }
         Relationships: []
       }
-      rate_limits: {
-        Row: {
-          action_type: string
-          attempt_count: number
-          created_at: string
-          id: string
-          identifier: string
-          updated_at: string
-          window_start: string
-        }
-        Insert: {
-          action_type: string
-          attempt_count?: number
-          created_at?: string
-          id?: string
-          identifier: string
-          updated_at?: string
-          window_start?: string
-        }
-        Update: {
-          action_type?: string
-          attempt_count?: number
-          created_at?: string
-          id?: string
-          identifier?: string
-          updated_at?: string
-          window_start?: string
-        }
-        Relationships: []
-      }
       reports: {
         Row: {
           admin_notes: string | null
@@ -698,50 +668,6 @@ export type Database = {
           {
             foreignKeyName: "reports_reviewed_by_admin_id_fkey"
             columns: ["reviewed_by_admin_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      security_audit_log: {
-        Row: {
-          action_type: string
-          created_at: string
-          details: Json | null
-          id: string
-          ip_address: unknown | null
-          resource_id: string | null
-          resource_type: string
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          action_type: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          ip_address?: unknown | null
-          resource_id?: string | null
-          resource_type: string
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          action_type?: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          ip_address?: unknown | null
-          resource_id?: string | null
-          resource_type?: string
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "security_audit_log_user_id_fkey"
-            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -992,19 +918,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      check_rate_limit: {
-        Args: {
-          p_identifier: string
-          p_action_type: string
-          p_max_attempts?: number
-          p_window_minutes?: number
-        }
-        Returns: boolean
-      }
-      cleanup_expired_rate_limits: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
       current_user_is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -1020,18 +933,6 @@ export type Database = {
       is_admin: {
         Args: { user_id: string }
         Returns: boolean
-      }
-      log_security_event: {
-        Args: {
-          p_user_id: string
-          p_action_type: string
-          p_resource_type: string
-          p_resource_id?: string
-          p_details?: Json
-          p_ip_address?: unknown
-          p_user_agent?: string
-        }
-        Returns: string
       }
       use_invite_token: {
         Args: { token_param: string; user_id_param: string }

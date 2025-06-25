@@ -4,15 +4,14 @@ import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthUser, SessionStatus, UserRole, UserId } from '@/types/auth';
 import { createAuthToasts } from '@/lib/auth/toastUtils';
-import { enhancedSignUp, enhancedSignIn, EnhancedSignUpData, EnhancedSignInData } from '@/lib/auth/enhancedAuthUtils';
-import { logSecurityEvent } from '@/lib/security/auditLogging';
+import { getRedirectUrl } from '@/lib/auth/authUtils';
 
 interface AuthContextType {
   session: Session | null;
   user: AuthUser | null;
   sessionStatus: SessionStatus;
-  signUp: (data: EnhancedSignUpData) => Promise<{ error?: string }>;
-  signIn: (data: EnhancedSignInData) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, displayName: string, role?: UserRole, inviteToken?: string) => Promise<{ error?: string }>;
+  signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -65,16 +64,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           smart_url_slug: userProfile.smart_url_slug || undefined,
           accepts_intros: userProfile.accepts_intros || undefined,
           requires_nda: userProfile.requires_nda || undefined,
-          poster_type: userProfile.poster_type || undefined,
-          location: userProfile.location || undefined,
-          website_url: userProfile.website_url || undefined,
-          linkedin_url: userProfile.linkedin_url || undefined,
-          is_suspended: userProfile.is_suspended || undefined,
-          suspension_expires_at: userProfile.suspension_expires_at || undefined,
-          search_visibility_reduced: userProfile.search_visibility_reduced || undefined,
-          messaging_restricted: userProfile.messaging_restricted || undefined,
-          gig_posting_restricted: userProfile.gig_posting_restricted || undefined,
-          moderation_notes: userProfile.moderation_notes || undefined,
         });
       }
     } catch (error) {
@@ -112,34 +101,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (data: EnhancedSignUpData) => {
-    const result = await enhancedSignUp(data);
-    
-    if (result.error) {
-      toasts.signUpError(result.error);
-      return { error: result.error };
-    }
+  const signUp = async (email: string, password: string, displayName: string, role: UserRole = 'gig_seeker', inviteToken?: string) => {
+    try {
+      const redirectUrl = getRedirectUrl();
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            role: role,
+            display_name: displayName,
+            invite_token: inviteToken
+          }
+        }
+      });
 
-    toasts.signUpSuccess();
-    return {};
+      if (error) {
+        toasts.signUpError(error.message);
+        return { error: error.message };
+      }
+
+      // Process invite token if provided
+      if (data.user && inviteToken) {
+        const { data: result, error: inviteError } = await supabase.rpc('use_invite_token', {
+          token_param: inviteToken,
+          user_id_param: data.user.id
+        });
+
+        if (inviteError || !result) {
+          console.error('Error processing invite token:', inviteError);
+        }
+      }
+
+      toasts.signUpSuccess();
+      return {};
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      toasts.signUpError(errorMessage);
+      return { error: errorMessage };
+    }
   };
 
-  const signIn = async (data: EnhancedSignInData) => {
-    const result = await enhancedSignIn(data);
-    
-    if (result.error) {
-      toasts.signInError(result.error);
-      return { error: result.error };
-    }
+  const signIn = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    toasts.signInSuccess();
-    return {};
+      if (error) {
+        toasts.signInError(error.message);
+        return { error: error.message };
+      }
+
+      toasts.signInSuccess();
+      return {};
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      toasts.signInError(errorMessage);
+      return { error: errorMessage };
+    }
   };
 
   const signOut = async () => {
-    if (user) {
-      await logSecurityEvent(user, 'user_signout', 'user', user.id);
-    }
     await supabase.auth.signOut();
     toasts.signOutSuccess();
   };

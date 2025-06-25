@@ -93,13 +93,13 @@ const Auth = () => {
           }
         }
 
-        const result = await signUp({
-          email,
-          password,
-          displayName,
-          role: intendedRole || 'gig_poster',
-          inviteToken: inviteToken || undefined
-        });
+        const result = await signUp(
+          email, 
+          password, 
+          displayName, 
+          intendedRole || 'gig_poster',
+          inviteToken || undefined
+        );
         
         if (result.error) {
           setError(result.error);
@@ -109,7 +109,7 @@ const Auth = () => {
           setDisplayName("");
         }
       } else {
-        const result = await signIn({ email, password });
+        const result = await signIn(email, password);
         if (result.error) {
           setError(result.error);
         } else {
