@@ -57,6 +57,57 @@ export type Database = {
           },
         ]
       }
+      contact_messages: {
+        Row: {
+          company_organization: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          inquiry_category: string | null
+          ip_address: unknown | null
+          last_name: string
+          message: string
+          referrer_page: string | null
+          subject: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          company_organization?: string | null
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          inquiry_category?: string | null
+          ip_address?: unknown | null
+          last_name: string
+          message: string
+          referrer_page?: string | null
+          subject: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          company_organization?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          inquiry_category?: string | null
+          ip_address?: unknown | null
+          last_name?: string
+          message?: string
+          referrer_page?: string | null
+          subject?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       feature_flags: {
         Row: {
           created_at: string | null
