@@ -47,6 +47,9 @@ export function useSessionStatus(): SessionStatus {
                   timeline_expectations: userProfile.timeline_expectations || undefined,
                   social_links: (userProfile.social_links as Record<string, string>) || undefined,
                   nda_required: userProfile.nda_required || undefined,
+                  invites_remaining: userProfile.invites_remaining,
+                  invited_by_user_id: userProfile.invited_by_user_id || undefined,
+                  invite_token_used: userProfile.invite_token_used || undefined,
                 });
               }
             } catch (error) {
