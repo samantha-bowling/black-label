@@ -321,6 +321,75 @@ export type Database = {
           },
         ]
       }
+      profile_tags: {
+        Row: {
+          category: Database["public"]["Enums"]["tag_category"]
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["tag_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["tag_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profile_tags: {
+        Row: {
+          created_at: string
+          id: string
+          tag_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tag_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tag_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profile_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "profile_tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_profile_tags_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           about_story: string | null
@@ -475,6 +544,7 @@ export type Database = {
         | "rejected"
         | "withdrawn"
       gig_status: "draft" | "open" | "in_progress" | "completed" | "cancelled"
+      tag_category: "core_discipline" | "specialty_skill" | "project_type"
       user_role: "gig_poster" | "gig_seeker" | "admin"
     }
     CompositeTypes: {
@@ -599,6 +669,7 @@ export const Constants = {
         "withdrawn",
       ],
       gig_status: ["draft", "open", "in_progress", "completed", "cancelled"],
+      tag_category: ["core_discipline", "specialty_skill", "project_type"],
       user_role: ["gig_poster", "gig_seeker", "admin"],
     },
   },

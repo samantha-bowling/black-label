@@ -1,4 +1,3 @@
-
 import { Database } from '@/integrations/supabase/types';
 
 export type UserRole = Database['public']['Enums']['user_role'];
@@ -50,6 +49,12 @@ export interface AuthUser {
   smart_url_slug?: string;
   accepts_intros?: boolean;
   requires_nda?: boolean;
+  // Profile DNA tags (populated via separate query)
+  profile_tags?: {
+    core_disciplines: string[];
+    specialty_skills: string[];
+    project_types: string[];
+  };
 }
 
 export interface SessionStatus {

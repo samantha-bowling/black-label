@@ -1,0 +1,47 @@
+
+import { Database } from '@/integrations/supabase/types';
+
+export type TagCategory = Database['public']['Enums']['tag_category'];
+
+export interface ProfileTag {
+  id: string;
+  name: string;
+  category: TagCategory;
+  description?: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserProfileTag {
+  id: string;
+  user_id: string;
+  tag_id: string;
+  created_at: string;
+  tag?: ProfileTag; // Populated when joining
+}
+
+export interface TagSelectionLimits {
+  core_discipline: { min: 1; max: 3 };
+  specialty_skill: { min: 0; max: 7 };
+  project_type: { min: 0; max: 5 };
+}
+
+export const TAG_SELECTION_LIMITS: TagSelectionLimits = {
+  core_discipline: { min: 1, max: 3 },
+  specialty_skill: { min: 0, max: 7 },
+  project_type: { min: 0, max: 5 },
+};
+
+export const TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
+  core_discipline: 'Core Disciplines',
+  specialty_skill: 'Specialty Skills',
+  project_type: 'Project Types',
+};
+
+export const TAG_CATEGORY_DESCRIPTIONS: Record<TagCategory, string> = {
+  core_discipline: 'Your primary professional identity - what you fundamentally do',
+  specialty_skill: 'Unique tools, frameworks, or sub-disciplines where you have expertise',
+  project_type: 'Types of projects and scales you typically work on',
+};
