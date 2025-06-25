@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -7,11 +6,183 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, Shield } from "lucide-react";
+import { FileText, Shield, Info } from "lucide-react";
 
 interface LegalModalsProps {
   children?: React.ReactNode;
+}
+
+export function AboutModal({ children }: LegalModalsProps) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children || (
+          <button className="text-sm text-muted-foreground hover:text-white transition-colors flex items-center">
+            <Info className="w-3 h-3 mr-1" />
+            About
+          </button>
+        )}
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl max-h-[80vh] bg-surface border-border">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-display text-white flex items-center">
+            <Info className="w-5 h-5 mr-2" />
+            About BLACKLABEL.gg
+          </DialogTitle>
+        </DialogHeader>
+        <ScrollArea className="h-[60vh] pr-4">
+          <div className="space-y-6 text-sm text-white/90">
+            {/* About Section */}
+            <section className="space-y-4">
+              <p className="text-base text-white/95">
+                BLACKLABEL.gg is an invite-only platform built for the best in games.
+              </p>
+              <p>
+                We connect world-class creative and technical talent with studios and projects that demand excellence.
+              </p>
+              <p>
+                Born from decades of industry experience—and frustration with how fragmented, noisy, and impersonal hiring pipelines have become—BLACKLABEL.gg was created as an alternative: a high-trust network where credibility, craft, and character come first.
+              </p>
+              <p>
+                Whether you're a veteran creative director seeking your next mission, or a studio looking to bring on elite collaborators for a tight timeline or stealth initiative, this is the space where quiet excellence thrives.
+              </p>
+              <p className="font-medium text-white">
+                Just the right people. At the right time. For the right work.
+              </p>
+              <p className="font-medium text-primary">
+                All killer. No filler.
+              </p>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="border-t border-border pt-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Frequently Asked Questions</h3>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    What makes BLACKLABEL.gg different from other gig platforms?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p className="mb-3">
+                      Unlike open marketplaces, BLACKLABEL.gg is a curated network. Every member—whether a seeker or poster—is vetted and invited. This ensures a higher signal-to-noise ratio, deeper trust, and more meaningful opportunities.
+                    </p>
+                    <p className="font-medium">
+                      We're not here to commoditize talent—we're here to respect it.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    How do I get invited?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p className="mb-3">There are two paths:</p>
+                    <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
+                      <li>Direct invitation from an existing member (each gets 3).</li>
+                      <li>Manual application reviewed by our team of industry veterans.</li>
+                    </ul>
+                    <p>
+                      If you're exceptional at what you do and serious about contributing meaningfully to game development, there's a path here for you.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    Who is this platform for?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p className="mb-3">BLACKLABEL.gg is for:</p>
+                    <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
+                      <li><strong>Gig Seekers:</strong> Senior- to principal-level creatives and technologists across design, engineering, art, production, audio, community, and strategy.</li>
+                      <li><strong>Gig Posters:</strong> Studios, publishers, or teams who value quality over quantity—and are ready to pay for experience.</li>
+                    </ul>
+                    <p>
+                      We're intentionally focused on veterans and high-trust collaborators. This isn't a beginner's marketplace.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-4">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    What kinds of gigs are posted?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p className="mb-3">Gigs vary from:</p>
+                    <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
+                      <li>Short-term consultations (e.g., "We need a combat designer to gut-check our boss flow")</li>
+                      <li>Freelance contracts (e.g., "2-month stint for an Unreal Tech Artist")</li>
+                      <li>Stealth startup collabs or moonlighting</li>
+                      <li>Full-time roles posted discreetly</li>
+                    </ul>
+                    <p>
+                      Compensation is always disclosed or estimable before you engage.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-5">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    Is there a fee to use BLACKLABEL.gg?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p className="mb-3">Talent never pays to use the platform.</p>
+                    <p className="mb-3">
+                      Gig Posters pay a finder's fee based on the total budget of a gig (details available on request).
+                    </p>
+                    <p>
+                      All terms are clear and up-front—no surprise fees, no fine print.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-6">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    Is my profile public?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p>
+                      No. Profiles are only visible to approved users of the platform and are not indexed publicly. You control what's shown.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-7">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    Can I invite others?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p>
+                      If you're a member, you'll be granted 3 invites to extend to professionals you trust. Choose carefully—your credibility travels with them.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-8">
+                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                    How can I get in touch?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white/80">
+                    <p>
+                      For support, partnership, or media inquiries, contact us at <a href="mailto:support@blacklabel.gg" className="text-primary hover:underline">support@blacklabel.gg</a>
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </section>
+          </div>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export function PrivacyPolicyModal({ children }: LegalModalsProps) {

@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -9,7 +10,7 @@ import {
   HeadingXL,
   HeadingLG
 } from "@/components/ui/primitives";
-import { PrivacyPolicyModal, TermsOfServiceModal } from "@/components/legal/LegalModals";
+import { PrivacyPolicyModal, TermsOfServiceModal, AboutModal } from "@/components/legal/LegalModals";
 import { ContactModal } from "@/components/contact/ContactModal";
 import { Star, Shield, CheckCircle } from "lucide-react";
 
@@ -191,6 +192,7 @@ const Index = () => {
             </div>
             
             <div className="flex items-center space-x-6">
+              <AboutModal />
               <PrivacyPolicyModal />
               <TermsOfServiceModal />
               <ContactModal />
