@@ -1,11 +1,9 @@
-
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   ButtonPrimary, 
   ButtonSecondary, 
   CardLuxe, 
-  BadgeBeta, 
   BadgeStatus,
   HeadingXL,
   HeadingLG
@@ -43,13 +41,9 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section pt-16 md:pt-20 pb-8">
+      <section className="hero-section pt-24 md:pt-28 pb-12">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto space-y-6">
-            <BadgeBeta className="animate-fade-in">
-              Invite-Only Beta
-            </BadgeBeta>
-            
             <div className="flex justify-center animate-fade-in">
               <img 
                 src="/lovable-uploads/3928092b-3c56-44d8-ab8a-e32eab280559.png" 
