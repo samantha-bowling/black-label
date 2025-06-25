@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -41,16 +42,10 @@ const Index = () => {
             />
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center">
             <ButtonSecondary onClick={handleSignIn}>
               Sign In
             </ButtonSecondary>
-            <ButtonSecondary onClick={handleTalentSignup}>
-              I have an invite
-            </ButtonSecondary>
-            <ButtonPrimary onClick={handlePostGigSignup}>
-              Sign Up to Post Gigs
-            </ButtonPrimary>
           </div>
         </div>
       </nav>
@@ -79,11 +74,11 @@ const Index = () => {
               Where verified creators and real opportunities meet.
             </p>
             
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in">
+            <div className="flex flex-col justify-center items-center space-y-4 animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
                 onClick={handlePostGigSignup}
-                className="group hover:shadow-glow transition-all duration-300"
+                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
               >
                 Looking for Talent? Sign Up to Post Gigs
               </ButtonPrimary>
@@ -91,7 +86,7 @@ const Index = () => {
               <ButtonSecondary 
                 size="lg" 
                 onClick={handleTalentSignup}
-                className="group hover:shadow-glow transition-all duration-300"
+                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
               >
                 I have an invite
               </ButtonSecondary>

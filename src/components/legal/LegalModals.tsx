@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -42,138 +41,133 @@ export function AboutModal({ children }: LegalModalsProps) {
           <div className="space-y-6 text-sm text-white/90">
             {/* About Section */}
             <section className="space-y-4">
-              <p className="text-base text-white/95">
-                BLACKLABEL.gg is an invite-only platform built for the best in games.
+              <p className="text-base text-white/95 font-medium">
+                BLACKLABEL.gg is the invite-only talent platform where gaming's best connect with opportunities that matter.
               </p>
               <p>
-                We connect world-class creative and technical talent with studios and projects that demand excellence.
+                We're not just another job board. We're a curated network of verified gaming professionals—from seasoned art directors and technical leads to battle-tested producers and creative visionaries—all connected through a system built on trust and proven expertise.
               </p>
               <p>
-                Born from decades of industry experience—and frustration with how fragmented, noisy, and impersonal hiring pipelines have become—BLACKLABEL.gg was created as an alternative: a high-trust network where credibility, craft, and character come first.
+                Whether you're a studio seeking a combat designer who can nail your boss encounters, a publisher looking for a UX expert to polish your mobile game, or an indie team needing a technical artist for that critical milestone, BLACKLABEL.gg connects you with talent that delivers.
               </p>
               <p>
-                Whether you're a veteran creative director seeking your next mission, or a studio looking to bring on elite collaborators for a tight timeline or stealth initiative, this is the space where quiet excellence thrives.
+                Our platform serves two distinct communities: <strong>Talent Seekers</strong> (verified gaming professionals) who join by invitation to access exclusive opportunities, and <strong>Gig Posters</strong> (studios, publishers, and teams) who can sign up to post projects and find the exact expertise they need.
               </p>
               <p className="font-medium text-white">
-                Just the right people. At the right time. For the right work.
+                Every profile is verified. Every opportunity is real. Every connection has purpose.
               </p>
               <p className="font-medium text-primary">
-                All killer. No filler.
+                This is where credibility meets craft.
               </p>
             </section>
 
             {/* FAQ Section */}
             <section className="border-t border-border pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Frequently Asked Questions</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">How It Works</h3>
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    What makes BLACKLABEL.gg different from other gig platforms?
+                    For Talent: How do I join as a gaming professional?
                   </AccordionTrigger>
                   <AccordionContent className="text-white/80 text-sm">
                     <p className="mb-3">
-                      Unlike open marketplaces, BLACKLABEL.gg is a curated network. Every member—whether a seeker or poster—is vetted and invited. This ensures a higher signal-to-noise ratio, deeper trust, and more meaningful opportunities.
+                      Joining as talent requires an invitation from an existing member or approval from our team. If you receive an invite token, simply use it during signup to create your verified profile.
+                    </p>
+                    <p className="mb-3">
+                      Once you're in, you'll complete a professional onboarding process where you showcase your expertise, previous work, and areas of specialization. This helps us match you with the right opportunities.
                     </p>
                     <p className="font-medium">
-                      We're not here to commoditize talent—we're here to respect it.
+                      No fees, no gimmicks—just access to quality gigs from real studios and teams.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="item-2">
                   <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    How do I get invited?
+                    For Studios: How do I post gigs and find talent?
                   </AccordionTrigger>
                   <AccordionContent className="text-white/80 text-sm">
-                    <p className="mb-3">There are two paths:</p>
-                    <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
-                      <li>Direct invitation from an existing member (each gets 3).</li>
-                      <li>Manual application reviewed by our team of industry veterans.</li>
-                    </ul>
+                    <p className="mb-3">
+                      Studios, publishers, and teams can sign up directly to post gigs. Our onboarding process helps you create detailed project postings that attract the right talent.
+                    </p>
+                    <p className="mb-3">
+                      You'll have access to our curated network of verified professionals across all gaming disciplines—from technical roles like programming and technical art to creative positions in design, audio, and production.
+                    </p>
                     <p>
-                      If you're exceptional at what you do and serious about contributing meaningfully to game development, there's a path here for you.
+                      We operate on a transparent fee structure where you only pay when you successfully connect with talent through our platform.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="item-3">
                   <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    Who is this platform for?
+                    What types of gaming professionals are on the platform?
                   </AccordionTrigger>
                   <AccordionContent className="text-white/80 text-sm">
-                    <p className="mb-3">BLACKLABEL.gg is for:</p>
+                    <p className="mb-3">Our network includes senior-level professionals across:</p>
                     <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
-                      <li><strong>Gig Seekers:</strong> Senior- to principal-level creatives and technologists across design, engineering, art, production, audio, community, and strategy.</li>
-                      <li><strong>Gig Posters:</strong> Studios, publishers, or teams who value quality over quantity—and are ready to pay for experience.</li>
+                      <li><strong>Design:</strong> Game designers, level designers, UX/UI designers, narrative designers</li>
+                      <li><strong>Art:</strong> Art directors, concept artists, 3D artists, technical artists, animators</li>
+                      <li><strong>Engineering:</strong> Gameplay programmers, engine programmers, tools developers</li>
+                      <li><strong>Production:</strong> Producers, project managers, community managers</li>
+                      <li><strong>Audio:</strong> Sound designers, audio programmers, composers</li>
+                      <li><strong>Strategy:</strong> Publishing consultants, monetization experts, marketing specialists</li>
                     </ul>
                     <p>
-                      We're intentionally focused on veterans and high-trust collaborators. This isn't a beginner's marketplace.
+                      Each professional has been vetted and comes with a track record of shipped games and industry experience.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="item-4">
                   <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    What kinds of gigs are posted?
+                    What kinds of opportunities are posted?
                   </AccordionTrigger>
                   <AccordionContent className="text-white/80 text-sm">
-                    <p className="mb-3">Gigs vary from:</p>
+                    <p className="mb-3">Projects range from:</p>
                     <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
-                      <li>Short-term consultations (e.g., "We need a combat designer to gut-check our boss flow")</li>
-                      <li>Freelance contracts (e.g., "2-month stint for an Unreal Tech Artist")</li>
-                      <li>Stealth startup collabs or moonlighting</li>
-                      <li>Full-time roles posted discreetly</li>
+                      <li><strong>Short-term contracts:</strong> 2-8 week focused engagements for specific features or milestones</li>
+                      <li><strong>Consulting:</strong> Expert reviews, design audits, technical assessments</li>
+                      <li><strong>Freelance projects:</strong> Art creation, audio implementation, tool development</li>
+                      <li><strong>Interim roles:</strong> Temporary leadership positions during transitions</li>
+                      <li><strong>Stealth collaborations:</strong> Unannounced projects requiring discretion</li>
                     </ul>
                     <p>
-                      Compensation is always disclosed or estimable before you engage.
+                      All opportunities include clear scope, timeline, and compensation details upfront.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="item-5">
                   <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    Is there a fee to use BLACKLABEL.gg?
+                    How does verification work?
                   </AccordionTrigger>
                   <AccordionContent className="text-white/80 text-sm">
-                    <p className="mb-3">Talent never pays to use the platform.</p>
                     <p className="mb-3">
-                      Gig Posters pay a finder's fee based on the total budget of a gig (details available on request).
+                      Every talent profile is verified through our multi-step process that includes portfolio review, industry reference checks, and validation of shipped games or professional experience.
+                    </p>
+                    <p className="mb-3">
+                      For gig posters, we verify company information, project legitimacy, and funding status to ensure all opportunities are real and actionable.
                     </p>
                     <p>
-                      All terms are clear and up-front—no surprise fees, no fine print.
+                      This verification process is what sets us apart from open marketplaces—both sides can trust they're working with legitimate, qualified professionals.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="item-6">
                   <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    Is my profile public?
+                    How do I get started?
                   </AccordionTrigger>
                   <AccordionContent className="text-white/80 text-sm">
-                    <p>
-                      No. Profiles are only visible to approved users of the platform and are not indexed publicly. You control what's shown.
+                    <p className="mb-3">
+                      <strong>If you're talent:</strong> You'll need an invite token from an existing member. Once you have one, use it during signup to begin your verification process.
                     </p>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-7">
-                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    Can I invite others?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white/80 text-sm">
-                    <p>
-                      If you're a member, you'll be granted 3 invites to extend to professionals you trust. Choose carefully—your credibility travels with them.
+                    <p className="mb-3">
+                      <strong>If you're posting gigs:</strong> You can sign up directly to create your company profile and post your first opportunity.
                     </p>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-8">
-                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
-                    How can I get in touch?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white/80 text-sm">
                     <p>
-                      For support, partnership, or media inquiries, contact us at <a href="mailto:support@blacklabel.gg" className="text-primary hover:underline">support@blacklabel.gg</a>
+                      Questions? Reach out to us at <a href="mailto:hello@blacklabel.gg" className="text-primary hover:underline">hello@blacklabel.gg</a>
                     </p>
                   </AccordionContent>
                 </AccordionItem>
