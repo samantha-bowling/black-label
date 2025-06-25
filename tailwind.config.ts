@@ -91,15 +91,15 @@ export default {
 				'card': 'var(--shadow-card)',
 				'hover': 'var(--shadow-hover)',
 				'focus': 'var(--shadow-focus)',
-				'glow': '0 0 30px rgba(185, 131, 255, 0.2)',
-				'glow-lg': '0 0 60px rgba(185, 131, 255, 0.3)'
+				'glow': '0 0 30px rgba(255, 255, 255, 0.1)',
+				'glow-lg': '0 0 60px rgba(255, 255, 255, 0.2)'
 			},
 			backgroundImage: {
-				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-card': 'var(--gradient-card)',
-				'gradient-surface': 'var(--gradient-surface)',
+				'gradient-primary': 'linear-gradient(135deg, #ffffff, #e5e5e5)',
+				'gradient-card': 'linear-gradient(145deg, #1A1B1F, #16171A)',
+				'gradient-surface': 'linear-gradient(145deg, #1A1B1F, #16171A)',
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'hero-glow': 'radial-gradient(ellipse at center, rgba(185, 131, 255, 0.05) 0%, transparent 70%)'
+				'hero-glow': 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%)'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -119,8 +119,8 @@ export default {
 					'100%': { transform: 'scale(1)', opacity: '1' }
 				},
 				'pulse-glow': {
-					'0%, 100%': { boxShadow: '0 0 20px rgba(185, 131, 255, 0.1)' },
-					'50%': { boxShadow: '0 0 40px rgba(185, 131, 255, 0.2)' }
+					'0%, 100%': { boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)' },
+					'50%': { boxShadow: '0 0 40px rgba(255, 255, 255, 0.2)' }
 				},
 				'loading-line': {
 					'0%': { backgroundPosition: '200% 0' },

@@ -1,10 +1,8 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Button as BaseButton } from "@/components/ui/button";
-import { Card as BaseCard } from "@/components/ui/card";
 
-// Button Primitives with BlackLabel.gg styling
+// Button Primitives with Monochromatic BlackLabel.gg styling
 export const ButtonPrimary = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -24,7 +22,7 @@ export const ButtonPrimary = React.forwardRef<
       className={cn(
         'btn-primary relative overflow-hidden transition-all duration-200',
         'disabled:opacity-50 disabled:cursor-not-allowed',
-        'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+        'focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-background',
         sizeClasses[size],
         isLoading && 'cursor-wait',
         className
@@ -34,7 +32,7 @@ export const ButtonPrimary = React.forwardRef<
     >
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
         </div>
       )}
       <span className={cn(isLoading && 'opacity-0')}>
@@ -62,7 +60,7 @@ export const ButtonSecondary = React.forwardRef<
       ref={ref}
       className={cn(
         'btn-secondary',
-        'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+        'focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-background',
         sizeClasses[size],
         className
       )}
@@ -126,7 +124,7 @@ export const BadgeStatus = React.forwardRef<
     success: 'bg-success/20 text-success border-success/30',
     warning: 'bg-warning/20 text-warning border-warning/30',
     error: 'bg-destructive/20 text-destructive border-destructive/30',
-    info: 'bg-primary/20 text-primary border-primary/30'
+    info: 'bg-white/20 text-white border-white/30'
   };
 
   return (
@@ -244,7 +242,7 @@ export const LoadingSpinner = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'border-2 border-primary/30 border-t-primary rounded-full animate-spin',
+        'border-2 border-white/30 border-t-white rounded-full animate-spin',
         sizeClasses[size],
         className
       )}

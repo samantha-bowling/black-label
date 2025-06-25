@@ -6,14 +6,14 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&display=swap');
 
-/* BlackLabel.gg Design System */
+/* BlackLabel.gg Monochromatic Design System */
 
 @layer base {
   :root {
-    /* Core Brand Colors */
-    --primary: 269 100% 76%; /* #B983FF - Electric violet */
-    --primary-muted: 269 70% 70%; /* #9C6BE0 */
-    --primary-foreground: 210 20% 8%; /* Dark text on primary */
+    /* Monochromatic Color Palette */
+    --primary: 0 0% 100%; /* Pure white for primary accent */
+    --primary-muted: 0 0% 85%; /* Light gray for muted primary */
+    --primary-foreground: 0 0% 0%; /* Pure black on white */
 
     /* Backgrounds */
     --background: 215 25% 4%; /* #0B0C10 - Near-black luxe */
@@ -27,16 +27,16 @@
     --text-tertiary: 0 0% 47%; /* #777 - Tertiary text */
 
     /* Semantic Colors */
-    --success: 142 76% 66%; /* #4ADE80 */
-    --warning: 45 93% 53%; /* #FACC15 */
-    --destructive: 0 85% 68%; /* #F87171 */
+    --success: 142 76% 66%; /* Keep green for success */
+    --warning: 45 93% 53%; /* Keep yellow for warning */
+    --destructive: 0 85% 68%; /* Keep red for errors */
     --destructive-foreground: 210 40% 98%;
 
     /* UI Elements */
-    --border: 220 9% 20%; /* #2C2D33 */
-    --input: 215 16% 12%; /* #1F2024 */
-    --ring: 269 100% 76%; /* Focus ring matches primary */
-    --focus-ring: 269 100% 76%;
+    --border: 220 9% 20%; /* #2C2D33 - Medium gray */
+    --input: 215 16% 12%; /* #1F2024 - Dark input background */
+    --ring: 0 0% 100%; /* White focus ring */
+    --focus-ring: 0 0% 100%;
 
     /* Accent & Secondary */
     --secondary: 220 12% 11%;
@@ -65,28 +65,29 @@
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
 
-    /* Shadows & Elevation */
-    --shadow-card: 0 0 20px rgba(185, 131, 255, 0.05);
-    --shadow-hover: 0 0 40px rgba(185, 131, 255, 0.1);
-    --shadow-focus: 0 0 0 2px rgba(185, 131, 255, 0.3);
+    /* Shadows & Elevation - Monochromatic */
+    --shadow-card: 0 0 20px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 0 40px rgba(0, 0, 0, 0.4);
+    --shadow-focus: 0 0 0 2px rgba(255, 255, 255, 0.3);
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #B983FF, #8C61F0);
-    --gradient-card: linear-gradient(145deg, rgba(185,131,255,0.15), rgba(255,255,255,0.05));
-    --gradient-surface: linear-gradient(145deg, #1A1B1F, #16171A);
+    /* Simplified Backgrounds - No gradients */
+    --background-surface: #1A1B1F;
+    --background-card: linear-gradient(145deg, #1A1B1F, #16171A);
   }
 
   .light {
-    /* Light mode fallback - keeping dark as default */
+    /* Light mode - inverted monochromatic */
     --background: 0 0% 98%;
-    --foreground: 210 20% 8%;
+    --foreground: 0 0% 8%;
     --surface: 0 0% 95%;
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 8%;
+    --card-foreground: 0 0% 8%;
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
+    --primary: 0 0% 0%; /* Black primary in light mode */
+    --primary-foreground: 0 0% 100%;
   }
 }
 
@@ -122,42 +123,42 @@
     @apply font-sans font-semibold text-lg;
   }
 
+  /* Monochromatic text effects */
   .text-gradient-primary {
-    @apply bg-gradient-to-r from-primary to-primary-muted bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent;
   }
 
   .text-glow {
-    text-shadow: 0 0 20px rgba(185, 131, 255, 0.3);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
 
-  /* Card Components */
+  /* Card Components - Simplified */
   .card-luxe {
     @apply bg-surface border border-border rounded-xl p-6;
-    background: var(--gradient-surface);
+    background: var(--background-card);
     box-shadow: var(--shadow-card);
     transition: all 0.3s ease;
   }
 
   .card-luxe:hover {
     box-shadow: var(--shadow-hover);
-    background: linear-gradient(145deg, rgba(185,131,255,0.05), rgba(255,255,255,0.02));
+    background: linear-gradient(145deg, #1A1B1F, #222327);
   }
 
-  /* Button Components */
+  /* Button Components - Monochromatic */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-white;
-    background: var(--gradient-primary);
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-black bg-white;
     box-shadow: var(--shadow-card);
     transition: all 0.2s ease;
   }
 
   .btn-primary:hover {
-    filter: brightness(1.1);
+    @apply bg-gray-200;
     box-shadow: var(--shadow-hover);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-primary bg-transparent border border-primary;
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-white bg-transparent border border-white;
     transition: all 0.2s ease;
   }
 
@@ -174,7 +175,7 @@
   }
 
   .input-luxe:focus {
-    @apply outline-none border-primary;
+    @apply outline-none border-white;
     box-shadow: var(--shadow-focus);
   }
 
@@ -184,20 +185,16 @@
 
   /* Badge Components */
   .badge-beta {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
-    background: hsl(var(--primary));
-    color: hsl(var(--background));
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white text-black;
   }
 
   /* Utility Classes */
   .glow-primary {
-    box-shadow: 0 0 30px rgba(185, 131, 255, 0.2);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
   }
 
   .border-glow {
-    border: 1px solid transparent;
-    background: linear-gradient(hsl(var(--surface)), hsl(var(--surface))) padding-box,
-                var(--gradient-primary) border-box;
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   /* Animations */
@@ -207,16 +204,16 @@
 
   @keyframes pulse-glow {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(185, 131, 255, 0.1);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
     50% {
-      box-shadow: 0 0 40px rgba(185, 131, 255, 0.2);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
     }
   }
 
   /* Loading States */
   .loading-line {
-    background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+    background: linear-gradient(90deg, transparent, hsl(var(--foreground)), transparent);
     background-size: 200% 100%;
     animation: loading-line 1.5s infinite;
   }
@@ -241,7 +238,7 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--primary));
+    background: hsl(var(--foreground));
   }
 }
 
@@ -249,7 +246,7 @@
 @layer components {
   .hero-section {
     @apply relative min-h-screen flex items-center justify-center;
-    background: radial-gradient(ellipse at center, rgba(185, 131, 255, 0.05) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
   }
 
   .nav-glass {
@@ -261,6 +258,6 @@
   }
 
   .empty-state-icon {
-    @apply w-12 h-12 mx-auto mb-4 text-primary/30;
+    @apply w-12 h-12 mx-auto mb-4 text-white/30;
   }
 }
