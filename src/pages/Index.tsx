@@ -22,7 +22,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/3928092b-3c56-44d8-ab8a-e32eab280559.png" 
+              src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
               alt="BlackLabel.gg" 
               className="h-8"
             />
@@ -182,7 +182,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <img 
-                src="/lovable-uploads/3928092b-3c56-44d8-ab8a-e32eab280559.png" 
+                src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
                 alt="BlackLabel.gg" 
                 className="h-6"
               />
