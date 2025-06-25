@@ -29,6 +29,7 @@ export type ResourceType =
   | 'system';
 
 export interface SecurityEventDetails {
+  [key: string]: any;
   userAgent?: string;
   referrer?: string;
   timestamp: string;
