@@ -31,6 +31,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       bio: userProfile.bio || undefined,
       avatarUrl: userProfile.avatar_url || undefined,
       onboarding_completed: userProfile.onboarding_completed,
+      public_profile: userProfile.public_profile,
       skills: userProfile.skills || undefined,
       desired_gig_types: userProfile.desired_gig_types || undefined,
       availability_status: userProfile.availability_status || undefined,

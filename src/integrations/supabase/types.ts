@@ -16,6 +16,8 @@ export type Database = {
           gig_id: string
           id: string
           pitch_text: string
+          reviewed_at: string | null
+          reviewer_notes: string | null
           seeker_id: string
           status: Database["public"]["Enums"]["application_status"] | null
           updated_at: string | null
@@ -26,6 +28,8 @@ export type Database = {
           gig_id: string
           id?: string
           pitch_text: string
+          reviewed_at?: string | null
+          reviewer_notes?: string | null
           seeker_id: string
           status?: Database["public"]["Enums"]["application_status"] | null
           updated_at?: string | null
@@ -36,6 +40,8 @@ export type Database = {
           gig_id?: string
           id?: string
           pitch_text?: string
+          reviewed_at?: string | null
+          reviewer_notes?: string | null
           seeker_id?: string
           status?: Database["public"]["Enums"]["application_status"] | null
           updated_at?: string | null
@@ -243,6 +249,7 @@ export type Database = {
           nda_required: boolean | null
           onboarding_completed: boolean
           past_credits: string | null
+          public_profile: boolean
           rate_range_max: number | null
           rate_range_min: number | null
           role: Database["public"]["Enums"]["user_role"] | null
@@ -268,6 +275,7 @@ export type Database = {
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
+          public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -293,6 +301,7 @@ export type Database = {
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
+          public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
           role?: Database["public"]["Enums"]["user_role"] | null

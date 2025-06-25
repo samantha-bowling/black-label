@@ -25,6 +25,7 @@ export interface AuthUser {
   bio?: string;
   avatarUrl?: string;
   onboarding_completed: boolean;
+  public_profile: boolean;
   skills?: string[];
   desired_gig_types?: string[];
   availability_status?: string;
