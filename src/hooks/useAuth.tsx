@@ -1,3 +1,4 @@
+
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,7 +11,6 @@ interface AuthContextType {
   sessionStatus: SessionStatus;
   signUp: (email: string, password: string, displayName: string, role?: UserRole, inviteToken?: string) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
-  signInWithLinkedIn: () => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -177,36 +177,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signInWithLinkedIn = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'linkedin_oidc',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        }
-      });
-
-      if (error) {
-        toast({
-          title: "LinkedIn Sign In Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { error: error.message };
-      }
-
-      return {};
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      toast({
-        title: "LinkedIn Sign In Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      return { error: errorMessage };
-    }
-  };
-
   const signOut = async () => {
     await supabase.auth.signOut();
     toast({
@@ -232,7 +202,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionStatus,
       signUp,
       signIn,
-      signInWithLinkedIn,
       signOut,
     }}>
       {children}

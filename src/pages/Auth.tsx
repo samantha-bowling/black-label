@@ -11,7 +11,6 @@ import {
   HeadingLG,
   InputLuxe
 } from "@/components/ui/primitives";
-import { Linkedin } from "lucide-react";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -26,7 +25,7 @@ const Auth = () => {
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signIn, signUp, signInWithLinkedIn } = useAuth();
+  const { signIn, signUp } = useAuth();
   const { validateInvite } = useInvites();
 
   useEffect(() => {
@@ -102,22 +101,6 @@ const Auth = () => {
       }
     } catch (err: any) {
       setError(err.message || "Authentication failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLinkedInAuth = async () => {
-    setError(null);
-    setLoading(true);
-    
-    try {
-      const result = await signInWithLinkedIn();
-      if (result.error) {
-        setError(result.error);
-      }
-    } catch (err: any) {
-      setError(err.message || "LinkedIn authentication failed");
     } finally {
       setLoading(false);
     }
@@ -258,29 +241,6 @@ const Auth = () => {
               {isSignUp ? 'Create Account' : 'Sign In'}
             </ButtonPrimary>
           </form>
-
-          {!isSignUp && (
-            <div className="mt-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
-              
-              <ButtonSecondary
-                onClick={handleLinkedInAuth}
-                className="w-full mt-4"
-                isLoading={loading}
-                size="lg"
-              >
-                <Linkedin className="w-4 h-4 mr-2" />
-                LinkedIn
-              </ButtonSecondary>
-            </div>
-          )}
 
           <div className="mt-6 text-center">
             <button
