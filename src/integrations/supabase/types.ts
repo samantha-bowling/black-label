@@ -125,6 +125,57 @@ export type Database = {
           },
         ]
       }
+      invites: {
+        Row: {
+          created_at: string
+          created_by_user_id: string
+          email: string | null
+          expires_at: string
+          id: string
+          token: string
+          updated_at: string
+          used_at: string | null
+          used_by_user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by_user_id: string
+          email?: string | null
+          expires_at?: string
+          id?: string
+          token?: string
+          updated_at?: string
+          used_at?: string | null
+          used_by_user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by_user_id?: string
+          email?: string | null
+          expires_at?: string
+          id?: string
+          token?: string
+          updated_at?: string
+          used_at?: string | null
+          used_by_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invites_created_by_user_id_fkey"
+            columns: ["created_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invites_used_by_user_id_fkey"
+            columns: ["used_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           availability_status: string | null
@@ -135,6 +186,9 @@ export type Database = {
           desired_gig_types: string[] | null
           display_name: string | null
           id: string
+          invite_token_used: string | null
+          invited_by_user_id: string | null
+          invites_remaining: number
           nda_required: boolean | null
           onboarding_completed: boolean
           past_credits: string | null
@@ -157,6 +211,9 @@ export type Database = {
           desired_gig_types?: string[] | null
           display_name?: string | null
           id: string
+          invite_token_used?: string | null
+          invited_by_user_id?: string | null
+          invites_remaining?: number
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
@@ -179,6 +236,9 @@ export type Database = {
           desired_gig_types?: string[] | null
           display_name?: string | null
           id?: string
+          invite_token_used?: string | null
+          invited_by_user_id?: string | null
+          invites_remaining?: number
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
@@ -192,7 +252,22 @@ export type Database = {
           typical_budget_min?: number | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "users_invite_token_used_fkey"
+            columns: ["invite_token_used"]
+            isOneToOne: false
+            referencedRelation: "invites"
+            referencedColumns: ["token"]
+          },
+          {
+            foreignKeyName: "users_invited_by_user_id_fkey"
+            columns: ["invited_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -209,6 +284,10 @@ export type Database = {
       }
       is_admin: {
         Args: { user_id: string }
+        Returns: boolean
+      }
+      use_invite_token: {
+        Args: { token_param: string; user_id_param: string }
         Returns: boolean
       }
     }

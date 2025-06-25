@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null;
   user: AuthUser | null;
   sessionStatus: SessionStatus;
-  signUp: (email: string, password: string, displayName: string, role?: UserRole) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, displayName: string, role?: UserRole, inviteToken?: string) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signInWithLinkedIn: () => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
@@ -60,6 +60,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   timeline_expectations: userProfile.timeline_expectations || undefined,
                   social_links: (userProfile.social_links as Record<string, string>) || undefined,
                   nda_required: userProfile.nda_required || undefined,
+                  invites_remaining: userProfile.invites_remaining,
+                  invited_by_user_id: userProfile.invited_by_user_id || undefined,
+                  invite_token_used: userProfile.invite_token_used || undefined,
                 });
               }
             } catch (error) {
@@ -84,18 +87,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, displayName: string, role: UserRole = 'gig_seeker') => {
+  const signUp = async (email: string, password: string, displayName: string, role: UserRole = 'gig_seeker', inviteToken?: string) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: redirectUrl,
           data: {
             role: role,
-            display_name: displayName
+            display_name: displayName,
+            invite_token: inviteToken
           }
         }
       });
@@ -107,6 +111,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           variant: "destructive",
         });
         return { error: error.message };
+      }
+
+      // If signup was successful and we have a user ID, process the invite
+      if (data.user && inviteToken) {
+        const { data: result, error: inviteError } = await supabase.rpc('use_invite_token', {
+          token_param: inviteToken,
+          user_id_param: data.user.id
+        });
+
+        if (inviteError || !result) {
+          console.error('Error processing invite token:', inviteError);
+          // Don't fail the signup, but log the issue
+        }
       }
 
       toast({

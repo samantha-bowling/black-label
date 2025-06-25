@@ -9,11 +9,13 @@ export type User = Database['public']['Tables']['users']['Row'];
 export type Gig = Database['public']['Tables']['gigs']['Row'];
 export type Application = Database['public']['Tables']['applications']['Row'];
 export type FeatureFlag = Database['public']['Tables']['feature_flags']['Row'];
+export type Invite = Database['public']['Tables']['invites']['Row'];
 
 // Branded types for safer domain modeling
 export type UserId = string & { readonly __brand: unique symbol };
 export type GigId = string & { readonly __brand: unique symbol };
 export type ApplicationId = string & { readonly __brand: unique symbol };
+export type InviteId = string & { readonly __brand: unique symbol };
 
 export interface AuthUser {
   id: UserId;
@@ -35,6 +37,9 @@ export interface AuthUser {
   timeline_expectations?: string;
   social_links?: Record<string, string>;
   nda_required?: boolean;
+  invites_remaining: number;
+  invited_by_user_id?: string;
+  invite_token_used?: string;
 }
 
 export interface SessionStatus {
