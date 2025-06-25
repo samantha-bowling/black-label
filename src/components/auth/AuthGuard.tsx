@@ -2,6 +2,7 @@
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useRoleAccess } from '@/hooks/useRoleAccess';
 import { UserRole } from '@/types/auth';
 
 interface AuthGuardProps {
@@ -12,6 +13,7 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children, requiredRole, requireAuth = true }: AuthGuardProps) {
   const { sessionStatus } = useAuth();
+  const roleAccess = useRoleAccess();
   const { isLoading, isAuthenticated, user } = sessionStatus;
   const location = useLocation();
 
@@ -30,7 +32,7 @@ export function AuthGuard({ children, requiredRole, requireAuth = true }: AuthGu
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
+  if (requiredRole && !roleAccess.hasRole(requiredRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
         <div className="text-center">

@@ -1,13 +1,13 @@
 
 import { useAuth } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
+import { useRoleAccess } from "@/hooks/useRoleAccess";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 
 const Admin = () => {
   const { user } = useAuth();
-  const { isAdmin } = useUserRole();
+  const { canAccessAdmin } = useRoleAccess();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,14 +18,14 @@ const Admin = () => {
     }
 
     // Redirect non-admin users to dashboard
-    if (user && !isAdmin()) {
+    if (user && !canAccessAdmin) {
       navigate('/dashboard');
       return;
     }
-  }, [user, isAdmin, navigate]);
+  }, [user, canAccessAdmin, navigate]);
 
-  // Show admin dashboard if user is admin
-  if (user && isAdmin()) {
+  // Show admin dashboard if user has admin access
+  if (user && canAccessAdmin) {
     return <AdminDashboard />;
   }
 

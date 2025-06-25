@@ -1,26 +1,12 @@
 
 import { useAuth } from './useAuth';
 import { UserRole } from '@/types/auth';
+import { getRoleCapabilities, hasRole, isOnboardingComplete } from '@/lib/auth/roleUtils';
 
 export function useUserRole() {
   const { user } = useAuth();
+  const capabilities = getRoleCapabilities(user);
   
-  const hasRole = (role: UserRole): boolean => {
-    return user?.role === role;
-  };
-
-  const isGigPoster = (): boolean => hasRole('gig_poster');
-  const isGigSeeker = (): boolean => hasRole('gig_seeker');
-  const isAdmin = (): boolean => hasRole('admin');
-
-  const canPostGigs = (): boolean => {
-    return user?.role === 'gig_poster' || user?.role === 'admin';
-  };
-
-  const canApplyToGigs = (): boolean => {
-    return user?.role === 'gig_seeker' || user?.role === 'admin';
-  };
-
   const needsOnboarding = (): boolean => {
     // User needs onboarding if they have a role but haven't completed onboarding
     return user && user.role ? !user.onboarding_completed : false;
@@ -28,18 +14,17 @@ export function useUserRole() {
 
   const isPosterOnboardingComplete = (): boolean => {
     // Check if poster has completed the essential fields
-    if (!user || user.role !== 'gig_poster') return false;
-    return !!(user.displayName && user.bio && user.onboarding_completed);
+    return isOnboardingComplete(user, 'gig_poster');
   };
 
   return {
     userRole: user?.role || null,
-    hasRole,
-    isGigPoster,
-    isGigSeeker,
-    isAdmin,
-    canPostGigs,
-    canApplyToGigs,
+    hasRole: (role: UserRole) => hasRole(user, role),
+    isGigPoster: () => hasRole(user, 'gig_poster'),
+    isGigSeeker: () => hasRole(user, 'gig_seeker'),
+    isAdmin: () => hasRole(user, 'admin'),
+    canPostGigs: () => capabilities.canPostGigs,
+    canApplyToGigs: () => capabilities.canApplyToGigs,
     needsOnboarding,
     isPosterOnboardingComplete,
   };

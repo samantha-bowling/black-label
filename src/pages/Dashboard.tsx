@@ -1,6 +1,6 @@
 
 import { useAuth } from '@/hooks/useAuth';
-import { useUserRole } from '@/hooks/useUserRole';
+import { useRoleAccess } from '@/hooks/useRoleAccess';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { InviteManager } from '@/components/invites/InviteManager';
 import { HeadingLG, ButtonSecondary, CardLuxe } from '@/components/ui/primitives';
@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
-  const { needsOnboarding, userRole } = useUserRole();
+  const { needsOnboarding, userRole, isOnboardingComplete } = useRoleAccess();
   const [activeTab, setActiveTab] = useState<'overview' | 'invites'>('overview');
 
   if (!user) {

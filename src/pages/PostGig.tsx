@@ -1,6 +1,6 @@
 
 import { useAuth } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
+import { useRoleAccess } from "@/hooks/useRoleAccess";
 import { PosterOnboardingFlow } from "@/components/onboarding/PosterOnboardingFlow";
 import { GigPostingForm } from "@/components/gig/GigPostingForm";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 const PostGig = () => {
   const { user } = useAuth();
-  const { canPostGigs, needsOnboarding } = useUserRole();
+  const { canPostGigs, needsOnboarding } = useRoleAccess();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,15 +18,15 @@ const PostGig = () => {
       return;
     }
 
-    // If user doesn't have gig_poster role, they shouldn't be here
-    if (user.role && !canPostGigs()) {
+    // If user doesn't have gig posting capability, they shouldn't be here
+    if (user.role && !canPostGigs) {
       navigate('/dashboard');
       return;
     }
   }, [user, canPostGigs, navigate]);
 
   // Show onboarding if user needs it
-  if (user && (!user.onboarding_completed || needsOnboarding())) {
+  if (user && (!user.onboarding_completed || needsOnboarding)) {
     return (
       <PosterOnboardingFlow 
         onComplete={() => window.location.reload()} 
@@ -34,8 +34,8 @@ const PostGig = () => {
     );
   }
 
-  // Show gig posting form if user is ready
-  if (user && canPostGigs()) {
+  // Show gig posting form if user can post gigs
+  if (user && canPostGigs) {
     return <GigPostingForm />;
   }
 
