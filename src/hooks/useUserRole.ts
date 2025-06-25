@@ -22,11 +22,13 @@ export function useUserRole() {
   };
 
   const needsRoleSelection = (): boolean => {
-    return !user?.role;
+    // User needs role selection if they're authenticated but have no role
+    return user ? !user.role : false;
   };
 
   const needsOnboarding = (): boolean => {
-    return user ? !user.onboarding_completed : false;
+    // User needs onboarding if they have a role but haven't completed onboarding
+    return user && user.role ? !user.onboarding_completed : false;
   };
 
   return {

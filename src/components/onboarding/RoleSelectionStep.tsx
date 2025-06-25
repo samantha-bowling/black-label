@@ -23,6 +23,7 @@ export function RoleSelectionStep({ onComplete }: RoleSelectionStepProps) {
 
     setIsLoading(true);
     try {
+      // Update user role in database
       const { error } = await supabase
         .from('users')
         .update({ role: selectedRole })
@@ -35,7 +36,10 @@ export function RoleSelectionStep({ onComplete }: RoleSelectionStepProps) {
         description: `You're now set up as a ${selectedRole === 'gig_seeker' ? 'Gig Seeker' : 'Gig Poster'}!`,
       });
 
-      onComplete(selectedRole);
+      // Wait a moment for the database update to propagate
+      setTimeout(() => {
+        onComplete(selectedRole);
+      }, 500);
     } catch (error) {
       console.error('Error updating role:', error);
       toast({
@@ -49,7 +53,7 @@ export function RoleSelectionStep({ onComplete }: RoleSelectionStepProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <div className="w-full max-w-2xl space-y-8">
         <div className="text-center space-y-4">
           <HeadingLG className="text-white">

@@ -134,14 +134,13 @@ export type Database = {
           created_at: string | null
           desired_gig_types: string[] | null
           display_name: string | null
-          email: string
           id: string
           nda_required: boolean | null
           onboarding_completed: boolean
           past_credits: string | null
           rate_range_max: number | null
           rate_range_min: number | null
-          role: Database["public"]["Enums"]["user_role"]
+          role: Database["public"]["Enums"]["user_role"] | null
           skills: string[] | null
           social_links: Json | null
           timeline_expectations: string | null
@@ -157,14 +156,13 @@ export type Database = {
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
-          email: string
           id: string
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
           rate_range_max?: number | null
           rate_range_min?: number | null
-          role?: Database["public"]["Enums"]["user_role"]
+          role?: Database["public"]["Enums"]["user_role"] | null
           skills?: string[] | null
           social_links?: Json | null
           timeline_expectations?: string | null
@@ -180,14 +178,13 @@ export type Database = {
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
-          email?: string
           id?: string
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
           rate_range_max?: number | null
           rate_range_min?: number | null
-          role?: Database["public"]["Enums"]["user_role"]
+          role?: Database["public"]["Enums"]["user_role"] | null
           skills?: string[] | null
           social_links?: Json | null
           timeline_expectations?: string | null
@@ -202,6 +199,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_user_is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       get_user_role: {
         Args: { user_id: string }
         Returns: Database["public"]["Enums"]["user_role"]
