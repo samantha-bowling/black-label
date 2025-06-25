@@ -25,7 +25,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
     return {
       id: userProfile.id as UserId,
-      email: userProfile.email,
+      email: session.user.email!, // Get email from session user object
       role: userProfile.role,
       displayName: userProfile.display_name,
       bio: userProfile.bio || undefined,

@@ -29,7 +29,7 @@ export function useSessionStatus(): SessionStatus {
               if (userProfile && !error) {
                 setUser({
                   id: userProfile.id as UserId,
-                  email: userProfile.email,
+                  email: session.user.email!, // Get email from session user object
                   role: userProfile.role,
                   displayName: userProfile.display_name,
                   bio: userProfile.bio || undefined,
