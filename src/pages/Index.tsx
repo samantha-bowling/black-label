@@ -32,20 +32,12 @@ const Index = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            {user ? (
-              <ButtonSecondary onClick={() => navigate("/dashboard")}>
-                Dashboard
-              </ButtonSecondary>
-            ) : (
-              <>
-                <ButtonSecondary onClick={() => navigate("/auth")}>
-                  Sign In
-                </ButtonSecondary>
-                <ButtonPrimary onClick={() => navigate("/auth")}>
-                  Join Beta
-                </ButtonPrimary>
-              </>
-            )}
+            <ButtonSecondary onClick={() => navigate("/auth")}>
+              Talent Login
+            </ButtonSecondary>
+            <ButtonPrimary onClick={() => navigate("/auth")}>
+              Post a Gig
+            </ButtonPrimary>
           </div>
         </div>
       </nav>
@@ -78,14 +70,22 @@ const Index = () => {
               Where verified creators and real opportunities meet.
             </p>
             
-            <div className="flex justify-center animate-fade-in">
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
                 onClick={() => navigate("/auth")}
                 className="group hover:shadow-glow transition-all duration-300"
               >
-                Join BLACKLABEL.gg
+                Looking for Talent? Post a Gig
               </ButtonPrimary>
+              
+              <ButtonSecondary 
+                size="lg" 
+                onClick={() => navigate("/auth")}
+                className="group hover:shadow-glow transition-all duration-300"
+              >
+                I have an invite
+              </ButtonSecondary>
             </div>
             
             {/* Trust Indicators */}
@@ -156,25 +156,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-12 relative">
+      {/* Closing Brand Statement */}
+      <section className="py-16 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
         <div className="container mx-auto px-4 text-center relative">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <HeadingLG>
-              You're in Good Company.
+          <div className="max-w-3xl mx-auto space-y-4">
+            <HeadingLG className="font-display">
+              WHITEGLOVE. BLACKLABEL.
             </HeadingLG>
             <p className="text-muted-foreground text-lg">
-              Join a curated network of game dev professionals working on meaningful, paid projects. 
-              Invite-only, built for trust.
+              Where credibility meets craft.
             </p>
-            <ButtonPrimary 
-              size="lg" 
-              onClick={() => navigate("/auth")}
-              className="hover:shadow-glow transition-all duration-300"
-            >
-              Request an Invite
-            </ButtonPrimary>
           </div>
         </div>
       </section>
