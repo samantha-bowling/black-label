@@ -44,6 +44,77 @@ export function useProfileTags() {
   };
 }
 
+// New export for available tags by category
+export function useAvailableTags(category: TagCategory) {
+  return useQuery({
+    queryKey: ['profile-tags', category],
+    queryFn: async (): Promise<ProfileTag[]> => {
+      console.log('Fetching profile tags for category:', category);
+      const { data, error } = await supabase
+        .from('profile_tags')
+        .select('*')
+        .eq('category', category)
+        .eq('is_active', true)
+        .order('sort_order');
+
+      if (error) {
+        console.error('Error fetching profile tags for category:', error);
+        throw error;
+      }
+      console.log('Profile tags fetched for category:', category, data?.length);
+      return data;
+    },
+  });
+}
+
+// New export for toggling user tags
+export function useToggleUserTag() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ userId, tagId, isSelected }: { userId: string; tagId: string; isSelected: boolean }) => {
+      console.log(`Toggling tag ${tagId} for user ${userId}: ${isSelected ? 'add' : 'remove'}`);
+
+      if (isSelected) {
+        // Add tag
+        const { error } = await supabase
+          .from('user_profile_tags')
+          .insert({ user_id: userId, tag_id: tagId });
+
+        if (error) {
+          console.error('Error adding tag:', error);
+          throw error;
+        }
+      } else {
+        // Remove tag
+        const { error } = await supabase
+          .from('user_profile_tags')
+          .delete()
+          .eq('user_id', userId)
+          .eq('tag_id', tagId);
+
+        if (error) {
+          console.error('Error removing tag:', error);
+          throw error;
+        }
+      }
+    },
+    onSuccess: () => {
+      // Invalidate related queries
+      queryClient.invalidateQueries({ queryKey: ['user-profile-tags'] });
+    },
+    onError: (error) => {
+      console.error('Tag toggle mutation error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update tag selection. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 export function useUserProfileTags(userId?: string) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
