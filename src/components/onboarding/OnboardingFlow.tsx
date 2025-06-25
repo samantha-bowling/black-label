@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/auth';
 import { OnboardingStep } from './OnboardingStep';
 import { SharedOnboardingFields } from './SharedOnboardingFields';
+import { ProfileDNATagsStep } from './ProfileDNATagsStep';
 import { GigSeekerFields } from './GigSeekerFields';
 import { GigPosterFields } from './GigPosterFields';
 import { ButtonPrimary } from '@/components/ui/primitives';
@@ -24,13 +25,19 @@ interface OnboardingFormData {
     github?: string;
     website?: string;
   };
-  // Gig Seeker specific
-  skills?: string[];
+  // Profile DNA tags (replacing legacy skills)
+  profile_tags?: {
+    core_disciplines: string[];
+    specialty_skills: string[];
+    project_types: string[];
+  };
+  // Gig Seeker specific (updated)
   desired_gig_types?: string[];
   availability_status?: string;
   past_credits?: string;
   rate_range_min?: number;
   rate_range_max?: number;
+  rate_visibility?: 'private' | 'verified_only' | 'public';
   // Gig Poster specific
   company_name?: string;
   typical_budget_min?: number;
@@ -50,12 +57,17 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
       display_name: user?.displayName || '',
       bio: user?.bio || '',
       social_links: user?.social_links || {},
-      skills: user?.skills || [],
+      profile_tags: {
+        core_disciplines: [],
+        specialty_skills: [],
+        project_types: [],
+      },
       desired_gig_types: user?.desired_gig_types || [],
       availability_status: user?.availability_status || '',
       past_credits: user?.past_credits || '',
       rate_range_min: user?.rate_range_min,
       rate_range_max: user?.rate_range_max,
+      rate_visibility: 'private',
       company_name: user?.company_name || '',
       typical_budget_min: user?.typical_budget_min,
       typical_budget_max: user?.typical_budget_max,
@@ -64,7 +76,8 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
     }
   });
 
-  const totalSteps = 2; // Shared info + Role-specific info
+  // Update total steps based on user role
+  const totalSteps = userRole === 'gig_seeker' ? 4 : 3; // Basic + DNA Tags + Professional + Privacy for seekers
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -83,18 +96,19 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
 
     setIsLoading(true);
     try {
+      // Update user profile
       const updateData = {
         display_name: data.display_name,
         bio: data.bio,
         social_links: data.social_links,
         onboarding_completed: true,
         ...(userRole === 'gig_seeker' && {
-          skills: data.skills,
           desired_gig_types: data.desired_gig_types,
           availability_status: data.availability_status,
           past_credits: data.past_credits,
           rate_range_min: data.rate_range_min,
           rate_range_max: data.rate_range_max,
+          // Note: rate_visibility will be handled in a future update
         }),
         ...(userRole === 'gig_poster' && {
           company_name: data.company_name,
@@ -130,6 +144,7 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
     }
   };
 
+  // Step 1: Basic Profile Information
   if (currentStep === 1) {
     return (
       <OnboardingStep
@@ -150,40 +165,100 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
     );
   }
 
-  return (
-    <OnboardingStep
-      title={userRole === 'gig_seeker' ? "Tell us about your skills" : "Tell us about your projects"}
-      description={userRole === 'gig_seeker' ? 
-        "Help others understand what you bring to the table" : 
-        "Help talent understand what you're looking for"
-      }
-      currentStep={currentStep}
-      totalSteps={totalSteps}
-    >
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        {userRole === 'gig_seeker' ? (
-          <GigSeekerFields form={form} />
-        ) : (
-          <GigPosterFields form={form} />
-        )}
-        <div className="flex justify-between">
-          <ButtonPrimary
-            type="button"
-            onClick={handleBack}
-            size="lg"
-            className="bg-white/10 hover:bg-white/20"
-          >
-            Back
-          </ButtonPrimary>
-          <ButtonPrimary
-            type="submit"
-            size="lg"
-            isLoading={isLoading}
-          >
-            Complete Setup
-          </ButtonPrimary>
-        </div>
-      </form>
-    </OnboardingStep>
-  );
+  // Step 2: Profile DNA Tags (for both roles)
+  if (currentStep === 2) {
+    return (
+      <OnboardingStep
+        title="Define your professional DNA"
+        description="Help others understand your expertise and specialization"
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+      >
+        <ProfileDNATagsStep 
+          userId={user?.id || ''}
+          onNext={handleNext}
+          onBack={handleBack}
+        />
+      </OnboardingStep>
+    );
+  }
+
+  // Step 3: Role-specific information
+  if (currentStep === 3) {
+    return (
+      <OnboardingStep
+        title={userRole === 'gig_seeker' ? "Professional story & experience" : "Tell us about your projects"}
+        description={userRole === 'gig_seeker' ? 
+          "Share your accomplishments and what makes you unique" : 
+          "Help talent understand what you're looking for"
+        }
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+      >
+        <form onSubmit={form.handleSubmit(userRole === 'gig_seeker' ? handleNext : handleSubmit)} className="space-y-6">
+          {userRole === 'gig_seeker' ? (
+            <GigSeekerFields form={form} />
+          ) : (
+            <GigPosterFields form={form} />
+          )}
+          <div className="flex justify-between">
+            <ButtonPrimary
+              type="button"
+              onClick={handleBack}
+              size="lg"
+              className="bg-white/10 hover:bg-white/20"
+            >
+              Back
+            </ButtonPrimary>
+            <ButtonPrimary
+              type="submit"
+              size="lg"
+              isLoading={isLoading}
+            >
+              {userRole === 'gig_seeker' ? 'Next' : 'Complete Setup'}
+            </ButtonPrimary>
+          </div>
+        </form>
+      </OnboardingStep>
+    );
+  }
+
+  // Step 4: Privacy & Profile Settings (Gig Seekers only)
+  if (currentStep === 4 && userRole === 'gig_seeker') {
+    return (
+      <OnboardingStep
+        title="Privacy & profile settings"
+        description="Control how your profile appears to others"
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+      >
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          {/* Privacy settings will be implemented in next step */}
+          <div className="text-center p-8 bg-muted/10 rounded-lg">
+            <p className="text-white/80">Privacy settings coming soon...</p>
+            <p className="text-white/60 text-sm mt-2">For now, your profile will be private by default.</p>
+          </div>
+          <div className="flex justify-between">
+            <ButtonPrimary
+              type="button"
+              onClick={handleBack}
+              size="lg"
+              className="bg-white/10 hover:bg-white/20"
+            >
+              Back
+            </ButtonPrimary>
+            <ButtonPrimary
+              type="submit"
+              size="lg"
+              isLoading={isLoading}
+            >
+              Complete Setup
+            </ButtonPrimary>
+          </div>
+        </form>
+      </OnboardingStep>
+    );
+  }
+
+  return null;
 }
