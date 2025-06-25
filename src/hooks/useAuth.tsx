@@ -2,15 +2,16 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthUser, SessionStatus } from '@/types/auth';
+import { AuthUser, SessionStatus, UserRole, UserId } from '@/types/auth';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   session: Session | null;
   user: AuthUser | null;
   sessionStatus: SessionStatus;
-  signUp: (email: string, password: string, role?: string) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, displayName: string, role?: UserRole) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signInWithLinkedIn: () => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -30,23 +31,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         
         if (session?.user) {
-          // Fetch user profile from our users table
-          const { data: userProfile, error } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
+          // Defer user profile fetch to avoid blocking auth state change
+          setTimeout(async () => {
+            try {
+              const { data: userProfile, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
 
-          if (userProfile && !error) {
-            setUser({
-              id: userProfile.id as any,
-              email: userProfile.email,
-              role: userProfile.role,
-              displayName: userProfile.display_name || undefined,
-              bio: userProfile.bio || undefined,
-              avatarUrl: userProfile.avatar_url || undefined,
-            });
-          }
+              if (userProfile && !error) {
+                setUser({
+                  id: userProfile.id as UserId,
+                  email: userProfile.email,
+                  role: userProfile.role,
+                  displayName: userProfile.display_name,
+                  bio: userProfile.bio || undefined,
+                  avatarUrl: userProfile.avatar_url || undefined,
+                });
+              }
+            } catch (error) {
+              console.error('Error fetching user profile:', error);
+            }
+          }, 0);
         } else {
           setUser(null);
         }
@@ -65,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, role = 'gig_seeker') => {
+  const signUp = async (email: string, password: string, displayName: string, role: UserRole = 'gig_seeker') => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
@@ -76,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           emailRedirectTo: redirectUrl,
           data: {
             role: role,
-            display_name: email.split('@')[0]
+            display_name: displayName
           }
         }
       });
@@ -140,6 +147,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const signInWithLinkedIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'linkedin_oidc',
+        options: {
+          redirectTo: `${window.location.origin}/`,
+        }
+      });
+
+      if (error) {
+        toast({
+          title: "LinkedIn Sign In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      toast({
+        title: "LinkedIn Sign In Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return { error: errorMessage };
+    }
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     toast({
@@ -148,10 +185,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const isExpired = session ? new Date(session.expires_at! * 1000) < new Date() : false;
+
   const sessionStatus: SessionStatus = {
     isLoading,
-    isAuthenticated: !!session,
+    isAuthenticated: !!session && !isExpired,
+    isExpired,
     user,
+    session,
   };
 
   return (
@@ -161,6 +202,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionStatus,
       signUp,
       signIn,
+      signInWithLinkedIn,
       signOut,
     }}>
       {children}

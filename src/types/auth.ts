@@ -19,7 +19,7 @@ export interface AuthUser {
   id: UserId;
   email: string;
   role: UserRole;
-  displayName?: string;
+  displayName: string;
   bio?: string;
   avatarUrl?: string;
 }
@@ -27,5 +27,7 @@ export interface AuthUser {
 export interface SessionStatus {
   isLoading: boolean;
   isAuthenticated: boolean;
+  isExpired: boolean;
   user: AuthUser | null;
+  session: any | null;
 }

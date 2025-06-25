@@ -1,23 +1,27 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRole } from "@/types/auth";
 import { 
   ButtonPrimary, 
+  ButtonSecondary,
   CardLuxe, 
   HeadingLG,
   InputLuxe
 } from "@/components/ui/primitives";
+import { Linkedin } from "lucide-react";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [selectedRole, setSelectedRole] = useState<UserRole>("gig_seeker");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, signInWithLinkedIn } = useAuth();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,13 +30,41 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        await signUp(email, password, selectedRole);
+        const result = await signUp(email, password, displayName, selectedRole);
+        if (result.error) {
+          setError(result.error);
+        } else {
+          // Stay on auth page to show email verification message
+          setEmail("");
+          setPassword("");
+          setDisplayName("");
+        }
       } else {
-        await signIn(email, password);
+        const result = await signIn(email, password);
+        if (result.error) {
+          setError(result.error);
+        } else {
+          navigate("/dashboard");
+        }
       }
-      navigate("/dashboard");
     } catch (err: any) {
       setError(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLinkedInAuth = async () => {
+    setError(null);
+    setLoading(true);
+    
+    try {
+      const result = await signInWithLinkedIn();
+      if (result.error) {
+        setError(result.error);
+      }
+    } catch (err: any) {
+      setError(err.message || "LinkedIn authentication failed");
     } finally {
       setLoading(false);
     }
@@ -44,8 +76,11 @@ const Auth = () => {
         <CardLuxe className="glow-primary">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-primary rounded-md"></div>
-              <span className="font-display font-bold text-xl">BlackLabel.gg</span>
+              <img 
+                src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
+                alt="BlackLabel" 
+                className="h-8"
+              />
             </div>
             <HeadingLG as="h2" className="mb-2">
               {isSignUp ? 'Join the Elite' : 'Welcome Back'}
@@ -90,21 +125,38 @@ const Auth = () => {
             </div>
 
             {isSignUp && (
-              <div>
-                <label htmlFor="role" className="block text-sm font-medium mb-2">
-                  Role
-                </label>
-                <select
-                  id="role"
-                  value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                  className="input-luxe w-full"
-                  required
-                >
-                  <option value="gig_seeker">Gig Seeker - Looking for opportunities</option>
-                  <option value="gig_poster">Gig Poster - Posting projects</option>
-                </select>
-              </div>
+              <>
+                <div>
+                  <label htmlFor="displayName" className="block text-sm font-medium mb-2">
+                    Display Name
+                  </label>
+                  <InputLuxe
+                    id="displayName"
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder="Enter your display name"
+                    required
+                    error={!!error}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="role" className="block text-sm font-medium mb-2">
+                    Role
+                  </label>
+                  <select
+                    id="role"
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value as UserRole)}
+                    className="input-luxe w-full"
+                    required
+                  >
+                    <option value="gig_seeker">Gig Seeker - Looking for opportunities</option>
+                    <option value="gig_poster">Gig Poster - Posting projects</option>
+                  </select>
+                </div>
+              </>
             )}
 
             {error && (
@@ -122,6 +174,29 @@ const Auth = () => {
               {isSignUp ? 'Create Account' : 'Sign In'}
             </ButtonPrimary>
           </form>
+
+          {!isSignUp && (
+            <div className="mt-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                </div>
+              </div>
+              
+              <ButtonSecondary
+                onClick={handleLinkedInAuth}
+                className="w-full mt-4"
+                isLoading={loading}
+                size="lg"
+              >
+                <Linkedin className="w-4 h-4 mr-2" />
+                LinkedIn
+              </ButtonSecondary>
+            </div>
+          )}
 
           <div className="mt-6 text-center">
             <button
