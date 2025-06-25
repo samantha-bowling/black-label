@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -20,9 +21,12 @@ const Index = () => {
       {/* Navigation */}
       <nav className="nav-glass fixed top-0 w-full z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-white rounded-md"></div>
-            <span className="font-display font-bold text-xl">BlackLabel.gg</span>
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/85f63ced-9364-4e81-a72f-044f549c0757.png" 
+              alt="BlackLabel.gg" 
+              className="h-8"
+            />
           </div>
           
           <div className="flex items-center space-x-4">
@@ -169,9 +173,12 @@ const Index = () => {
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-white rounded"></div>
-              <span className="font-display font-bold">BlackLabel.gg</span>
+            <div className="flex items-center mb-4 md:mb-0">
+              <img 
+                src="/lovable-uploads/85f63ced-9364-4e81-a72f-044f549c0757.png" 
+                alt="BlackLabel.gg" 
+                className="h-6"
+              />
             </div>
             <div className="text-sm text-muted-foreground">
               © 2024 BlackLabel.gg. The premier talent platform for games.
