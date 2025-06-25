@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -10,7 +9,7 @@ import {
   HeadingXL,
   HeadingLG
 } from "@/components/ui/primitives";
-import { Star, Shield, CheckCircle, ChevronRight } from "lucide-react";
+import { Star, Shield, CheckCircle } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -72,7 +71,6 @@ const Index = () => {
                 className="group hover:shadow-glow transition-all duration-300"
               >
                 Join BlackLabel.gg
-                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </ButtonPrimary>
             </div>
             
