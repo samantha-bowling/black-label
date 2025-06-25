@@ -1,7 +1,6 @@
-
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useUserProfileTags } from '@/hooks/useUserProfileTags';
+import { useUserProfileTags } from '@/hooks/useProfileTags';
 import { TagCategory, TAG_CATEGORY_LABELS } from '@/types/profile-tags';
 
 interface ProfileTagDisplayProps {
