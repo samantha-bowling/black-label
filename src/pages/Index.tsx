@@ -26,7 +26,7 @@ const Index = () => {
           <div className="flex items-center">
             <img 
               src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
-              alt="BlackLabel.gg" 
+              alt="BLACKLABEL.gg" 
               className="h-8"
             />
           </div>
@@ -61,7 +61,7 @@ const Index = () => {
             <div className="flex justify-center animate-fade-in">
               <img 
                 src="/lovable-uploads/3928092b-3c56-44d8-ab8a-e32eab280559.png" 
-                alt="BlackLabel.gg" 
+                alt="BLACKLABEL.gg" 
                 className="h-24 md:h-32 lg:h-40"
               />
             </div>
@@ -84,7 +84,7 @@ const Index = () => {
                 onClick={() => navigate("/auth")}
                 className="group hover:shadow-glow transition-all duration-300"
               >
-                Join BlackLabel
+                Join BLACKLABEL.gg
               </ButtonPrimary>
             </div>
             
@@ -126,7 +126,7 @@ const Index = () => {
               </div>
               <h3 className="font-display font-semibold text-xl mb-4">Verified Talent</h3>
               <p className="text-muted-foreground mb-4">
-                Work with trusted experts from AAA studios, indie gems, and competitive esports.
+                Work with trusted experts from AAA studios to indie gems.
               </p>
               <BadgeStatus variant="success">Verified</BadgeStatus>
             </CardLuxe>
@@ -186,7 +186,7 @@ const Index = () => {
             <div className="flex items-center">
               <img 
                 src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
-                alt="BlackLabel.gg" 
+                alt="BLACKLABEL.gg" 
                 className="h-6"
               />
             </div>
@@ -199,7 +199,7 @@ const Index = () => {
             </div>
             
             <div className="text-sm text-muted-foreground">
-              © 2024 BlackLabel.gg. The premier talent platform for games.
+              © 2024 BLACKLABEL.gg. The premier talent platform for games.
             </div>
           </div>
         </div>

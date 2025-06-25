@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -66,10 +67,10 @@ export function AboutModal({ children }: LegalModalsProps) {
               <h3 className="text-lg font-semibold text-white mb-4">Frequently Asked Questions</h3>
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     What makes BLACKLABEL.gg different from other gig platforms?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p className="mb-3">
                       Unlike open marketplaces, BLACKLABEL.gg is a curated network. Every member—whether a seeker or poster—is vetted and invited. This ensures a higher signal-to-noise ratio, deeper trust, and more meaningful opportunities.
                     </p>
@@ -80,10 +81,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-2">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     How do I get invited?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p className="mb-3">There are two paths:</p>
                     <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
                       <li>Direct invitation from an existing member (each gets 3).</li>
@@ -96,10 +97,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-3">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     Who is this platform for?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p className="mb-3">BLACKLABEL.gg is for:</p>
                     <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
                       <li><strong>Gig Seekers:</strong> Senior- to principal-level creatives and technologists across design, engineering, art, production, audio, community, and strategy.</li>
@@ -112,10 +113,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-4">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     What kinds of gigs are posted?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p className="mb-3">Gigs vary from:</p>
                     <ul className="list-disc list-inside space-y-1 ml-4 mb-3">
                       <li>Short-term consultations (e.g., "We need a combat designer to gut-check our boss flow")</li>
@@ -130,10 +131,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-5">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     Is there a fee to use BLACKLABEL.gg?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p className="mb-3">Talent never pays to use the platform.</p>
                     <p className="mb-3">
                       Gig Posters pay a finder's fee based on the total budget of a gig (details available on request).
@@ -145,10 +146,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-6">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     Is my profile public?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p>
                       No. Profiles are only visible to approved users of the platform and are not indexed publicly. You control what's shown.
                     </p>
@@ -156,10 +157,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-7">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     Can I invite others?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p>
                       If you're a member, you'll be granted 3 invites to extend to professionals you trust. Choose carefully—your credibility travels with them.
                     </p>
@@ -167,10 +168,10 @@ export function AboutModal({ children }: LegalModalsProps) {
                 </AccordionItem>
 
                 <AccordionItem value="item-8">
-                  <AccordionTrigger className="text-left text-white hover:text-primary">
+                  <AccordionTrigger className="text-left text-white hover:text-primary text-sm">
                     How can I get in touch?
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/80">
+                  <AccordionContent className="text-white/80 text-sm">
                     <p>
                       For support, partnership, or media inquiries, contact us at <a href="mailto:support@blacklabel.gg" className="text-primary hover:underline">support@blacklabel.gg</a>
                     </p>
