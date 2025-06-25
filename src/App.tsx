@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import PostGig from "./pages/PostGig";
+import Admin from "./pages/Admin";
 import PublicProfile from "./pages/PublicProfile";
 import NotFound from "./pages/NotFound";
 
@@ -38,6 +39,14 @@ const App = () => (
               element={
                 <AuthGuard requireAuth>
                   <PostGig />
+                </AuthGuard>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <AuthGuard requireAuth requiredRole="admin">
+                  <Admin />
                 </AuthGuard>
               } 
             />
