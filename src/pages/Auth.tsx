@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,6 +9,8 @@ import {
   HeadingLG,
 } from "@/components/ui/primitives";
 import { AuthFormField } from "@/components/forms/AuthFormField";
+import { PasswordField } from "@/components/forms/PasswordField";
+import { checkPasswordStrength } from "@/lib/auth/passwordUtils";
 import { 
   getSignUpTitle, 
   getSignUpDescription, 
@@ -20,6 +21,7 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -71,9 +73,34 @@ const Auth = () => {
     }
   };
 
+  const validatePasswords = (): string | null => {
+    if (!isSignUp) return null;
+    
+    if (password !== confirmPassword) {
+      return 'Passwords do not match';
+    }
+    
+    const strength = checkPasswordStrength(password);
+    if (strength.score < 2) {
+      return 'Password is too weak. Please follow the strength requirements.';
+    }
+    
+    return null;
+  };
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Validate passwords for signup
+    if (isSignUp) {
+      const passwordError = validatePasswords();
+      if (passwordError) {
+        setError(passwordError);
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
@@ -106,6 +133,7 @@ const Auth = () => {
         } else {
           setEmail("");
           setPassword("");
+          setConfirmPassword("");
           setDisplayName("");
         }
       } else {
@@ -127,6 +155,8 @@ const Auth = () => {
     setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
     setIsSignUp(authMode === 'signin');
     setError(null);
+    setPassword("");
+    setConfirmPassword("");
   };
 
   const switchRole = () => {
@@ -152,6 +182,13 @@ const Auth = () => {
         </div>
       </div>
     );
+  };
+
+  const isFormValid = () => {
+    if (!isSignUp) return true;
+    
+    const strength = checkPasswordStrength(password);
+    return password === confirmPassword && strength.score >= 2;
   };
 
   return (
@@ -217,16 +254,28 @@ const Auth = () => {
               error={!!error}
             />
 
-            <AuthFormField
+            <PasswordField
               id="password"
               label="Password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
               error={!!error}
+              showStrengthIndicator={isSignUp}
             />
+
+            {isSignUp && (
+              <PasswordField
+                id="confirmPassword"
+                label="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
+                required
+                error={!!error || (confirmPassword && password !== confirmPassword)}
+              />
+            )}
 
             {isSignUp && intendedRole === 'gig_poster' && (
               <AuthFormField
@@ -251,7 +300,10 @@ const Auth = () => {
               className="w-full"
               isLoading={loading}
               size="lg"
-              disabled={shouldDisableSubmit(isSignUp, intendedRole, inviteValid, inviteToken)}
+              disabled={
+                shouldDisableSubmit(isSignUp, intendedRole, inviteValid, inviteToken) || 
+                (isSignUp && !isFormValid())
+              }
             >
               {isSignUp ? 'Create Account' : 'Sign In'}
             </ButtonPrimary>
