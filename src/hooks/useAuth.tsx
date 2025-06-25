@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const toasts = createAuthToasts();
 
-  const fetchUserProfile = async (userId: string, email: string) => {
+  const fetchUserProfile = async (userId: string, email: string, retryCount = 0) => {
     try {
       const { data: userProfile, error } = await supabase
         .from('users')
@@ -65,9 +65,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           accepts_intros: userProfile.accepts_intros || undefined,
           requires_nda: userProfile.requires_nda || undefined,
         });
+      } else if (retryCount < 3) {
+        // Retry fetching user profile if it doesn't exist yet (user might be newly created)
+        console.log(`Retrying user profile fetch (attempt ${retryCount + 1})`);
+        setTimeout(() => {
+          fetchUserProfile(userId, email, retryCount + 1);
+        }, 1000 * (retryCount + 1)); // Exponential backoff
+      } else {
+        console.error('Failed to fetch user profile after retries:', error);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+      if (retryCount < 3) {
+        setTimeout(() => {
+          fetchUserProfile(userId, email, retryCount + 1);
+        }, 1000 * (retryCount + 1));
+      }
     }
   };
 

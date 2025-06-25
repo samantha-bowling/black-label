@@ -131,10 +131,21 @@ const Auth = () => {
         if (result.error) {
           setError(result.error);
         } else {
+          // Clear form fields
           setEmail("");
           setPassword("");
           setConfirmPassword("");
           setDisplayName("");
+          
+          // Navigate based on user role after successful signup
+          if (intendedRole === 'gig_poster') {
+            navigate("/post-a-gig");
+          } else if (intendedRole === 'gig_seeker') {
+            navigate("/dashboard");
+          } else {
+            // Fallback to dashboard
+            navigate("/dashboard");
+          }
         }
       } else {
         const result = await signIn(email, password);
