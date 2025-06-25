@@ -4,7 +4,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { createAuthToasts } from '@/lib/auth/toastUtils';
-import { UserRole } from '@/types/auth';
+import { UserRole, PosterType } from '@/types/auth';
 
 interface OnboardingSubmissionConfig {
   userRole: UserRole;
@@ -29,7 +29,7 @@ interface OnboardingFormData {
   typical_budget_max?: number;
   timeline_expectations?: string;
   nda_required?: boolean;
-  poster_type?: string;
+  poster_type?: PosterType;
   location?: string;
   website_url?: string;
   linkedin_url?: string;
@@ -52,6 +52,7 @@ export function useOnboardingSubmission({ userRole, onComplete }: OnboardingSubm
         onboarding_completed: true,
       };
 
+      // Create role-specific data with proper typing
       const roleSpecificData = userRole === 'gig_seeker' ? {
         desired_gig_types: data.desired_gig_types,
         availability_status: data.availability_status,

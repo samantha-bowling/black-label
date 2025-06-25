@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { UserRole } from '@/types/auth';
+import { UserRole, PosterType } from '@/types/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { useOnboardingSubmission } from '@/hooks/useOnboardingSubmission';
 import { getOnboardingConfig } from '@/lib/onboarding/onboardingConfig';
@@ -41,7 +41,7 @@ interface OnboardingFormData {
   typical_budget_max?: number;
   timeline_expectations?: string;
   nda_required?: boolean;
-  poster_type?: string;
+  poster_type?: PosterType;
   location?: string;
   website_url?: string;
   linkedin_url?: string;
@@ -97,7 +97,6 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
 
   const renderStepContent = () => {
     const isLastStep = currentStep === config.totalSteps;
-    const isFirstStep = currentStep === 1;
 
     switch (currentStepConfig.component) {
       case 'shared':
