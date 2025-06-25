@@ -9,6 +9,7 @@ interface FeatureFlags {
   reviews: boolean;
   milestone_tracking: boolean;
   application_filters: boolean;
+  enhanced_profiles: boolean;
 }
 
 export function useFeatureFlags() {
@@ -29,6 +30,7 @@ export function useFeatureFlags() {
     reviews: flags?.find(f => f.flag_name === 'reviews')?.enabled ?? false,
     milestone_tracking: flags?.find(f => f.flag_name === 'milestone_tracking')?.enabled ?? false,
     application_filters: flags?.find(f => f.flag_name === 'application_filters')?.enabled ?? false,
+    enhanced_profiles: flags?.find(f => f.flag_name === 'enhanced_profiles')?.enabled ?? false,
   };
 
   const isEnabled = (flagName: keyof FeatureFlags): boolean => {

@@ -41,6 +41,15 @@ export interface AuthUser {
   invites_remaining: number;
   invited_by_user_id?: string;
   invite_token_used?: string;
+  // Enhanced profile fields
+  banner_image_url?: string;
+  banner_background_color?: string;
+  signature_quote?: string;
+  expertise_signature?: string;
+  about_story?: string;
+  smart_url_slug?: string;
+  accepts_intros?: boolean;
+  requires_nda?: boolean;
 }
 
 export interface SessionStatus {

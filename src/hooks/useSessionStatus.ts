@@ -51,6 +51,15 @@ export function useSessionStatus(): SessionStatus {
                   invites_remaining: userProfile.invites_remaining,
                   invited_by_user_id: userProfile.invited_by_user_id || undefined,
                   invite_token_used: userProfile.invite_token_used || undefined,
+                  // Enhanced profile fields
+                  banner_image_url: userProfile.banner_image_url || undefined,
+                  banner_background_color: userProfile.banner_background_color || undefined,
+                  signature_quote: userProfile.signature_quote || undefined,
+                  expertise_signature: userProfile.expertise_signature || undefined,
+                  about_story: userProfile.about_story || undefined,
+                  smart_url_slug: userProfile.smart_url_slug || undefined,
+                  accepts_intros: userProfile.accepts_intros || undefined,
+                  requires_nda: userProfile.requires_nda || undefined,
                 });
               }
             } catch (error) {
