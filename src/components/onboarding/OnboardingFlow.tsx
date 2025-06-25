@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +9,7 @@ import { SharedOnboardingFields } from './SharedOnboardingFields';
 import { ProfileDNATagsStep } from './ProfileDNATagsStep';
 import { GigSeekerFields } from './GigSeekerFields';
 import { GigPosterFields } from './GigPosterFields';
+import { PrivacyProfileSettingsStep } from './PrivacyProfileSettingsStep';
 import { ButtonPrimary } from '@/components/ui/primitives';
 
 interface OnboardingFlowProps {
@@ -44,6 +44,8 @@ interface OnboardingFormData {
   typical_budget_max?: number;
   timeline_expectations?: string;
   nda_required?: boolean;
+  public_profile?: boolean;
+  accepts_intros?: boolean;
 }
 
 export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
@@ -68,6 +70,8 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
       rate_range_min: user?.rate_range_min,
       rate_range_max: user?.rate_range_max,
       rate_visibility: 'private',
+      public_profile: user?.public_profile || false,
+      accepts_intros: user?.accepts_intros !== false, // Default to true
       company_name: user?.company_name || '',
       typical_budget_min: user?.typical_budget_min,
       typical_budget_max: user?.typical_budget_max,
@@ -108,6 +112,8 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
           past_credits: data.past_credits,
           rate_range_min: data.rate_range_min,
           rate_range_max: data.rate_range_max,
+          public_profile: data.public_profile,
+          accepts_intros: data.accepts_intros,
           // Note: rate_visibility will be handled in a future update
         }),
         ...(userRole === 'gig_poster' && {
@@ -232,30 +238,13 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
         currentStep={currentStep}
         totalSteps={totalSteps}
       >
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          {/* Privacy settings will be implemented in next step */}
-          <div className="text-center p-8 bg-muted/10 rounded-lg">
-            <p className="text-white/80">Privacy settings coming soon...</p>
-            <p className="text-white/60 text-sm mt-2">For now, your profile will be private by default.</p>
-          </div>
-          <div className="flex justify-between">
-            <ButtonPrimary
-              type="button"
-              onClick={handleBack}
-              size="lg"
-              className="bg-white/10 hover:bg-white/20"
-            >
-              Back
-            </ButtonPrimary>
-            <ButtonPrimary
-              type="submit"
-              size="lg"
-              isLoading={isLoading}
-            >
-              Complete Setup
-            </ButtonPrimary>
-          </div>
-        </form>
+        <PrivacyProfileSettingsStep
+          form={form}
+          onNext={handleNext}
+          onBack={handleBack}
+          onSubmit={() => form.handleSubmit(handleSubmit)()}
+          isLoading={isLoading}
+        />
       </OnboardingStep>
     );
   }
