@@ -21,20 +21,20 @@ export function ProfileDNATagsStep({ userId, userRole, onNext, onBack }: Profile
   const categories: TagCategory[] = ['core_discipline', 'specialty_skill', 'project_type'];
   
   // Role-specific category labels for step progression
-  const getCategoryLabel = (category: TagCategory) => {
+  const getCategoryLabel = (category: TagCategory): string => {
     if (userRole === 'gig_poster') {
       switch (category) {
         case 'core_discipline': return 'Disciplines You Need';
         case 'specialty_skill': return 'Skills You Require';
         case 'project_type': return 'Your Project Types';
-        default: return category.replace('_', ' ');
+        default: return category.replace(/_/g, ' ');
       }
     } else {
       switch (category) {
         case 'core_discipline': return 'Your Core Disciplines';
         case 'specialty_skill': return 'Your Specialty Skills';
         case 'project_type': return 'Project Types You Work On';
-        default: return category.replace('_', ' ');
+        default: return category.replace(/_/g, ' ');
       }
     }
   };

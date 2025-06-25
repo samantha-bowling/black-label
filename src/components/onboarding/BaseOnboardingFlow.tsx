@@ -115,6 +115,7 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
         return (
           <ProfileDNATagsStep 
             userId={user?.id || ''}
+            userRole={userRole}
             onNext={handleNext}
             onBack={handleBack}
           />

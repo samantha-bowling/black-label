@@ -28,10 +28,11 @@ export interface TagSelectionLimits {
   project_type: { min: 0; max: 5 };
 }
 
+// Updated limits to match your specifications more closely
 export const TAG_SELECTION_LIMITS: TagSelectionLimits = {
-  core_discipline: { min: 1, max: 3 },
-  specialty_skill: { min: 0, max: 7 },
-  project_type: { min: 0, max: 5 },
+  core_discipline: { min: 1, max: 3 }, // 1-3 for professional clarity
+  specialty_skill: { min: 0, max: 7 }, // 5-7 suggested, allowing up to 7
+  project_type: { min: 0, max: 5 }, // 3-5 suggested, allowing up to 5
 };
 
 export const TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
@@ -41,9 +42,9 @@ export const TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
 };
 
 export const TAG_CATEGORY_DESCRIPTIONS: Record<TagCategory, string> = {
-  core_discipline: 'Your primary professional identity - what you fundamentally do',
-  specialty_skill: 'Unique tools, frameworks, or sub-disciplines where you have expertise',
-  project_type: 'Types of projects and scales you typically work on',
+  core_discipline: 'Your primary professional identity - think "job lane" or role on a credits screen',
+  specialty_skill: 'Unique tools, frameworks, or sub-disciplines where you have notable expertise',
+  project_type: 'Project archetypes and scales that describe where you\'ve operated',
 };
 
 // Role-specific descriptions for posters

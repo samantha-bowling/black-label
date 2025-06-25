@@ -41,6 +41,22 @@ export function ProfileTagSelector({ userId, category, userRole = 'gig_seeker', 
   const categoryLabels = isGigPoster ? POSTER_TAG_CATEGORY_LABELS : TAG_CATEGORY_LABELS;
   const categoryDescriptions = isGigPoster ? POSTER_TAG_CATEGORY_DESCRIPTIONS : TAG_CATEGORY_DESCRIPTIONS;
 
+  // Professional context helper text
+  const getHelperText = (category: TagCategory) => {
+    switch (category) {
+      case 'core_discipline':
+        return isGigPoster 
+          ? 'Select the primary disciplines you typically need for projects'
+          : 'Think of this as your "job lane" - roles that would appear on a credits screen';
+      case 'specialty_skill':
+        return 'These give texture and flavor to your role - your unique expertise areas';
+      case 'project_type':
+        return 'Project archetypes that describe the scale and context where you operate';
+      default:
+        return '';
+    }
+  };
+
   const handleTagToggle = (tagId: string) => {
     setLocalSelection(prev => {
       if (prev.includes(tagId)) {
@@ -53,13 +69,23 @@ export function ProfileTagSelector({ userId, category, userRole = 'gig_seeker', 
   };
 
   const handleSave = () => {
+    console.log(`Saving tags for category ${category}:`, localSelection);
     updateUserTags({ tagIds: localSelection, category });
     onComplete?.();
   };
 
   const handleReset = () => {
+    console.log(`Resetting tags for category ${category}`);
     setLocalSelection(selectedTagIds);
   };
+
+  // Update local selection when user tags change (after successful save)
+  React.useEffect(() => {
+    const newSelectedIds = selectedUserTags.map(ut => ut.tag_id);
+    if (JSON.stringify(newSelectedIds) !== JSON.stringify(localSelection)) {
+      setLocalSelection(newSelectedIds);
+    }
+  }, [selectedUserTags]);
 
   if (isLoadingTags) {
     return (
@@ -84,12 +110,17 @@ export function ProfileTagSelector({ userId, category, userRole = 'gig_seeker', 
             {localSelection.length}/{limits.max}
           </Badge>
         </CardTitle>
-        <CardDescription>
-          {categoryDescriptions[category]}
+        <CardDescription className="space-y-2">
+          <div>{categoryDescriptions[category]}</div>
+          <div className="text-sm text-muted-foreground italic">
+            {getHelperText(category)}
+          </div>
           {limits.min > 0 && (
-            <span className="block mt-1 text-sm">
-              Select {limits.min}-{limits.max} {category === 'core_discipline' ? 'disciplines' : 'options'}
-            </span>
+            <div className="text-sm font-medium">
+              Select {limits.min === limits.max ? limits.min : `${limits.min}-${limits.max}`} {
+                category === 'core_discipline' ? 'disciplines' : 'options'
+              }
+            </div>
           )}
         </CardDescription>
       </CardHeader>
@@ -117,14 +148,25 @@ export function ProfileTagSelector({ userId, category, userRole = 'gig_seeker', 
                 />
                 <label
                   htmlFor={tag.id}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
                 >
                   {tag.name}
+                  {tag.description && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {tag.description}
+                    </div>
+                  )}
                 </label>
               </div>
             );
           })}
         </div>
+
+        {!canSelectMore && limits.max > 0 && (
+          <div className="text-sm text-amber-600">
+            Maximum {limits.max} selections reached. Unselect others to choose different options.
+          </div>
+        )}
 
         {!hasMinimumSelected && limits.min > 0 && (
           <div className="text-sm text-destructive">

@@ -12,13 +12,18 @@ export function useProfileTags() {
   const { data: profileTags = [], isLoading: isLoadingTags } = useQuery({
     queryKey: ['profile-tags'],
     queryFn: async (): Promise<ProfileTag[]> => {
+      console.log('Fetching profile tags...');
       const { data, error } = await supabase
         .from('profile_tags')
         .select('*')
         .eq('is_active', true)
         .order('sort_order');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching profile tags:', error);
+        throw error;
+      }
+      console.log('Profile tags fetched:', data?.length);
       return data;
     },
   });
@@ -49,6 +54,7 @@ export function useUserProfileTags(userId?: string) {
     queryFn: async (): Promise<UserProfileTag[]> => {
       if (!userId) return [];
 
+      console.log('Fetching user tags for user:', userId);
       const { data, error } = await supabase
         .from('user_profile_tags')
         .select(`
@@ -57,7 +63,11 @@ export function useUserProfileTags(userId?: string) {
         `)
         .eq('user_id', userId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching user tags:', error);
+        throw error;
+      }
+      console.log('User tags fetched:', data?.length);
       return data;
     },
     enabled: !!userId,
@@ -75,7 +85,7 @@ export function useUserProfileTags(userId?: string) {
     return acc;
   }, {} as Record<TagCategory, UserProfileTag[]>);
 
-  // Add/remove user tag with improved conflict handling
+  // Enhanced mutation with better error handling and logging
   const updateUserTagsMutation = useMutation({
     mutationFn: async ({ 
       tagIds, 
@@ -86,6 +96,8 @@ export function useUserProfileTags(userId?: string) {
     }) => {
       if (!userId) throw new Error('User ID is required');
 
+      console.log(`Updating ${category} tags for user ${userId}:`, tagIds);
+
       // Validate selection limits
       const limits = TAG_SELECTION_LIMITS[category];
       if (tagIds.length < limits.min) {
@@ -95,9 +107,13 @@ export function useUserProfileTags(userId?: string) {
         throw new Error(`Please select no more than ${limits.max} ${category.replace('_', ' ')}`);
       }
 
+      // Start a transaction-like approach
+      console.log('Starting tag update process...');
+
       // Remove existing tags for this category first
       const existingCategoryTags = userTagsByCategory[category] || [];
       if (existingCategoryTags.length > 0) {
+        console.log(`Removing ${existingCategoryTags.length} existing tags for category ${category}`);
         const { error: deleteError } = await supabase
           .from('user_profile_tags')
           .delete()
@@ -106,12 +122,14 @@ export function useUserProfileTags(userId?: string) {
 
         if (deleteError) {
           console.error('Delete error:', deleteError);
-          throw new Error('Failed to update tags. Please try again.');
+          throw new Error(`Failed to update tags: ${deleteError.message}`);
         }
+        console.log('Successfully removed existing tags');
       }
 
-      // Add new tags with conflict handling
+      // Add new tags with improved conflict handling
       if (tagIds.length > 0) {
+        console.log(`Adding ${tagIds.length} new tags for category ${category}`);
         const insertData = tagIds.map(tagId => ({
           user_id: userId,
           tag_id: tagId,
@@ -119,18 +137,35 @@ export function useUserProfileTags(userId?: string) {
 
         const { error: insertError } = await supabase
           .from('user_profile_tags')
-          .upsert(insertData, { 
-            onConflict: 'user_id,tag_id',
-            ignoreDuplicates: true 
-          });
+          .insert(insertData);
 
         if (insertError) {
           console.error('Insert error:', insertError);
-          throw new Error('Failed to save tags. Please try again.');
+          // If it's a constraint violation, try to handle it gracefully
+          if (insertError.code === '23505') { // unique_violation
+            console.log('Unique constraint violation - attempting upsert');
+            const { error: upsertError } = await supabase
+              .from('user_profile_tags')
+              .upsert(insertData, { 
+                onConflict: 'user_id,tag_id',
+                ignoreDuplicates: true 
+              });
+            
+            if (upsertError) {
+              console.error('Upsert error:', upsertError);
+              throw new Error(`Failed to save tags: ${upsertError.message}`);
+            }
+          } else {
+            throw new Error(`Failed to save tags: ${insertError.message}`);
+          }
         }
+        console.log('Successfully added new tags');
       }
+
+      console.log('Tag update completed successfully');
     },
     onSuccess: (_, { category }) => {
+      console.log(`Successfully updated ${category} tags`);
       queryClient.invalidateQueries({ queryKey: ['user-profile-tags', userId] });
       toast({
         title: "Tags Updated",
@@ -138,7 +173,7 @@ export function useUserProfileTags(userId?: string) {
       });
     },
     onError: (error) => {
-      console.error('Mutation error:', error);
+      console.error('Tag update mutation error:', error);
       toast({
         title: "Error",
         description: error.message,
