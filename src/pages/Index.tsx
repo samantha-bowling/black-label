@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -9,6 +10,7 @@ import {
   HeadingXL,
   HeadingLG
 } from "@/components/ui/primitives";
+import { PrivacyPolicyModal, TermsOfServiceModal } from "@/components/legal/LegalModals";
 import { Star, Shield, CheckCircle } from "lucide-react";
 
 const Index = () => {
@@ -179,14 +181,26 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex items-center">
               <img 
                 src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
                 alt="BlackLabel.gg" 
                 className="h-6"
               />
             </div>
+            
+            <div className="flex items-center space-x-6">
+              <PrivacyPolicyModal />
+              <TermsOfServiceModal />
+              <a 
+                href="mailto:hello@blacklabel.gg" 
+                className="text-sm text-muted-foreground hover:text-white transition-colors"
+              >
+                Contact Us
+              </a>
+            </div>
+            
             <div className="text-sm text-muted-foreground">
               © 2024 BlackLabel.gg. The premier talent platform for games.
             </div>
