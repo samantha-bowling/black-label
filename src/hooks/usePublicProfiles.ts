@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthUser, UserId } from '@/types/auth';
+import { AuthUser, UserId, UserRole } from '@/types/auth';
 
 interface PublicProfile {
   id: UserId;
   displayName: string;
   bio?: string;
   avatarUrl?: string;
-  role: string;
+  role: UserRole;
   skills?: string[];
   pastCredits?: string;
   socialLinks?: Record<string, string>;
@@ -20,7 +20,7 @@ export function usePublicProfiles() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchPublicProfiles = async (filters?: {
-    role?: string;
+    role?: UserRole;
     skills?: string[];
     limit?: number;
   }) => {
@@ -68,7 +68,7 @@ export function usePublicProfiles() {
         displayName: profile.display_name || 'Anonymous',
         bio: profile.bio || undefined,
         avatarUrl: profile.avatar_url || undefined,
-        role: profile.role,
+        role: profile.role as UserRole,
         skills: profile.skills || undefined,
         pastCredits: profile.past_credits || undefined,
         socialLinks: (profile.social_links as Record<string, string>) || undefined,
