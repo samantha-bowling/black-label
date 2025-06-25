@@ -31,6 +31,12 @@ export function useUserRole() {
     return user && user.role ? !user.onboarding_completed : false;
   };
 
+  const isPosterOnboardingComplete = (): boolean => {
+    // Check if poster has completed the essential fields
+    if (!user || user.role !== 'gig_poster') return false;
+    return !!(user.displayName && user.bio && user.onboarding_completed);
+  };
+
   return {
     userRole: user?.role || null,
     hasRole,
@@ -41,5 +47,6 @@ export function useUserRole() {
     canApplyToGigs,
     needsRoleSelection,
     needsOnboarding,
+    isPosterOnboardingComplete,
   };
 }

@@ -151,6 +151,69 @@ export type Database = {
           },
         ]
       }
+      collaboration_requests: {
+        Row: {
+          budget_range: Database["public"]["Enums"]["budget_range"]
+          created_at: string
+          description: string
+          expires_at: string | null
+          id: string
+          poster_id: string
+          project_title: string
+          responded_at: string | null
+          seeker_id: string
+          seeker_response: string | null
+          status: Database["public"]["Enums"]["collaboration_status"] | null
+          timeline: string
+          updated_at: string
+        }
+        Insert: {
+          budget_range: Database["public"]["Enums"]["budget_range"]
+          created_at?: string
+          description: string
+          expires_at?: string | null
+          id?: string
+          poster_id: string
+          project_title: string
+          responded_at?: string | null
+          seeker_id: string
+          seeker_response?: string | null
+          status?: Database["public"]["Enums"]["collaboration_status"] | null
+          timeline: string
+          updated_at?: string
+        }
+        Update: {
+          budget_range?: Database["public"]["Enums"]["budget_range"]
+          created_at?: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          poster_id?: string
+          project_title?: string
+          responded_at?: string | null
+          seeker_id?: string
+          seeker_response?: string | null
+          status?: Database["public"]["Enums"]["collaboration_status"] | null
+          timeline?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaboration_requests_poster_id_fkey"
+            columns: ["poster_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collaboration_requests_seeker_id_fkey"
+            columns: ["seeker_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           company_organization: string | null
@@ -228,39 +291,80 @@ export type Database = {
       }
       gigs: {
         Row: {
+          admin_notes: string | null
+          approved_at: string | null
+          approved_by_user_id: string | null
+          brief_status: Database["public"]["Enums"]["brief_status"] | null
           budget: number | null
+          budget_range: Database["public"]["Enums"]["budget_range"] | null
+          collaborator_id: string | null
+          contract_type: Database["public"]["Enums"]["contract_type"] | null
           created_at: string | null
           description: string
           id: string
           poster_id: string
+          project_type_tags: string[] | null
+          skills_needed: string[] | null
           status: Database["public"]["Enums"]["gig_status"] | null
           timeline: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
+          admin_notes?: string | null
+          approved_at?: string | null
+          approved_by_user_id?: string | null
+          brief_status?: Database["public"]["Enums"]["brief_status"] | null
           budget?: number | null
+          budget_range?: Database["public"]["Enums"]["budget_range"] | null
+          collaborator_id?: string | null
+          contract_type?: Database["public"]["Enums"]["contract_type"] | null
           created_at?: string | null
           description: string
           id?: string
           poster_id: string
+          project_type_tags?: string[] | null
+          skills_needed?: string[] | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           timeline?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
+          admin_notes?: string | null
+          approved_at?: string | null
+          approved_by_user_id?: string | null
+          brief_status?: Database["public"]["Enums"]["brief_status"] | null
           budget?: number | null
+          budget_range?: Database["public"]["Enums"]["budget_range"] | null
+          collaborator_id?: string | null
+          contract_type?: Database["public"]["Enums"]["contract_type"] | null
           created_at?: string | null
           description?: string
           id?: string
           poster_id?: string
+          project_type_tags?: string[] | null
+          skills_needed?: string[] | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           timeline?: string | null
           title?: string
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "gigs_approved_by_user_id_fkey"
+            columns: ["approved_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gigs_collaborator_id_fkey"
+            columns: ["collaborator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "gigs_poster_id_fkey"
             columns: ["poster_id"]
@@ -315,6 +419,76 @@ export type Database = {
           {
             foreignKeyName: "invites_used_by_user_id_fkey"
             columns: ["used_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          collaboration_request_id: string | null
+          created_at: string
+          currency: string | null
+          gig_id: string | null
+          id: string
+          metadata: Json | null
+          payment_type: string
+          status: Database["public"]["Enums"]["payment_status"] | null
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          collaboration_request_id?: string | null
+          created_at?: string
+          currency?: string | null
+          gig_id?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_type: string
+          status?: Database["public"]["Enums"]["payment_status"] | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          collaboration_request_id?: string | null
+          created_at?: string
+          currency?: string | null
+          gig_id?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_type?: string
+          status?: Database["public"]["Enums"]["payment_status"] | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_payments_collaboration_requests"
+            columns: ["collaboration_request_id"]
+            isOneToOne: false
+            referencedRelation: "collaboration_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "gigs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -408,9 +582,12 @@ export type Database = {
           invite_token_used: string | null
           invited_by_user_id: string | null
           invites_remaining: number
+          linkedin_url: string | null
+          location: string | null
           nda_required: boolean | null
           onboarding_completed: boolean
           past_credits: string | null
+          poster_type: Database["public"]["Enums"]["poster_type"] | null
           public_profile: boolean
           rate_range_max: number | null
           rate_range_min: number | null
@@ -424,6 +601,7 @@ export type Database = {
           typical_budget_max: number | null
           typical_budget_min: number | null
           updated_at: string | null
+          website_url: string | null
         }
         Insert: {
           about_story?: string | null
@@ -442,9 +620,12 @@ export type Database = {
           invite_token_used?: string | null
           invited_by_user_id?: string | null
           invites_remaining?: number
+          linkedin_url?: string | null
+          location?: string | null
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
+          poster_type?: Database["public"]["Enums"]["poster_type"] | null
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
@@ -458,6 +639,7 @@ export type Database = {
           typical_budget_max?: number | null
           typical_budget_min?: number | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Update: {
           about_story?: string | null
@@ -476,9 +658,12 @@ export type Database = {
           invite_token_used?: string | null
           invited_by_user_id?: string | null
           invites_remaining?: number
+          linkedin_url?: string | null
+          location?: string | null
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
+          poster_type?: Database["public"]["Enums"]["poster_type"] | null
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
@@ -492,6 +677,7 @@ export type Database = {
           typical_budget_max?: number | null
           typical_budget_min?: number | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Relationships: [
           {
@@ -543,7 +729,39 @@ export type Database = {
         | "accepted"
         | "rejected"
         | "withdrawn"
+      brief_status:
+        | "draft"
+        | "pending_review"
+        | "active"
+        | "closed"
+        | "rejected"
+      budget_range:
+        | "under_5k"
+        | "5k_15k"
+        | "15k_50k"
+        | "50k_100k"
+        | "100k_plus"
+        | "equity_only"
+      collaboration_status:
+        | "pending_payment"
+        | "pending_approval"
+        | "accepted"
+        | "declined"
+        | "expired"
+      contract_type:
+        | "freelance"
+        | "consulting"
+        | "part_time"
+        | "full_time"
+        | "equity"
       gig_status: "draft" | "open" | "in_progress" | "completed" | "cancelled"
+      payment_status: "pending" | "completed" | "failed" | "refunded"
+      poster_type:
+        | "individual"
+        | "indie_dev"
+        | "studio"
+        | "agency"
+        | "publisher"
       tag_category: "core_discipline" | "specialty_skill" | "project_type"
       user_role: "gig_poster" | "gig_seeker" | "admin"
     }
@@ -668,7 +886,32 @@ export const Constants = {
         "rejected",
         "withdrawn",
       ],
+      brief_status: ["draft", "pending_review", "active", "closed", "rejected"],
+      budget_range: [
+        "under_5k",
+        "5k_15k",
+        "15k_50k",
+        "50k_100k",
+        "100k_plus",
+        "equity_only",
+      ],
+      collaboration_status: [
+        "pending_payment",
+        "pending_approval",
+        "accepted",
+        "declined",
+        "expired",
+      ],
+      contract_type: [
+        "freelance",
+        "consulting",
+        "part_time",
+        "full_time",
+        "equity",
+      ],
       gig_status: ["draft", "open", "in_progress", "completed", "cancelled"],
+      payment_status: ["pending", "completed", "failed", "refunded"],
+      poster_type: ["individual", "indie_dev", "studio", "agency", "publisher"],
       tag_category: ["core_discipline", "specialty_skill", "project_type"],
       user_role: ["gig_poster", "gig_seeker", "admin"],
     },

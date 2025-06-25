@@ -9,6 +9,7 @@ import { AuthGuard } from "@/components/auth/AuthGuard";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import PostGig from "./pages/PostGig";
 import PublicProfile from "./pages/PublicProfile";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,14 @@ const App = () => (
               element={
                 <AuthGuard requireAuth>
                   <Dashboard />
+                </AuthGuard>
+              } 
+            />
+            <Route 
+              path="/post-a-gig" 
+              element={
+                <AuthGuard requireAuth>
+                  <PostGig />
                 </AuthGuard>
               } 
             />

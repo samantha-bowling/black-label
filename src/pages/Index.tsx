@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -16,6 +17,10 @@ const Index = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  const handlePostGig = () => {
+    navigate("/post-a-gig");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -33,7 +38,7 @@ const Index = () => {
             <ButtonSecondary onClick={() => navigate("/auth")}>
               Talent Login
             </ButtonSecondary>
-            <ButtonPrimary onClick={() => navigate("/auth")}>
+            <ButtonPrimary onClick={handlePostGig}>
               Post a Gig
             </ButtonPrimary>
           </div>
@@ -67,7 +72,7 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
-                onClick={() => navigate("/auth")}
+                onClick={handlePostGig}
                 className="group hover:shadow-glow transition-all duration-300"
               >
                 Looking for Talent? Post a Gig
