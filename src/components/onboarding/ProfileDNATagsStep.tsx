@@ -4,23 +4,39 @@ import { ProfileTagSelector } from '@/components/profile/ProfileTagSelector';
 import { ButtonPrimary } from '@/components/ui/primitives';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TagCategory } from '@/types/profile-tags';
+import { UserRole } from '@/types/auth';
 import { useUserProfileTags } from '@/hooks/useProfileTags';
 
 interface ProfileDNATagsStepProps {
   userId: string;
+  userRole: UserRole;
   onNext: () => void;
   onBack: () => void;
 }
 
-export function ProfileDNATagsStep({ userId, onNext, onBack }: ProfileDNATagsStepProps) {
+export function ProfileDNATagsStep({ userId, userRole, onNext, onBack }: ProfileDNATagsStepProps) {
   const [currentCategory, setCurrentCategory] = useState<TagCategory>('core_discipline');
   const { userTagsByCategory, isLoadingUserTags } = useUserProfileTags(userId);
 
   const categories: TagCategory[] = ['core_discipline', 'specialty_skill', 'project_type'];
-  const categoryLabels = {
-    core_discipline: 'Core Disciplines',
-    specialty_skill: 'Specialty Skills', 
-    project_type: 'Project Types'
+  
+  // Role-specific category labels for step progression
+  const getCategoryLabel = (category: TagCategory) => {
+    if (userRole === 'gig_poster') {
+      switch (category) {
+        case 'core_discipline': return 'Disciplines You Need';
+        case 'specialty_skill': return 'Skills You Require';
+        case 'project_type': return 'Your Project Types';
+        default: return category.replace('_', ' ');
+      }
+    } else {
+      switch (category) {
+        case 'core_discipline': return 'Your Core Disciplines';
+        case 'specialty_skill': return 'Your Specialty Skills';
+        case 'project_type': return 'Project Types You Work On';
+        default: return category.replace('_', ' ');
+      }
+    }
   };
 
   const currentCategoryIndex = categories.indexOf(currentCategory);
@@ -89,7 +105,7 @@ export function ProfileDNATagsStep({ userId, onNext, onBack }: ProfileDNATagsSte
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl text-white">
-            {categoryLabels[currentCategory]}
+            {getCategoryLabel(currentCategory)}
           </CardTitle>
           <p className="text-white/70">
             Step {currentCategoryIndex + 1} of {categories.length}
@@ -101,6 +117,7 @@ export function ProfileDNATagsStep({ userId, onNext, onBack }: ProfileDNATagsSte
       <ProfileTagSelector
         userId={userId}
         category={currentCategory}
+        userRole={userRole}
         onComplete={() => {}} // Handle completion through our custom buttons
       />
 

@@ -5,15 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useProfileTags, useUserProfileTags } from '@/hooks/useProfileTags';
-import { TagCategory, TAG_SELECTION_LIMITS, TAG_CATEGORY_LABELS, TAG_CATEGORY_DESCRIPTIONS } from '@/types/profile-tags';
+import { 
+  TagCategory, 
+  TAG_SELECTION_LIMITS, 
+  TAG_CATEGORY_LABELS, 
+  TAG_CATEGORY_DESCRIPTIONS,
+  POSTER_TAG_CATEGORY_LABELS,
+  POSTER_TAG_CATEGORY_DESCRIPTIONS 
+} from '@/types/profile-tags';
+import { UserRole } from '@/types/auth';
 
 interface ProfileTagSelectorProps {
   userId: string;
   category: TagCategory;
+  userRole?: UserRole;
   onComplete?: () => void;
 }
 
-export function ProfileTagSelector({ userId, category, onComplete }: ProfileTagSelectorProps) {
+export function ProfileTagSelector({ userId, category, userRole = 'gig_seeker', onComplete }: ProfileTagSelectorProps) {
   const { tagsByCategory, isLoadingTags } = useProfileTags();
   const { userTagsByCategory, updateUserTags, isUpdatingTags } = useUserProfileTags(userId);
 
@@ -26,6 +35,11 @@ export function ProfileTagSelector({ userId, category, onComplete }: ProfileTagS
   const limits = TAG_SELECTION_LIMITS[category];
   const canSelectMore = localSelection.length < limits.max;
   const hasMinimumSelected = localSelection.length >= limits.min;
+
+  // Use role-specific labels and descriptions
+  const isGigPoster = userRole === 'gig_poster';
+  const categoryLabels = isGigPoster ? POSTER_TAG_CATEGORY_LABELS : TAG_CATEGORY_LABELS;
+  const categoryDescriptions = isGigPoster ? POSTER_TAG_CATEGORY_DESCRIPTIONS : TAG_CATEGORY_DESCRIPTIONS;
 
   const handleTagToggle = (tagId: string) => {
     setLocalSelection(prev => {
@@ -65,13 +79,13 @@ export function ProfileTagSelector({ userId, category, onComplete }: ProfileTagS
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          {TAG_CATEGORY_LABELS[category]}
+          {categoryLabels[category]}
           <Badge variant="outline">
             {localSelection.length}/{limits.max}
           </Badge>
         </CardTitle>
         <CardDescription>
-          {TAG_CATEGORY_DESCRIPTIONS[category]}
+          {categoryDescriptions[category]}
           {limits.min > 0 && (
             <span className="block mt-1 text-sm">
               Select {limits.min}-{limits.max} {category === 'core_discipline' ? 'disciplines' : 'options'}

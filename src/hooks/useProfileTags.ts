@@ -75,7 +75,7 @@ export function useUserProfileTags(userId?: string) {
     return acc;
   }, {} as Record<TagCategory, UserProfileTag[]>);
 
-  // Add/remove user tag
+  // Add/remove user tag with improved conflict handling
   const updateUserTagsMutation = useMutation({
     mutationFn: async ({ 
       tagIds, 
@@ -95,7 +95,7 @@ export function useUserProfileTags(userId?: string) {
         throw new Error(`Please select no more than ${limits.max} ${category.replace('_', ' ')}`);
       }
 
-      // Remove existing tags for this category
+      // Remove existing tags for this category first
       const existingCategoryTags = userTagsByCategory[category] || [];
       if (existingCategoryTags.length > 0) {
         const { error: deleteError } = await supabase
@@ -104,21 +104,30 @@ export function useUserProfileTags(userId?: string) {
           .eq('user_id', userId)
           .in('tag_id', existingCategoryTags.map(ut => ut.tag_id));
 
-        if (deleteError) throw deleteError;
+        if (deleteError) {
+          console.error('Delete error:', deleteError);
+          throw new Error('Failed to update tags. Please try again.');
+        }
       }
 
-      // Add new tags
+      // Add new tags with conflict handling
       if (tagIds.length > 0) {
+        const insertData = tagIds.map(tagId => ({
+          user_id: userId,
+          tag_id: tagId,
+        }));
+
         const { error: insertError } = await supabase
           .from('user_profile_tags')
-          .insert(
-            tagIds.map(tagId => ({
-              user_id: userId,
-              tag_id: tagId,
-            }))
-          );
+          .upsert(insertData, { 
+            onConflict: 'user_id,tag_id',
+            ignoreDuplicates: true 
+          });
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          console.error('Insert error:', insertError);
+          throw new Error('Failed to save tags. Please try again.');
+        }
       }
     },
     onSuccess: (_, { category }) => {
@@ -129,6 +138,7 @@ export function useUserProfileTags(userId?: string) {
       });
     },
     onError: (error) => {
+      console.error('Mutation error:', error);
       toast({
         title: "Error",
         description: error.message,

@@ -1,131 +1,178 @@
 
-import { useAuth } from '@/hooks/useAuth';
-import { useRoleAccess } from '@/hooks/useRoleAccess';
-import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
-import { InviteManager } from '@/components/invites/InviteManager';
-import { HeadingLG, ButtonSecondary, CardLuxe } from '@/components/ui/primitives';
-import { Users, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { InviteManager } from "@/components/invites/InviteManager";
 
-export default function Dashboard() {
-  const { user, signOut } = useAuth();
-  const { needsOnboarding, userRole, isOnboardingComplete } = useRoleAccess();
-  const [activeTab, setActiveTab] = useState<'overview' | 'invites'>('overview');
+const Dashboard = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!user) {
-    return null; // AuthGuard should handle this
-  }
-
-  // Show onboarding if user has role but hasn't completed onboarding
-  if (needsOnboarding && userRole) {
     return (
-      <OnboardingFlow
-        userRole={userRole}
-        onComplete={() => {
-          window.location.reload(); // Simple refresh to update the UI
-        }}
-      />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
-  // Main dashboard content
+  const isGigPoster = user.role === 'gig_poster';
+  const isAdmin = user.role === 'admin';
+  const showInvites = !isGigPoster; // Hide invites for gig posters
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <img 
-                src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
-                alt="BlackLabel.gg" 
-                className="h-8"
-              />
-              <nav className="flex space-x-6">
-                <button
-                  onClick={() => setActiveTab('overview')}
-                  className={`text-sm font-medium transition-colors ${
-                    activeTab === 'overview' 
-                      ? 'text-white' 
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  Overview
-                </button>
-                <button
-                  onClick={() => setActiveTab('invites')}
-                  className={`text-sm font-medium transition-colors ${
-                    activeTab === 'invites' 
-                      ? 'text-white' 
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  <Users className="w-4 h-4 inline mr-1" />
-                  Invites
-                </button>
-              </nav>
-            </div>
-            <ButtonSecondary onClick={signOut} size="sm">
-              <Settings className="w-4 h-4 mr-1" />
-              Sign Out
-            </ButtonSecondary>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">
+            Welcome back, {user.displayName}!
+          </h1>
+          <div className="flex items-center gap-2">
+            <Badge variant={user.role === 'admin' ? 'destructive' : 'secondary'}>
+              {user.role?.replace('_', ' ').toUpperCase()}
+            </Badge>
+            {!user.onboarding_completed && (
+              <Badge variant="outline">Setup Incomplete</Badge>
+            )}
           </div>
         </div>
-      </header>
 
-      <div className="container mx-auto px-4 py-8">
-        {activeTab === 'overview' ? (
-          <div className="space-y-8">
-            <div className="text-center">
-              <HeadingLG className="text-white mb-4">
-                Welcome to BlackLabel.gg
-              </HeadingLG>
-              <p className="text-white/80 text-lg mb-8">
-                Your gaming talent marketplace
-              </p>
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="bg-white/10">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            {showInvites && (
+              <TabsTrigger value="invites">
+                Invites {user.invites_remaining > 0 && `(${user.invites_remaining})`}
+              </TabsTrigger>
+            )}
+            {isAdmin && <TabsTrigger value="admin">Admin</TabsTrigger>}
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="bg-white/5 border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Profile Status</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-white/70">Onboarding</span>
+                      <Badge variant={user.onboarding_completed ? "secondary" : "destructive"}>
+                        {user.onboarding_completed ? "Complete" : "Incomplete"}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/70">Public Profile</span>
+                      <Badge variant={user.public_profile ? "secondary" : "outline"}>
+                        {user.public_profile ? "Visible" : "Hidden"}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {isGigPoster && (
+                <Card className="bg-white/5 border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-white">Quick Actions</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button 
+                      onClick={() => navigate('/post-a-gig')}
+                      className="w-full"
+                    >
+                      Post a New Gig
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => navigate('/profile/' + user.smart_url_slug)}
+                      className="w-full"
+                    >
+                      View Public Profile
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {showInvites && (
+                <Card className="bg-white/5 border-white/10">
+                  <CardHeader>
+                    <CardTitle className="text-white">Invitations</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-white/70">Remaining</span>
+                        <Badge variant="secondary">{user.invites_remaining}</Badge>
+                      </div>
+                      {user.invited_by_user_id && (
+                        <div className="text-sm text-white/60">
+                          You were invited to join
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-            
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <CardLuxe className="p-6">
-                <h2 className="text-xl font-semibold text-white mb-2">
-                  Hello, {user.displayName}!
-                </h2>
-                <p className="text-white/70 mb-4">
-                  Role: {userRole === 'gig_seeker' ? 'Gaming Talent' : userRole === 'gig_poster' ? 'Project Creator' : userRole || 'Not set'}
-                </p>
-                <div className="space-y-2 text-sm text-white/60">
-                  <p>✓ Profile setup complete</p>
-                  <p>✓ Email verified</p>
-                  <p>• Dashboard features coming soon...</p>
-                </div>
-              </CardLuxe>
 
-              <CardLuxe className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Community Status
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <p className="text-white/70">
-                    Invites remaining: {user.invites_remaining}
+            {!user.onboarding_completed && (
+              <Card className="bg-amber-500/10 border-amber-500/20">
+                <CardHeader>
+                  <CardTitle className="text-amber-400">Complete Your Setup</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-white/80 mb-4">
+                    Finish setting up your profile to get the most out of the platform.
                   </p>
-                  {user.invited_by_user_id && (
-                    <p className="text-white/60">
-                      Invited by community member
-                    </p>
-                  )}
-                  {user.role === 'admin' && (
-                    <p className="text-primary font-medium">
-                      Admin privileges active
-                    </p>
-                  )}
-                </div>
-              </CardLuxe>
-            </div>
-          </div>
-        ) : (
-          <InviteManager />
-        )}
+                  <Button variant="secondary">
+                    Complete Onboarding
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="profile">
+            <Card className="bg-white/5 border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">Profile Settings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-white/70">Profile management coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {showInvites && (
+            <TabsContent value="invites">
+              <InviteManager />
+            </TabsContent>
+          )}
+
+          {isAdmin && (
+            <TabsContent value="admin">
+              <Card className="bg-white/5 border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Admin Panel</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={() => navigate('/admin')}>
+                    Open Admin Dashboard
+                  </Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
+        </Tabs>
       </div>
     </div>
   );
-}
+};
+
+export default Dashboard;

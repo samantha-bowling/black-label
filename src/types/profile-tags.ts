@@ -45,3 +45,16 @@ export const TAG_CATEGORY_DESCRIPTIONS: Record<TagCategory, string> = {
   specialty_skill: 'Unique tools, frameworks, or sub-disciplines where you have expertise',
   project_type: 'Types of projects and scales you typically work on',
 };
+
+// Role-specific descriptions for posters
+export const POSTER_TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
+  core_discipline: 'Core Disciplines Needed',
+  specialty_skill: 'Specialty Skills Required',
+  project_type: 'Project Types You Post',
+};
+
+export const POSTER_TAG_CATEGORY_DESCRIPTIONS: Record<TagCategory, string> = {
+  core_discipline: 'Primary professional disciplines you typically need for your projects',
+  specialty_skill: 'Specific tools, frameworks, or expertise you commonly require',
+  project_type: 'Types and scales of projects you typically post',
+};
