@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -11,6 +10,7 @@ import {
   HeadingLG
 } from "@/components/ui/primitives";
 import { PrivacyPolicyModal, TermsOfServiceModal } from "@/components/legal/LegalModals";
+import { ContactModal } from "@/components/contact/ContactModal";
 import { Star, Shield, CheckCircle } from "lucide-react";
 
 const Index = () => {
@@ -193,12 +193,7 @@ const Index = () => {
             <div className="flex items-center space-x-6">
               <PrivacyPolicyModal />
               <TermsOfServiceModal />
-              <a 
-                href="mailto:hello@blacklabel.gg" 
-                className="text-sm text-muted-foreground hover:text-white transition-colors"
-              >
-                Contact Us
-              </a>
+              <ContactModal />
             </div>
             
             <div className="text-sm text-muted-foreground">
