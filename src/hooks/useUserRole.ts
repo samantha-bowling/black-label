@@ -1,12 +1,12 @@
 
-import { useSession } from './useSession';
+import { useAuth } from './useAuth';
 import { UserRole } from '@/types/auth';
 
 export function useUserRole() {
-  const { user, role } = useSession();
+  const { user } = useAuth();
   
-  const hasRole = (targetRole: UserRole): boolean => {
-    return user?.role === targetRole;
+  const hasRole = (role: UserRole): boolean => {
+    return user?.role === role;
   };
 
   const isGigPoster = (): boolean => hasRole('gig_poster');
@@ -26,11 +26,11 @@ export function useUserRole() {
   };
 
   const needsOnboarding = (): boolean => {
-    return user && user.role ? !user.onboarding_completed : false;
+    return user ? !user.onboarding_completed : false;
   };
 
   return {
-    userRole: role,
+    userRole: user?.role || null,
     hasRole,
     isGigPoster,
     isGigSeeker,

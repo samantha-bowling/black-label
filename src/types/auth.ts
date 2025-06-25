@@ -18,8 +18,8 @@ export type ApplicationId = string & { readonly __brand: unique symbol };
 export interface AuthUser {
   id: UserId;
   email: string;
-  role: UserRole | null;
-  displayName?: string | null;
+  role: UserRole;
+  displayName: string;
   bio?: string;
   avatarUrl?: string;
   onboarding_completed: boolean;

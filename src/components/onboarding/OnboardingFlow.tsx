@@ -1,7 +1,8 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSession } from '@/hooks/useSession';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/auth';
 import { OnboardingStep } from './OnboardingStep';
@@ -41,7 +42,7 @@ interface OnboardingFormData {
 export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, upsertUserProgress, refreshUser } = useSession();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   const form = useForm<OnboardingFormData>({
@@ -65,29 +66,9 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
 
   const totalSteps = 2; // Shared info + Role-specific info
 
-  const handleNext = async (data: OnboardingFormData) => {
-    setIsLoading(true);
-    try {
-      // Persist step 1 data
-      const stepData = {
-        display_name: data.display_name,
-        bio: data.bio,
-        social_links: data.social_links,
-      };
-
-      const { error } = await upsertUserProgress(stepData);
-      if (error) throw new Error(error);
-
-      setCurrentStep(2);
-    } catch (error) {
-      console.error('Error saving step 1:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save your progress. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
     }
   };
 
@@ -124,11 +105,12 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
         }),
       };
 
-      const { error } = await upsertUserProgress(updateData);
-      if (error) throw new Error(error);
+      const { error } = await supabase
+        .from('users')
+        .update(updateData)
+        .eq('id', user.id);
 
-      // Refresh user data
-      await refreshUser();
+      if (error) throw error;
 
       toast({
         title: "Profile Complete!",
@@ -159,11 +141,7 @@ export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
         <form onSubmit={form.handleSubmit(handleNext)} className="space-y-6">
           <SharedOnboardingFields form={form} />
           <div className="flex justify-end">
-            <ButtonPrimary 
-              type="submit" 
-              size="lg"
-              isLoading={isLoading}
-            >
+            <ButtonPrimary type="submit" size="lg">
               Next
             </ButtonPrimary>
           </div>

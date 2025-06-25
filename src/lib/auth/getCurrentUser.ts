@@ -23,12 +23,9 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null;
     }
 
-    // Email comes from auth.users
-    const email = session.user.email || '';
-
     return {
       id: userProfile.id as UserId,
-      email,
+      email: userProfile.email,
       role: userProfile.role,
       displayName: userProfile.display_name,
       bio: userProfile.bio || undefined,
