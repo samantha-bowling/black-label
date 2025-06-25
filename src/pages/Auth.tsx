@@ -26,6 +26,7 @@ const Auth = () => {
   const [inviteToken, setInviteToken] = useState<string>("");
   const [inviteValid, setInviteValid] = useState<boolean | null>(null);
   const [intendedRole, setIntendedRole] = useState<UserRole | null>(null);
+  const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -35,6 +36,16 @@ const Auth = () => {
   useEffect(() => {
     const token = searchParams.get('invite');
     const roleParam = searchParams.get('role');
+    const modeParam = searchParams.get('mode');
+    
+    // Set auth mode based on URL parameter
+    if (modeParam === 'signin') {
+      setAuthMode('signin');
+      setIsSignUp(false);
+    } else {
+      setAuthMode('signup');
+      setIsSignUp(true);
+    }
     
     if (token) {
       // User came via invite - they're a seeker
@@ -46,6 +57,9 @@ const Auth = () => {
       // User came wanting to post gigs - they're a poster
       setIsSignUp(true);
       setIntendedRole('gig_poster');
+    } else if (!modeParam) {
+      // Default to seeker signup for invite flow
+      setIntendedRole('gig_seeker');
     }
   }, [searchParams]);
 
@@ -109,6 +123,37 @@ const Auth = () => {
     }
   };
 
+  const toggleAuthMode = () => {
+    setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
+    setIsSignUp(authMode === 'signin');
+    setError(null);
+  };
+
+  const switchRole = () => {
+    const newRole = intendedRole === 'gig_poster' ? 'gig_seeker' : 'gig_poster';
+    if (newRole === 'gig_poster') {
+      navigate('/auth?role=poster');
+    } else {
+      navigate('/auth');
+    }
+  };
+
+  const getFlowIndicator = () => {
+    if (!isSignUp) return null;
+    
+    return (
+      <div className="flex items-center justify-center space-x-2 mb-4">
+        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+          intendedRole === 'gig_poster' 
+            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' 
+            : 'bg-green-500/20 text-green-400 border border-green-500/30'
+        }`}>
+          {intendedRole === 'gig_poster' ? 'Poster Signup' : 'Talent Signup'}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -121,6 +166,9 @@ const Auth = () => {
                 className="h-8"
               />
             </div>
+            
+            {getFlowIndicator()}
+            
             <HeadingLG as="h2" className="mb-2">
               {isSignUp ? getSignUpTitle(intendedRole) : 'Welcome Back'}
             </HeadingLG>
@@ -180,7 +228,7 @@ const Auth = () => {
               error={!!error}
             />
 
-            {isSignUp && (
+            {isSignUp && intendedRole === 'gig_poster' && (
               <AuthFormField
                 id="displayName"
                 label="Display Name"
@@ -209,16 +257,27 @@ const Auth = () => {
             </ButtonPrimary>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 space-y-3 text-center">
             <button
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={toggleAuthMode}
               className="text-sm text-primary hover:text-primary-muted transition-colors"
             >
               {isSignUp
                 ? 'Already have an account? Sign in'
-                : "Have an invite? Sign up"
+                : "Need an account? Sign up"
               }
             </button>
+            
+            {isSignUp && (
+              <div className="text-center">
+                <button
+                  onClick={switchRole}
+                  className="text-xs text-muted-foreground hover:text-white transition-colors"
+                >
+                  Wrong path? Switch to {intendedRole === 'gig_poster' ? 'talent signup' : 'poster signup'}
+                </button>
+              </div>
+            )}
           </div>
         </CardLuxe>
       </div>

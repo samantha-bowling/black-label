@@ -12,9 +12,9 @@ export const getSignUpTitle = (intendedRole: UserRole | null): string => {
 
 export const getSignUpDescription = (intendedRole: UserRole | null): string => {
   if (intendedRole === 'gig_seeker') {
-    return 'Complete your invite-only registration to access exclusive gaming opportunities';
+    return 'Use your invite token to access exclusive gaming opportunities';
   } else if (intendedRole === 'gig_poster') {
-    return 'Set up your account to start posting gigs and finding talent';
+    return 'Create your account to start posting gigs and finding talent';
   }
   return 'Enter the most exclusive gaming talent network';
 };
@@ -32,4 +32,18 @@ export const shouldDisableSubmit = (
   return isSignUp && 
          intendedRole === 'gig_seeker' && 
          (inviteValid === false || !inviteToken);
+};
+
+export const getAuthModeFromUrl = (searchParams: URLSearchParams): 'signup' | 'signin' => {
+  const mode = searchParams.get('mode');
+  return mode === 'signin' ? 'signin' : 'signup';
+};
+
+export const getRoleFromUrl = (searchParams: URLSearchParams): UserRole | null => {
+  const role = searchParams.get('role');
+  const invite = searchParams.get('invite');
+  
+  if (invite) return 'gig_seeker';
+  if (role === 'poster') return 'gig_poster';
+  return 'gig_seeker'; // Default to seeker for invite flow
 };

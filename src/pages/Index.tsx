@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -17,8 +16,16 @@ const Index = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const handlePostGig = () => {
-    navigate("/post-a-gig");
+  const handlePostGigSignup = () => {
+    navigate("/auth?role=poster");
+  };
+
+  const handleTalentSignup = () => {
+    navigate("/auth");
+  };
+
+  const handleSignIn = () => {
+    navigate("/auth?mode=signin");
   };
 
   return (
@@ -35,11 +42,14 @@ const Index = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            <ButtonSecondary onClick={() => navigate("/auth")}>
-              Talent Login
+            <ButtonSecondary onClick={handleSignIn}>
+              Sign In
             </ButtonSecondary>
-            <ButtonPrimary onClick={handlePostGig}>
-              Post a Gig
+            <ButtonSecondary onClick={handleTalentSignup}>
+              I have an invite
+            </ButtonSecondary>
+            <ButtonPrimary onClick={handlePostGigSignup}>
+              Sign Up to Post Gigs
             </ButtonPrimary>
           </div>
         </div>
@@ -72,15 +82,15 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
-                onClick={handlePostGig}
+                onClick={handlePostGigSignup}
                 className="group hover:shadow-glow transition-all duration-300"
               >
-                Looking for Talent? Post a Gig
+                Looking for Talent? Sign Up to Post Gigs
               </ButtonPrimary>
               
               <ButtonSecondary 
                 size="lg" 
-                onClick={() => navigate("/auth")}
+                onClick={handleTalentSignup}
                 className="group hover:shadow-glow transition-all duration-300"
               >
                 I have an invite
