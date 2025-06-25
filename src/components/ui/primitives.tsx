@@ -47,8 +47,9 @@ export const ButtonSecondary = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     size?: 'sm' | 'md' | 'lg';
+    isLoading?: boolean;
   }
->(({ className, size = 'md', children, ...props }, ref) => {
+>(({ className, size = 'md', isLoading, children, ...props }, ref) => {
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm',
     md: 'px-6 py-3 text-base', 
@@ -59,14 +60,24 @@ export const ButtonSecondary = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        'btn-secondary',
+        'btn-secondary relative overflow-hidden transition-all duration-200',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
         'focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-background',
         sizeClasses[size],
+        isLoading && 'cursor-wait',
         className
       )}
+      disabled={isLoading}
       {...props}
     >
-      {children}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        </div>
+      )}
+      <span className={cn(isLoading && 'opacity-0')}>
+        {children}
+      </span>
     </button>
   );
 });
