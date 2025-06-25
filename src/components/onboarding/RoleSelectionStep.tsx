@@ -1,8 +1,7 @@
 
 import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { UserRole } from '@/types/auth';
-import { useAuth } from '@/hooks/useAuth';
+import { useSession } from '@/hooks/useSession';
 import { useToast } from '@/hooks/use-toast';
 import { ButtonPrimary } from '@/components/ui/primitives';
 import { CardLuxe, HeadingLG } from '@/components/ui/primitives';
@@ -15,7 +14,7 @@ interface RoleSelectionStepProps {
 export function RoleSelectionStep({ onComplete }: RoleSelectionStepProps) {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, upsertUserProgress, refreshUser } = useSession();
   const { toast } = useToast();
 
   const handleRoleSelection = async () => {
@@ -23,12 +22,12 @@ export function RoleSelectionStep({ onComplete }: RoleSelectionStepProps) {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ role: selectedRole })
-        .eq('id', user.id);
+      const { error } = await upsertUserProgress({ role: selectedRole });
 
-      if (error) throw error;
+      if (error) throw new Error(error);
+
+      // Refresh user data to get updated role
+      await refreshUser();
 
       toast({
         title: "Role Selected",

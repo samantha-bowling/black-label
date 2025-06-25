@@ -1,37 +1,42 @@
 
-import { useAuth } from '@/hooks/useAuth';
+import { useSession } from '@/hooks/useSession';
 import { useUserRole } from '@/hooks/useUserRole';
 import { RoleSelectionStep } from '@/components/onboarding/RoleSelectionStep';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { HeadingXL, CardLuxe } from '@/components/ui/primitives';
 import { UserRole } from '@/types/auth';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useSession();
   const { needsRoleSelection, needsOnboarding, userRole } = useUserRole();
 
   // Show role selection if user doesn't have a role
   if (needsRoleSelection()) {
     return (
-      <RoleSelectionStep 
-        onComplete={(role: UserRole) => {
-          // Role updated, component will re-render
-          window.location.reload();
-        }} 
-      />
+      <ErrorBoundary>
+        <RoleSelectionStep 
+          onComplete={async (role: UserRole) => {
+            // Refresh user data after role selection
+            await refreshUser();
+          }} 
+        />
+      </ErrorBoundary>
     );
   }
 
   // Show onboarding if user hasn't completed it
   if (needsOnboarding()) {
     return (
-      <OnboardingFlow 
-        userRole={userRole!}
-        onComplete={() => {
-          // Onboarding completed, component will re-render  
-          window.location.reload();
-        }}
-      />
+      <ErrorBoundary>
+        <OnboardingFlow 
+          userRole={userRole!}
+          onComplete={async () => {
+            // Refresh user data after onboarding completion
+            await refreshUser();
+          }}
+        />
+      </ErrorBoundary>
     );
   }
 

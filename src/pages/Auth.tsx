@@ -1,218 +1,195 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { UserRole } from "@/types/auth";
-import { 
-  ButtonPrimary, 
-  ButtonSecondary,
-  CardLuxe, 
-  HeadingLG,
-  InputLuxe
-} from "@/components/ui/primitives";
-import { Linkedin } from "lucide-react";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useSession } from '@/hooks/useSession';
+import { ButtonPrimary, InputLuxe, CardLuxe, HeadingXL } from '@/components/ui/primitives';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Linkedin } from 'lucide-react';
 
-const Auth = () => {
+interface AuthFormData {
+  email: string;
+  password: string;
+  displayName?: string;
+}
+
+export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [selectedRole, setSelectedRole] = useState<UserRole>("gig_seeker");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp, signInWithLinkedIn, user } = useSession();
   const navigate = useNavigate();
-  const { signIn, signUp, signInWithLinkedIn } = useAuth();
+  
+  const form = useForm<AuthFormData>();
 
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  // Redirect if already authenticated
+  if (user) {
+    navigate('/dashboard');
+    return null;
+  }
 
+  const handleSubmit = async (data: AuthFormData) => {
+    setIsLoading(true);
+    
     try {
+      let result;
+      
       if (isSignUp) {
-        const result = await signUp(email, password, displayName, selectedRole);
-        if (result.error) {
-          setError(result.error);
-        } else {
-          // Stay on auth page to show email verification message
-          setEmail("");
-          setPassword("");
-          setDisplayName("");
+        if (!data.displayName?.trim()) {
+          form.setError('displayName', { message: 'Display name is required' });
+          return;
         }
+        result = await signUp(data.email, data.password, data.displayName);
       } else {
-        const result = await signIn(email, password);
-        if (result.error) {
-          setError(result.error);
-        } else {
-          navigate("/dashboard");
-        }
+        result = await signIn(data.email, data.password);
       }
-    } catch (err: any) {
-      setError(err.message || "Authentication failed");
+
+      if (!result.error) {
+        navigate('/dashboard');
+      }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleLinkedInAuth = async () => {
-    setError(null);
-    setLoading(true);
-    
+  const handleLinkedInSignIn = async () => {
+    setIsLoading(true);
     try {
       const result = await signInWithLinkedIn();
-      if (result.error) {
-        setError(result.error);
+      if (!result.error) {
+        // LinkedIn redirect will handle navigation
       }
-    } catch (err: any) {
-      setError(err.message || "LinkedIn authentication failed");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <CardLuxe className="glow-primary">
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <img 
-                src="/lovable-uploads/5c266225-a588-440b-b158-3bb0d529a94f.png" 
-                alt="BlackLabel" 
-                className="h-8"
-              />
-            </div>
-            <HeadingLG as="h2" className="mb-2">
-              {isSignUp ? 'Join the Elite' : 'Welcome Back'}
-            </HeadingLG>
-            <p className="text-muted-foreground">
-              {isSignUp 
-                ? 'Enter the most exclusive gaming talent network' 
-                : 'Access your elite gaming network'
-              }
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <CardLuxe className="w-full max-w-md p-8 space-y-6">
+        <div className="text-center space-y-2">
+          <HeadingXL className="text-white" gradient>
+            {isSignUp ? 'Join BlackLabel.gg' : 'Welcome Back'}
+          </HeadingXL>
+          <p className="text-white/70">
+            {isSignUp ? 'Create your account to get started' : 'Sign in to your account'}
+          </p>
+        </div>
 
-          <form onSubmit={handleAuth} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          {isSignUp && (
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email
-              </label>
+              <Label htmlFor="displayName" className="text-white">
+                Display Name
+              </Label>
               <InputLuxe
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-                error={!!error}
+                id="displayName"
+                type="text"
+                placeholder="How should we call you?"
+                {...form.register('displayName', { required: 'Display name is required' })}
+                error={!!form.formState.errors.displayName}
               />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Password
-              </label>
-              <InputLuxe
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-                error={!!error}
-              />
-            </div>
-
-            {isSignUp && (
-              <>
-                <div>
-                  <label htmlFor="displayName" className="block text-sm font-medium mb-2">
-                    Display Name
-                  </label>
-                  <InputLuxe
-                    id="displayName"
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Enter your display name"
-                    required
-                    error={!!error}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="role" className="block text-sm font-medium mb-2">
-                    Role
-                  </label>
-                  <select
-                    id="role"
-                    value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                    className="input-luxe w-full"
-                    required
-                  >
-                    <option value="gig_seeker">Gig Seeker - Looking for opportunities</option>
-                    <option value="gig_poster">Gig Poster - Posting projects</option>
-                  </select>
-                </div>
-              </>
-            )}
-
-            {error && (
-              <div className="p-3 bg-destructive/20 border border-destructive/30 rounded-md">
-                <p className="text-destructive text-sm">{error}</p>
-              </div>
-            )}
-
-            <ButtonPrimary
-              type="submit"
-              className="w-full"
-              isLoading={loading}
-              size="lg"
-            >
-              {isSignUp ? 'Create Account' : 'Sign In'}
-            </ButtonPrimary>
-          </form>
-
-          {!isSignUp && (
-            <div className="mt-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
-              
-              <ButtonSecondary
-                onClick={handleLinkedInAuth}
-                className="w-full mt-4"
-                isLoading={loading}
-                size="lg"
-              >
-                <Linkedin className="w-4 h-4 mr-2" />
-                LinkedIn
-              </ButtonSecondary>
+              {form.formState.errors.displayName && (
+                <p className="text-destructive text-sm mt-1">
+                  {form.formState.errors.displayName.message}
+                </p>
+              )}
             </div>
           )}
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-primary hover:text-primary-muted transition-colors"
-            >
-              {isSignUp
-                ? 'Already have an account? Sign in'
-                : "Don't have an account? Sign up"
-              }
-            </button>
+          <div>
+            <Label htmlFor="email" className="text-white">
+              Email
+            </Label>
+            <InputLuxe
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              {...form.register('email', { 
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Please enter a valid email'
+                }
+              })}
+              error={!!form.formState.errors.email}
+            />
+            {form.formState.errors.email && (
+              <p className="text-destructive text-sm mt-1">
+                {form.formState.errors.email.message}
+              </p>
+            )}
           </div>
-        </CardLuxe>
-      </div>
+
+          <div>
+            <Label htmlFor="password" className="text-white">
+              Password
+            </Label>
+            <InputLuxe
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              {...form.register('password', { 
+                required: 'Password is required',
+                minLength: {
+                  value: 6,
+                  message: 'Password must be at least 6 characters'
+                }
+              })}
+              error={!!form.formState.errors.password}
+            />
+            {form.formState.errors.password && (
+              <p className="text-destructive text-sm mt-1">
+                {form.formState.errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <ButtonPrimary
+            type="submit"
+            size="lg"
+            className="w-full"
+            isLoading={isLoading}
+          >
+            {isSignUp ? 'Create Account' : 'Sign In'}
+          </ButtonPrimary>
+        </form>
+
+        <div className="space-y-4">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full bg-white/20" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-black px-2 text-white/60">or</span>
+            </div>
+          </div>
+
+          <ButtonPrimary
+            type="button"
+            size="lg"
+            className="w-full bg-blue-600 hover:bg-blue-700"
+            onClick={handleLinkedInSignIn}
+            isLoading={isLoading}
+          >
+            <Linkedin className="w-5 h-5 mr-2" />
+            Continue with LinkedIn
+          </ButtonPrimary>
+        </div>
+
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-white/70 hover:text-white transition-colors"
+          >
+            {isSignUp 
+              ? 'Already have an account? Sign in' 
+              : "Don't have an account? Sign up"
+            }
+          </button>
+        </div>
+      </CardLuxe>
     </div>
   );
-};
-
-export default Auth;
+}
