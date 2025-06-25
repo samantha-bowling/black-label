@@ -46,26 +46,26 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section pt-16 md:pt-20 pb-12">
+      <section className="hero-section pt-16 md:pt-20 pb-8">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <BadgeBeta className="mb-6 animate-fade-in">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <BadgeBeta className="animate-fade-in">
               Invite-Only Beta
             </BadgeBeta>
             
-            <HeadingXL glow className="mb-6 animate-fade-in">
+            <HeadingXL glow className="animate-fade-in">
               The Premier Talent Platform for Games
             </HeadingXL>
             
-            <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto animate-fade-in">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in">
               Connect with top-tier professionals and studios for contract, consulting, and freelance work—built by veterans who know what it takes to ship.
             </p>
             
-            <p className="text-lg text-white font-medium mb-8 animate-fade-in">
+            <p className="text-lg text-white font-medium animate-fade-in">
               Where verified creators and real opportunities meet.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in">
+            <div className="flex justify-center animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
                 onClick={() => navigate("/auth")}
@@ -74,16 +74,10 @@ const Index = () => {
                 Join BlackLabel.gg
                 <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </ButtonPrimary>
-              <ButtonSecondary 
-                size="lg"
-                className="hover:shadow-glow-lg transition-all duration-300"
-              >
-                View Showcase
-              </ButtonSecondary>
             </div>
             
             {/* Trust Indicators */}
-            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground animate-fade-in">
+            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground animate-fade-in pt-4">
               <div className="flex items-center space-x-2">
                 <Star className="w-4 h-4 text-white" />
                 <span>Verified Talent</span>
@@ -104,8 +98,8 @@ const Index = () => {
       {/* Benefits Section */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <HeadingLG className="mb-4">
+          <div className="text-center mb-12 space-y-4">
+            <HeadingLG>
               Built for Gaming Excellence
             </HeadingLG>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -154,11 +148,11 @@ const Index = () => {
       <section className="py-12 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
         <div className="container mx-auto px-4 text-center relative">
-          <div className="max-w-3xl mx-auto">
-            <HeadingLG className="mb-6">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <HeadingLG>
               You're in Good Company.
             </HeadingLG>
-            <p className="text-muted-foreground mb-8 text-lg">
+            <p className="text-muted-foreground text-lg">
               Join a curated network of game dev professionals working on meaningful, paid projects. 
               Invite-only, built for trust.
             </p>
