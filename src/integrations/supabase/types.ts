@@ -127,33 +127,72 @@ export type Database = {
       }
       users: {
         Row: {
+          availability_status: string | null
           avatar_url: string | null
           bio: string | null
+          company_name: string | null
           created_at: string | null
+          desired_gig_types: string[] | null
           display_name: string | null
           email: string
           id: string
+          nda_required: boolean | null
+          onboarding_completed: boolean
+          past_credits: string | null
+          rate_range_max: number | null
+          rate_range_min: number | null
           role: Database["public"]["Enums"]["user_role"]
+          skills: string[] | null
+          social_links: Json | null
+          timeline_expectations: string | null
+          typical_budget_max: number | null
+          typical_budget_min: number | null
           updated_at: string | null
         }
         Insert: {
+          availability_status?: string | null
           avatar_url?: string | null
           bio?: string | null
+          company_name?: string | null
           created_at?: string | null
+          desired_gig_types?: string[] | null
           display_name?: string | null
           email: string
           id: string
+          nda_required?: boolean | null
+          onboarding_completed?: boolean
+          past_credits?: string | null
+          rate_range_max?: number | null
+          rate_range_min?: number | null
           role?: Database["public"]["Enums"]["user_role"]
+          skills?: string[] | null
+          social_links?: Json | null
+          timeline_expectations?: string | null
+          typical_budget_max?: number | null
+          typical_budget_min?: number | null
           updated_at?: string | null
         }
         Update: {
+          availability_status?: string | null
           avatar_url?: string | null
           bio?: string | null
+          company_name?: string | null
           created_at?: string | null
+          desired_gig_types?: string[] | null
           display_name?: string | null
           email?: string
           id?: string
+          nda_required?: boolean | null
+          onboarding_completed?: boolean
+          past_credits?: string | null
+          rate_range_max?: number | null
+          rate_range_min?: number | null
           role?: Database["public"]["Enums"]["user_role"]
+          skills?: string[] | null
+          social_links?: Json | null
+          timeline_expectations?: string | null
+          typical_budget_max?: number | null
+          typical_budget_min?: number | null
           updated_at?: string | null
         }
         Relationships: []

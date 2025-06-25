@@ -22,6 +22,19 @@ export interface AuthUser {
   displayName: string;
   bio?: string;
   avatarUrl?: string;
+  onboarding_completed: boolean;
+  skills?: string[];
+  desired_gig_types?: string[];
+  availability_status?: string;
+  past_credits?: string;
+  rate_range_min?: number;
+  rate_range_max?: number;
+  company_name?: string;
+  typical_budget_min?: number;
+  typical_budget_max?: number;
+  timeline_expectations?: string;
+  social_links?: Record<string, string>;
+  nda_required?: boolean;
 }
 
 export interface SessionStatus {

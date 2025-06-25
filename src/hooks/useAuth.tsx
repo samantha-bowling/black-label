@@ -1,4 +1,3 @@
-
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -48,6 +47,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   displayName: userProfile.display_name,
                   bio: userProfile.bio || undefined,
                   avatarUrl: userProfile.avatar_url || undefined,
+                  onboarding_completed: userProfile.onboarding_completed,
+                  skills: userProfile.skills || undefined,
+                  desired_gig_types: userProfile.desired_gig_types || undefined,
+                  availability_status: userProfile.availability_status || undefined,
+                  past_credits: userProfile.past_credits || undefined,
+                  rate_range_min: userProfile.rate_range_min || undefined,
+                  rate_range_max: userProfile.rate_range_max || undefined,
+                  company_name: userProfile.company_name || undefined,
+                  typical_budget_min: userProfile.typical_budget_min || undefined,
+                  typical_budget_max: userProfile.typical_budget_max || undefined,
+                  timeline_expectations: userProfile.timeline_expectations || undefined,
+                  social_links: (userProfile.social_links as Record<string, string>) || undefined,
+                  nda_required: userProfile.nda_required || undefined,
                 });
               }
             } catch (error) {

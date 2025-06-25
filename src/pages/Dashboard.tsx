@@ -1,162 +1,98 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { useUserRole } from '@/hooks/useUserRole';
-import { useFeatureFlags } from '@/hooks/useFeatureFlags';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { RoleSelectionStep } from '@/components/onboarding/RoleSelectionStep';
+import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import { HeadingXL, CardLuxe } from '@/components/ui/primitives';
+import { UserRole } from '@/types/auth';
 
 export default function Dashboard() {
-  const { user, signOut } = useAuth();
-  const { userRole, canPostGigs, canApplyToGigs } = useUserRole();
-  const { flags, isEnabled } = useFeatureFlags();
+  const { user } = useAuth();
+  const { needsRoleSelection, needsOnboarding, userRole } = useUserRole();
 
-  const getRoleDisplay = (role: string) => {
-    switch (role) {
-      case 'gig_poster':
-        return 'Studio/Company';
-      case 'gig_seeker':
-        return 'Freelancer';
-      case 'admin':
-        return 'Administrator';
-      default:
-        return role;
-    }
-  };
+  // Show role selection if user doesn't have a role
+  if (needsRoleSelection()) {
+    return (
+      <RoleSelectionStep 
+        onComplete={(role: UserRole) => {
+          // Role updated, component will re-render
+          window.location.reload();
+        }} 
+      />
+    );
+  }
 
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case 'gig_poster':
-        return 'default';
-      case 'gig_seeker':
-        return 'secondary';
-      case 'admin':
-        return 'destructive';
-      default:
-        return 'outline';
-    }
-  };
+  // Show onboarding if user hasn't completed it
+  if (needsOnboarding()) {
+    return (
+      <OnboardingFlow 
+        userRole={userRole!}
+        onComplete={() => {
+          // Onboarding completed, component will re-render  
+          window.location.reload();
+        }}
+      />
+    );
+  }
 
+  // Main dashboard for completed users
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">BlackLabel.gg Dashboard</h1>
-            <p className="text-slate-300">Welcome back, {user?.displayName || user?.email}</p>
-          </div>
-          <Button
-            onClick={signOut}
-            variant="outline"
-            className="bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
-          >
-            Sign Out
-          </Button>
+    <div className="min-h-screen p-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center space-y-4">
+          <HeadingXL className="text-white" gradient>
+            Welcome back, {user?.displayName}!
+          </HeadingXL>
+          <p className="text-white/80 text-xl">
+            {userRole === 'gig_seeker' ? 
+              "Ready to find your next gaming gig?" : 
+              "Ready to find the perfect talent for your project?"
+            }
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* User Profile Card */}
-          <Card className="border-slate-700 bg-slate-800/50 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                Your Profile
-                <Badge variant={getRoleBadgeVariant(userRole || '')}>
-                  {getRoleDisplay(userRole || '')}
-                </Badge>
-              </CardTitle>
-              <CardDescription className="text-slate-300">
-                Account information and settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-white">
-              <div className="space-y-2">
-                <p><span className="text-slate-400">Email:</span> {user?.email}</p>
-                <p><span className="text-slate-400">Role:</span> {getRoleDisplay(userRole || '')}</p>
-                {user?.bio && (
-                  <p><span className="text-slate-400">Bio:</span> {user.bio}</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <CardLuxe className="p-6">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              {userRole === 'gig_seeker' ? 'Browse Gigs' : 'Post a Gig'}
+            </h3>
+            <p className="text-white/70 mb-4">
+              {userRole === 'gig_seeker' ? 
+                'Discover exciting opportunities in the gaming industry' :
+                'Find the perfect talent for your next project'
+              }
+            </p>
+            <div className="bg-white/10 text-white/60 px-4 py-2 rounded text-sm">
+              Coming in Phase 3
+            </div>
+          </CardLuxe>
 
-          {/* Permissions Card */}
-          <Card className="border-slate-700 bg-slate-800/50 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="text-white">Your Permissions</CardTitle>
-              <CardDescription className="text-slate-300">
-                What you can do on the platform
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-white">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${canPostGigs() ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Post Gigs</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${canApplyToGigs() ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Apply to Gigs</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${userRole === 'admin' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Admin Access</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <CardLuxe className="p-6">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Profile
+            </h3>
+            <p className="text-white/70 mb-4">
+              Manage your profile and settings
+            </p>
+            <div className="bg-white/10 text-white/60 px-4 py-2 rounded text-sm">
+              Coming Soon
+            </div>
+          </CardLuxe>
 
-          {/* Feature Flags Card */}
-          <Card className="border-slate-700 bg-slate-800/50 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="text-white">Platform Features</CardTitle>
-              <CardDescription className="text-slate-300">
-                Currently available features
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-white">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${flags.messaging ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Messaging</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${flags.reviews ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Reviews</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${flags.milestone_tracking ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Milestone Tracking</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${flags.application_filters ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span>Application Filters</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Quick Actions</h2>
-          <div className="flex gap-4">
-            {canPostGigs() && (
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                Post a New Gig
-              </Button>
-            )}
-            {canApplyToGigs() && (
-              <Button variant="outline" className="bg-slate-800 border-slate-600 text-white hover:bg-slate-700">
-                Browse Available Gigs
-              </Button>
-            )}
-            {isEnabled('messaging') && (
-              <Button variant="outline" className="bg-slate-800 border-slate-600 text-white hover:bg-slate-700">
-                Messages
-              </Button>
-            )}
-          </div>
+          <CardLuxe className="p-6">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              {userRole === 'gig_seeker' ? 'Applications' : 'My Gigs'}
+            </h3>
+            <p className="text-white/70 mb-4">
+              {userRole === 'gig_seeker' ? 
+                'Track your gig applications' :
+                'Manage your posted gigs'
+              }
+            </p>
+            <div className="bg-white/10 text-white/60 px-4 py-2 rounded text-sm">
+              Coming in Phase 3
+            </div>
+          </CardLuxe>
         </div>
       </div>
     </div>
