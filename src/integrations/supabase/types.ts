@@ -773,6 +773,7 @@ export type Database = {
           created_at: string | null
           desired_gig_types: string[] | null
           display_name: string | null
+          email: string | null
           expertise_signature: string | null
           gig_posting_restricted: boolean
           id: string
@@ -817,6 +818,7 @@ export type Database = {
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
+          email?: string | null
           expertise_signature?: string | null
           gig_posting_restricted?: boolean
           id: string
@@ -861,6 +863,7 @@ export type Database = {
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
+          email?: string | null
           expertise_signature?: string | null
           gig_posting_restricted?: boolean
           id?: string

@@ -85,6 +85,8 @@ export function ModerationDashboard() {
       const { data, error } = await query;
       if (error) throw error;
 
+      console.log('Raw reports data:', data);
+
       // Transform and validate the data
       const transformedReports: ReportWithUser[] = (data || []).map(report => ({
         ...report,
@@ -92,6 +94,7 @@ export function ModerationDashboard() {
         reported_user: report.reported_user || null
       }));
 
+      console.log('Transformed reports:', transformedReports);
       setReports(transformedReports);
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -408,10 +411,16 @@ export function ModerationDashboard() {
                       <div>
                         <span className="text-muted-foreground">Reporter:</span>
                         <p>{selectedReport.is_anonymous ? 'Anonymous' : selectedReport.reporter?.display_name || 'Unknown'}</p>
+                        {!selectedReport.is_anonymous && selectedReport.reporter?.email && (
+                          <p className="text-xs text-muted-foreground">{selectedReport.reporter.email}</p>
+                        )}
                       </div>
                       <div>
                         <span className="text-muted-foreground">Reported User:</span>
                         <p>{selectedReport.reported_user?.display_name || 'Unknown'}</p>
+                        {selectedReport.reported_user?.email && (
+                          <p className="text-xs text-muted-foreground">{selectedReport.reported_user.email}</p>
+                        )}
                       </div>
                     </div>
                   </div>
