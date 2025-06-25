@@ -8,6 +8,7 @@ import { PendingGigReviews } from './PendingGigReviews';
 import { TalentManagement } from './TalentManagement';
 import { CollaborationRequests } from './CollaborationRequests';
 import { PlatformAnalytics } from './PlatformAnalytics';
+import { ModerationDashboard } from './ModerationDashboard';
 
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -21,15 +22,16 @@ export function AdminDashboard() {
               Admin Dashboard
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Manage gigs, talent, and platform operations
+              Manage gigs, talent, moderation, and platform operations
             </p>
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-6 mb-8">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="gig-reviews">Gig Reviews</TabsTrigger>
               <TabsTrigger value="talent">Talent</TabsTrigger>
+              <TabsTrigger value="moderation">Moderation</TabsTrigger>
               <TabsTrigger value="collaborations">Collaborations</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
             </TabsList>
@@ -44,6 +46,10 @@ export function AdminDashboard() {
 
             <TabsContent value="talent" className="space-y-6">
               <TalentManagement />
+            </TabsContent>
+
+            <TabsContent value="moderation" className="space-y-6">
+              <ModerationDashboard />
             </TabsContent>
 
             <TabsContent value="collaborations" className="space-y-6">

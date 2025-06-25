@@ -10,6 +10,10 @@ export type ContractType = Database['public']['Enums']['contract_type'];
 export type BriefStatus = Database['public']['Enums']['brief_status'];
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
 export type CollaborationStatus = Database['public']['Enums']['collaboration_status'];
+export type ReportCategory = Database['public']['Enums']['report_category'];
+export type ReportSeverity = Database['public']['Enums']['report_severity'];
+export type ReportStatus = Database['public']['Enums']['report_status'];
+export type ModerationActionType = Database['public']['Enums']['moderation_action_type'];
 
 export type User = Database['public']['Tables']['users']['Row'];
 export type Gig = Database['public']['Tables']['gigs']['Row'];
@@ -18,6 +22,9 @@ export type FeatureFlag = Database['public']['Tables']['feature_flags']['Row'];
 export type Invite = Database['public']['Tables']['invites']['Row'];
 export type Payment = Database['public']['Tables']['payments']['Row'];
 export type CollaborationRequest = Database['public']['Tables']['collaboration_requests']['Row'];
+export type Report = Database['public']['Tables']['reports']['Row'];
+export type ModerationAction = Database['public']['Tables']['moderation_actions']['Row'];
+export type UserQualityScore = Database['public']['Tables']['user_quality_scores']['Row'];
 
 // Branded types for safer domain modeling
 export type UserId = string & { readonly __brand: unique symbol };
@@ -26,6 +33,8 @@ export type ApplicationId = string & { readonly __brand: unique symbol };
 export type InviteId = string & { readonly __brand: unique symbol };
 export type PaymentId = string & { readonly __brand: unique symbol };
 export type CollaborationRequestId = string & { readonly __brand: unique symbol };
+export type ReportId = string & { readonly __brand: unique symbol };
+export type ModerationActionId = string & { readonly __brand: unique symbol };
 
 export interface AuthUser {
   id: UserId;
@@ -65,6 +74,13 @@ export interface AuthUser {
   location?: string;
   website_url?: string;
   linkedin_url?: string;
+  // Moderation fields
+  is_suspended?: boolean;
+  suspension_expires_at?: string;
+  search_visibility_reduced?: boolean;
+  messaging_restricted?: boolean;
+  gig_posting_restricted?: boolean;
+  moderation_notes?: string;
   // Profile DNA tags (populated via separate query)
   profile_tags?: {
     core_disciplines: string[];

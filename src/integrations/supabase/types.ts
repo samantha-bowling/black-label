@@ -425,6 +425,70 @@ export type Database = {
           },
         ]
       }
+      moderation_actions: {
+        Row: {
+          action_type: Database["public"]["Enums"]["moderation_action_type"]
+          admin_id: string
+          created_at: string
+          details: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          reason: string
+          report_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_type: Database["public"]["Enums"]["moderation_action_type"]
+          admin_id: string
+          created_at?: string
+          details?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          reason: string
+          report_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_type?: Database["public"]["Enums"]["moderation_action_type"]
+          admin_id?: string
+          created_at?: string
+          details?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          reason?: string
+          report_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_actions_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_actions_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_actions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
@@ -528,6 +592,88 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          admin_notes: string | null
+          category: Database["public"]["Enums"]["report_category"]
+          created_at: string
+          description: string
+          evidence_urls: string[] | null
+          id: string
+          is_anonymous: boolean
+          metadata: Json | null
+          reported_user_id: string
+          reporter_id: string | null
+          resolution_summary: string | null
+          reviewed_at: string | null
+          reviewed_by_admin_id: string | null
+          severity: Database["public"]["Enums"]["report_severity"]
+          status: Database["public"]["Enums"]["report_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          category: Database["public"]["Enums"]["report_category"]
+          created_at?: string
+          description: string
+          evidence_urls?: string[] | null
+          id?: string
+          is_anonymous?: boolean
+          metadata?: Json | null
+          reported_user_id: string
+          reporter_id?: string | null
+          resolution_summary?: string | null
+          reviewed_at?: string | null
+          reviewed_by_admin_id?: string | null
+          severity?: Database["public"]["Enums"]["report_severity"]
+          status?: Database["public"]["Enums"]["report_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          category?: Database["public"]["Enums"]["report_category"]
+          created_at?: string
+          description?: string
+          evidence_urls?: string[] | null
+          id?: string
+          is_anonymous?: boolean
+          metadata?: Json | null
+          reported_user_id?: string
+          reporter_id?: string | null
+          resolution_summary?: string | null
+          reviewed_at?: string | null
+          reviewed_by_admin_id?: string | null
+          severity?: Database["public"]["Enums"]["report_severity"]
+          status?: Database["public"]["Enums"]["report_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_reported_user_id_fkey"
+            columns: ["reported_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reviewed_by_admin_id_fkey"
+            columns: ["reviewed_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profile_tags: {
         Row: {
           created_at: string
@@ -564,6 +710,56 @@ export type Database = {
           },
         ]
       }
+      user_quality_scores: {
+        Row: {
+          community_feedback_score: number
+          compliance_score: number
+          created_at: string
+          id: string
+          last_calculated_at: string
+          overall_score: number
+          profile_completeness_score: number
+          resolved_reports_count: number
+          total_reports_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          community_feedback_score?: number
+          compliance_score?: number
+          created_at?: string
+          id?: string
+          last_calculated_at?: string
+          overall_score?: number
+          profile_completeness_score?: number
+          resolved_reports_count?: number
+          total_reports_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          community_feedback_score?: number
+          compliance_score?: number
+          created_at?: string
+          id?: string
+          last_calculated_at?: string
+          overall_score?: number
+          profile_completeness_score?: number
+          resolved_reports_count?: number
+          total_reports_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quality_scores_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           about_story: string | null
@@ -578,12 +774,16 @@ export type Database = {
           desired_gig_types: string[] | null
           display_name: string | null
           expertise_signature: string | null
+          gig_posting_restricted: boolean
           id: string
           invite_token_used: string | null
           invited_by_user_id: string | null
           invites_remaining: number
+          is_suspended: boolean
           linkedin_url: string | null
           location: string | null
+          messaging_restricted: boolean
+          moderation_notes: string | null
           nda_required: boolean | null
           onboarding_completed: boolean
           past_credits: string | null
@@ -593,10 +793,12 @@ export type Database = {
           rate_range_min: number | null
           requires_nda: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
+          search_visibility_reduced: boolean
           signature_quote: string | null
           skills: string[] | null
           smart_url_slug: string | null
           social_links: Json | null
+          suspension_expires_at: string | null
           timeline_expectations: string | null
           typical_budget_max: number | null
           typical_budget_min: number | null
@@ -616,12 +818,16 @@ export type Database = {
           desired_gig_types?: string[] | null
           display_name?: string | null
           expertise_signature?: string | null
+          gig_posting_restricted?: boolean
           id: string
           invite_token_used?: string | null
           invited_by_user_id?: string | null
           invites_remaining?: number
+          is_suspended?: boolean
           linkedin_url?: string | null
           location?: string | null
+          messaging_restricted?: boolean
+          moderation_notes?: string | null
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
@@ -631,10 +837,12 @@ export type Database = {
           rate_range_min?: number | null
           requires_nda?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          search_visibility_reduced?: boolean
           signature_quote?: string | null
           skills?: string[] | null
           smart_url_slug?: string | null
           social_links?: Json | null
+          suspension_expires_at?: string | null
           timeline_expectations?: string | null
           typical_budget_max?: number | null
           typical_budget_min?: number | null
@@ -654,12 +862,16 @@ export type Database = {
           desired_gig_types?: string[] | null
           display_name?: string | null
           expertise_signature?: string | null
+          gig_posting_restricted?: boolean
           id?: string
           invite_token_used?: string | null
           invited_by_user_id?: string | null
           invites_remaining?: number
+          is_suspended?: boolean
           linkedin_url?: string | null
           location?: string | null
+          messaging_restricted?: boolean
+          moderation_notes?: string | null
           nda_required?: boolean | null
           onboarding_completed?: boolean
           past_credits?: string | null
@@ -669,10 +881,12 @@ export type Database = {
           rate_range_min?: number | null
           requires_nda?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          search_visibility_reduced?: boolean
           signature_quote?: string | null
           skills?: string[] | null
           smart_url_slug?: string | null
           social_links?: Json | null
+          suspension_expires_at?: string | null
           timeline_expectations?: string | null
           typical_budget_max?: number | null
           typical_budget_min?: number | null
@@ -755,6 +969,14 @@ export type Database = {
         | "full_time"
         | "equity"
       gig_status: "draft" | "open" | "in_progress" | "completed" | "cancelled"
+      moderation_action_type:
+        | "warning"
+        | "temporary_suspension"
+        | "permanent_suspension"
+        | "profile_flag"
+        | "search_visibility_reduction"
+        | "messaging_restriction"
+        | "gig_posting_restriction"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       poster_type:
         | "individual"
@@ -762,6 +984,17 @@ export type Database = {
         | "studio"
         | "agency"
         | "publisher"
+      report_category:
+        | "inappropriate_content"
+        | "unprofessional_behavior"
+        | "fake_credentials"
+        | "spam"
+        | "harassment"
+        | "contract_violations"
+        | "quality_concerns"
+        | "other"
+      report_severity: "low" | "medium" | "high" | "critical"
+      report_status: "pending" | "under_review" | "resolved" | "dismissed"
       tag_category: "core_discipline" | "specialty_skill" | "project_type"
       user_role: "gig_poster" | "gig_seeker" | "admin"
     }
@@ -910,8 +1143,29 @@ export const Constants = {
         "equity",
       ],
       gig_status: ["draft", "open", "in_progress", "completed", "cancelled"],
+      moderation_action_type: [
+        "warning",
+        "temporary_suspension",
+        "permanent_suspension",
+        "profile_flag",
+        "search_visibility_reduction",
+        "messaging_restriction",
+        "gig_posting_restriction",
+      ],
       payment_status: ["pending", "completed", "failed", "refunded"],
       poster_type: ["individual", "indie_dev", "studio", "agency", "publisher"],
+      report_category: [
+        "inappropriate_content",
+        "unprofessional_behavior",
+        "fake_credentials",
+        "spam",
+        "harassment",
+        "contract_violations",
+        "quality_concerns",
+        "other",
+      ],
+      report_severity: ["low", "medium", "high", "critical"],
+      report_status: ["pending", "under_review", "resolved", "dismissed"],
       tag_category: ["core_discipline", "specialty_skill", "project_type"],
       user_role: ["gig_poster", "gig_seeker", "admin"],
     },
