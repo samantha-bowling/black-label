@@ -1009,6 +1009,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      ensure_user_profile: {
+        Args: { user_id_param: string; email_param: string }
+        Returns: boolean
+      }
       generate_smart_url_slug: {
         Args: { display_name_param: string }
         Returns: string

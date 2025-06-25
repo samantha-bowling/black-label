@@ -32,6 +32,18 @@ export function AuthGuard({ children, requiredRole, requireAuth = true }: AuthGu
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
+  // If authenticated but no user profile yet, show loading
+  if (isAuthenticated && !user && requireAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/80">Setting up your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (requiredRole && !roleAccess.hasRole(requiredRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">

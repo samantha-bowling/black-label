@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -32,15 +33,21 @@ const Auth = () => {
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, sessionStatus } = useAuth();
   const { validateInvite } = useInvites();
+
+  // Redirect authenticated users
+  useEffect(() => {
+    if (sessionStatus.isAuthenticated && sessionStatus.user) {
+      navigate('/auth/callback');
+    }
+  }, [sessionStatus, navigate]);
 
   useEffect(() => {
     const token = searchParams.get('invite');
     const roleParam = searchParams.get('role');
     const modeParam = searchParams.get('mode');
     
-    // Set auth mode based on URL parameter
     if (modeParam === 'signin') {
       setAuthMode('signin');
       setIsSignUp(false);
@@ -50,17 +57,14 @@ const Auth = () => {
     }
     
     if (token) {
-      // User came via invite - they're a seeker
       setInviteToken(token);
       setIsSignUp(true);
       setIntendedRole('gig_seeker');
       validateInviteToken(token);
     } else if (roleParam === 'poster') {
-      // User came wanting to post gigs - they're a poster
       setIsSignUp(true);
       setIntendedRole('gig_poster');
     } else if (!modeParam) {
-      // Default to seeker signup for invite flow
       setIntendedRole('gig_seeker');
     }
   }, [searchParams]);
@@ -92,7 +96,6 @@ const Auth = () => {
     e.preventDefault();
     setError(null);
 
-    // Validate passwords for signup
     if (isSignUp) {
       const passwordError = validatePasswords();
       if (passwordError) {
@@ -105,7 +108,6 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        // For seekers, require invite token
         if (intendedRole === 'gig_seeker') {
           if (!inviteToken) {
             setError('An invite token is required to sign up as a talent seeker');
@@ -131,28 +133,18 @@ const Auth = () => {
         if (result.error) {
           setError(result.error);
         } else {
-          // Clear form fields
           setEmail("");
           setPassword("");
           setConfirmPassword("");
           setDisplayName("");
-          
-          // Navigate based on user role after successful signup
-          if (intendedRole === 'gig_poster') {
-            navigate("/post-a-gig");
-          } else if (intendedRole === 'gig_seeker') {
-            navigate("/dashboard");
-          } else {
-            // Fallback to dashboard
-            navigate("/dashboard");
-          }
+          // Don't navigate here - let the auth state change handle it
         }
       } else {
         const result = await signIn(email, password);
         if (result.error) {
           setError(result.error);
         } else {
-          navigate("/dashboard");
+          // Don't navigate here - let the auth state change handle it
         }
       }
     } catch (err: any) {

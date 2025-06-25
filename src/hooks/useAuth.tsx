@@ -23,6 +23,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const toasts = createAuthToasts();
 
+  const ensureUserProfile = async (userId: string, email: string) => {
+    try {
+      const { data: result, error } = await supabase.rpc('ensure_user_profile', {
+        user_id_param: userId,
+        email_param: email
+      });
+
+      if (error) {
+        console.error('Error ensuring user profile:', error);
+        return false;
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error calling ensure_user_profile:', error);
+      return false;
+    }
+  };
+
   const fetchUserProfile = async (userId: string, email: string, retryCount = 0) => {
     try {
       const { data: userProfile, error } = await supabase
@@ -65,14 +84,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           accepts_intros: userProfile.accepts_intros || undefined,
           requires_nda: userProfile.requires_nda || undefined,
         });
+        return true;
       } else if (retryCount < 3) {
-        // Retry fetching user profile if it doesn't exist yet (user might be newly created)
-        console.log(`Retrying user profile fetch (attempt ${retryCount + 1})`);
-        setTimeout(() => {
-          fetchUserProfile(userId, email, retryCount + 1);
-        }, 1000 * (retryCount + 1)); // Exponential backoff
+        // Profile doesn't exist, try to create it
+        console.log(`Profile not found, attempting to create (attempt ${retryCount + 1})`);
+        const profileCreated = await ensureUserProfile(userId, email);
+        
+        if (profileCreated) {
+          // Retry fetching after creating profile
+          setTimeout(() => {
+            fetchUserProfile(userId, email, retryCount + 1);
+          }, 1000 * (retryCount + 1));
+        } else {
+          console.error('Failed to create user profile');
+        }
       } else {
-        console.error('Failed to fetch user profile after retries:', error);
+        console.error('Failed to fetch or create user profile after retries:', error);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -82,17 +109,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }, 1000 * (retryCount + 1));
       }
     }
+    return false;
   };
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state change:', event, session?.user?.email);
         setSession(session);
         
         if (session?.user) {
-          // Defer user profile fetch to avoid blocking auth state change
           setTimeout(() => {
             fetchUserProfile(session.user.id, session.user.email!);
           }, 0);
@@ -103,7 +129,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (!session) {
@@ -134,18 +159,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) {
         toasts.signUpError(error.message);
         return { error: error.message };
-      }
-
-      // Process invite token if provided
-      if (data.user && inviteToken) {
-        const { data: result, error: inviteError } = await supabase.rpc('use_invite_token', {
-          token_param: inviteToken,
-          user_id_param: data.user.id
-        });
-
-        if (inviteError || !result) {
-          console.error('Error processing invite token:', inviteError);
-        }
       }
 
       toasts.signUpSuccess();
