@@ -4,12 +4,17 @@
 @tailwind utilities;
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700&display=swap');
 
 /* BlackLabel.gg Monochromatic Design System */
 
 @layer base {
   :root {
+    /* Typography Variables */
+    --font-display: 'Orbitron', 'Rajdhani', sans-serif;
+    --font-body: 'Satoshi', 'Inter', sans-serif;
+
     /* Monochromatic Color Palette */
     --primary: 0 0% 100%; /* Pure white for primary accent */
     --primary-muted: 0 0% 85%; /* Light gray for muted primary */
@@ -101,26 +106,45 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.65;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   /* Typography Scale */
   h1, .heading-xl {
-    @apply font-display font-semibold text-4xl lg:text-5xl xl:text-6xl tracking-tight;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    @apply text-4xl lg:text-5xl xl:text-6xl tracking-tight;
     font-size: clamp(2rem, 4vw, 3.25rem);
   }
 
   h2, .heading-lg {
-    @apply font-display font-semibold text-2xl lg:text-3xl tracking-tight;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    @apply text-2xl lg:text-3xl tracking-tight;
   }
 
   h3, .heading-md {
-    @apply font-display font-semibold text-xl lg:text-2xl tracking-tight;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    @apply text-xl lg:text-2xl tracking-tight;
   }
 
   h4, .heading-sm {
-    @apply font-sans font-semibold text-lg;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    @apply text-lg;
   }
 
   /* Monochromatic text effects */
@@ -148,6 +172,10 @@
   /* Button Components - Monochromatic */
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-black bg-white;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     box-shadow: var(--shadow-card);
     transition: all 0.2s ease;
   }
@@ -159,6 +187,10 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-white bg-transparent border border-white;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     transition: all 0.2s ease;
   }
 
@@ -170,6 +202,7 @@
   /* Input Components */
   .input-luxe {
     @apply w-full rounded-md border border-border bg-input px-3 py-2 text-sm;
+    font-family: var(--font-body);
     background-color: hsl(var(--input));
     transition: all 0.2s ease;
   }
@@ -186,6 +219,10 @@
   /* Badge Components */
   .badge-beta {
     @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white text-black;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
 
   /* Utility Classes */

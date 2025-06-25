@@ -1,3 +1,4 @@
+
 // BlackLabel.gg Monochromatic Design System
 // Premium black, white, and gray color palette for maximum professionalism
 
@@ -66,9 +67,21 @@ export const designTokens = {
   // Typography
   typography: {
     fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      display: ['Orbitron', 'Inter', 'system-ui', 'sans-serif'],
+      display: "'Orbitron', 'Rajdhani', sans-serif",
+      body: "'Satoshi', 'Inter', sans-serif",
+      sans: ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
       mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+    },
+    heading: {
+      fontFamily: "var(--font-display)",
+      fontWeight: 700,
+      letterSpacing: '0.03em',
+      textTransform: 'uppercase',
+    },
+    body: {
+      fontFamily: "var(--font-body)",
+      fontWeight: 400,
+      lineHeight: 1.65,
     },
     fontSize: {
       xs: '0.75rem',     // 12px
@@ -135,7 +148,10 @@ export const designTokens = {
         hover: '#E5E5E5',
         padding: '0.75rem 1.5rem',
         borderRadius: 'full',
-        fontWeight: 600,
+        fontWeight: 700,
+        fontFamily: "var(--font-display)",
+        letterSpacing: '0.03em',
+        textTransform: 'uppercase',
       },
       secondary: {
         background: 'transparent',
@@ -144,7 +160,10 @@ export const designTokens = {
         hover: 'rgba(255, 255, 255, 0.1)',
         padding: '0.75rem 1.5rem',
         borderRadius: 'full',
-        fontWeight: 600,
+        fontWeight: 700,
+        fontFamily: "var(--font-display)",
+        letterSpacing: '0.03em',
+        textTransform: 'uppercase',
       },
     },
     
@@ -164,6 +183,7 @@ export const designTokens = {
       border: '1px solid #2C2D33',
       borderRadius: '0.5rem',
       padding: '0.75rem',
+      fontFamily: "var(--font-body)",
       focus: {
         border: '1px solid #FFFFFF',
         shadow: '0 0 0 2px rgba(255, 255, 255, 0.3)',
@@ -176,7 +196,10 @@ export const designTokens = {
       borderRadius: 'full',
       padding: '0.25rem 0.75rem',
       fontSize: '0.75rem',
-      fontWeight: 600,
+      fontWeight: 700,
+      fontFamily: "var(--font-display)",
+      letterSpacing: '0.03em',
+      textTransform: 'uppercase',
     },
   },
 

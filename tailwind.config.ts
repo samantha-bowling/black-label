@@ -20,8 +20,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
-				display: ['Orbitron', 'Inter', 'system-ui', 'sans-serif'],
+				sans: ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
+				display: ['Orbitron', 'Rajdhani', 'Inter', 'system-ui', 'sans-serif'],
+				body: ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
 				mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
 			},
 			colors: {
@@ -93,13 +94,6 @@ export default {
 				'focus': 'var(--shadow-focus)',
 				'glow': '0 0 30px rgba(255, 255, 255, 0.1)',
 				'glow-lg': '0 0 60px rgba(255, 255, 255, 0.2)'
-			},
-			backgroundImage: {
-				'gradient-primary': 'linear-gradient(135deg, #ffffff, #e5e5e5)',
-				'gradient-card': 'linear-gradient(145deg, #1A1B1F, #16171A)',
-				'gradient-surface': 'linear-gradient(145deg, #1A1B1F, #16171A)',
-				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'hero-glow': 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%)'
 			},
 			keyframes: {
 				'accordion-down': {
