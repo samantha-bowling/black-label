@@ -12,6 +12,13 @@ interface PublicProfile {
   skills?: string[];
   pastCredits?: string;
   socialLinks?: Record<string, string>;
+  inviter?: {
+    id: string;
+    displayName: string;
+    avatarUrl?: string;
+    smartUrlSlug?: string;
+    publicProfile: boolean;
+  } | null;
 }
 
 export function usePublicProfiles() {
@@ -38,7 +45,15 @@ export function usePublicProfiles() {
           role,
           skills,
           past_credits,
-          social_links
+          social_links,
+          invited_by_user_id,
+          inviter:invited_by_user_id(
+            id,
+            display_name,
+            avatar_url,
+            smart_url_slug,
+            public_profile
+          )
         `)
         .eq('public_profile', true)
         .eq('onboarding_completed', true)
@@ -72,6 +87,13 @@ export function usePublicProfiles() {
         skills: profile.skills || undefined,
         pastCredits: profile.past_credits || undefined,
         socialLinks: (profile.social_links as Record<string, string>) || undefined,
+        inviter: profile.inviter ? {
+          id: profile.inviter.id,
+          displayName: profile.inviter.display_name || 'Anonymous',
+          avatarUrl: profile.inviter.avatar_url || undefined,
+          smartUrlSlug: profile.inviter.smart_url_slug || undefined,
+          publicProfile: profile.inviter.public_profile || false,
+        } : null,
       }));
 
       setProfiles(publicProfiles);

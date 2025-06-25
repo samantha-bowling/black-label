@@ -7,15 +7,24 @@ import { EnhancedProfileView } from '@/components/profile/EnhancedProfileView';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 
+interface InviterInfo {
+  id: string;
+  displayName: string;
+  avatarUrl?: string;
+  smartUrlSlug?: string;
+  publicProfile: boolean;
+}
+
 export default function PublicProfile() {
   const { slug } = useParams<{ slug: string }>();
 
-  const { data: user, isLoading, error } = useQuery({
+  const { data: profileData, isLoading, error } = useQuery({
     queryKey: ['public-profile', slug],
     queryFn: async () => {
       if (!slug) throw new Error('No profile slug provided');
 
-      const { data, error } = await supabase
+      // First, get the user profile
+      const { data: userData, error: userError } = await supabase
         .from('users')
         .select('*')
         .eq('smart_url_slug', slug)
@@ -23,43 +32,65 @@ export default function PublicProfile() {
         .eq('onboarding_completed', true)
         .single();
 
-      if (error) throw error;
-      if (!data) throw new Error('Profile not found');
+      if (userError) throw userError;
+      if (!userData) throw new Error('Profile not found');
 
-      return {
-        id: data.id as UserId,
+      // If user was invited by someone, fetch inviter info
+      let inviterInfo: InviterInfo | null = null;
+      if (userData.invited_by_user_id) {
+        const { data: inviterData, error: inviterError } = await supabase
+          .from('users')
+          .select('id, display_name, avatar_url, smart_url_slug, public_profile')
+          .eq('id', userData.invited_by_user_id)
+          .single();
+
+        if (!inviterError && inviterData) {
+          inviterInfo = {
+            id: inviterData.id,
+            displayName: inviterData.display_name || 'Anonymous',
+            avatarUrl: inviterData.avatar_url || undefined,
+            smartUrlSlug: inviterData.smart_url_slug || undefined,
+            publicProfile: inviterData.public_profile || false,
+          };
+        }
+      }
+
+      const user: AuthUser = {
+        id: userData.id as UserId,
         email: '', // Don't expose email in public profiles
-        role: data.role,
-        displayName: data.display_name || 'Anonymous',
-        bio: data.bio || '',
-        avatarUrl: data.avatar_url || undefined,
-        onboarding_completed: data.onboarding_completed,
-        public_profile: data.public_profile,
-        skills: data.skills || undefined,
-        desired_gig_types: data.desired_gig_types || undefined,
-        availability_status: data.availability_status || undefined,
-        past_credits: data.past_credits || undefined,
-        rate_range_min: data.rate_range_min || undefined,
-        rate_range_max: data.rate_range_max || undefined,
-        company_name: data.company_name || undefined,
-        typical_budget_min: data.typical_budget_min || undefined,
-        typical_budget_max: data.typical_budget_max || undefined,
-        timeline_expectations: data.timeline_expectations || undefined,
-        social_links: (data.social_links as Record<string, string>) || undefined,
-        nda_required: data.nda_required || undefined,
-        invites_remaining: data.invites_remaining,
-        invited_by_user_id: data.invited_by_user_id || undefined,
-        invite_token_used: data.invite_token_used || undefined,
+        role: userData.role,
+        displayName: userData.display_name || 'Anonymous',
+        bio: userData.bio || '',
+        avatarUrl: userData.avatar_url || undefined,
+        onboarding_completed: userData.onboarding_completed,
+        public_profile: userData.public_profile,
+        skills: userData.skills || undefined,
+        desired_gig_types: userData.desired_gig_types || undefined,
+        availability_status: userData.availability_status || undefined,
+        past_credits: userData.past_credits || undefined,
+        rate_range_min: userData.rate_range_min || undefined,
+        rate_range_max: userData.rate_range_max || undefined,
+        company_name: userData.company_name || undefined,
+        typical_budget_min: userData.typical_budget_min || undefined,
+        typical_budget_max: userData.typical_budget_max || undefined,
+        timeline_expectations: userData.timeline_expectations || undefined,
+        social_links: (userData.social_links as Record<string, string>) || undefined,
+        nda_required: userData.nda_required || undefined,
+        invites_remaining: userData.invites_remaining,
+        invited_by_user_id: userData.invited_by_user_id || undefined,
+        invite_token_used: userData.invite_token_used || undefined,
         // Enhanced profile fields
-        banner_image_url: data.banner_image_url || undefined,
-        banner_background_color: data.banner_background_color || undefined,
-        signature_quote: data.signature_quote || undefined,
-        expertise_signature: data.expertise_signature || undefined,
-        about_story: data.about_story || undefined,
-        smart_url_slug: data.smart_url_slug || undefined,
-        accepts_intros: data.accepts_intros || undefined,
-        requires_nda: data.requires_nda || undefined,
-      } as AuthUser;
+        banner_image_url: userData.banner_image_url || undefined,
+        banner_background_color: userData.banner_background_color || undefined,
+        signature_quote: userData.signature_quote || undefined,
+        expertise_signature: userData.expertise_signature || undefined,
+        about_story: userData.about_story || undefined,
+        smart_url_slug: userData.smart_url_slug || undefined,
+        accepts_intros: userData.accepts_intros || undefined,
+        requires_nda: userData.requires_nda || undefined,
+      };
+
+      return { user, inviter: inviterInfo };
     },
   });
 
@@ -82,7 +113,7 @@ export default function PublicProfile() {
     );
   }
 
-  if (error || !user) {
+  if (error || !profileData?.user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <Card className="max-w-md">
@@ -100,7 +131,11 @@ export default function PublicProfile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <EnhancedProfileView user={user} isOwner={false} />
+      <EnhancedProfileView 
+        user={profileData.user} 
+        inviter={profileData.inviter}
+        isOwner={false} 
+      />
     </div>
   );
 }

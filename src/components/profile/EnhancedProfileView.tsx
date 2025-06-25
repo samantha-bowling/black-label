@@ -5,17 +5,27 @@ import { CustomBannerHeader } from './CustomBannerHeader';
 import { CaseStudyCard } from './CaseStudyCard';
 import { CollaborationBadges } from './CollaborationBadges';
 import { AvailabilityIndicator } from './AvailabilityIndicator';
+import { InviterDisplay } from './InviterDisplay';
 import { AuthUser } from '@/types/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, MapPin, Calendar } from 'lucide-react';
 
+interface InviterInfo {
+  id: string;
+  displayName: string;
+  avatarUrl?: string;
+  smartUrlSlug?: string;
+  publicProfile: boolean;
+}
+
 interface EnhancedProfileViewProps {
   user: AuthUser;
+  inviter?: InviterInfo | null;
   isOwner?: boolean;
 }
 
-export function EnhancedProfileView({ user, isOwner = false }: EnhancedProfileViewProps) {
+export function EnhancedProfileView({ user, inviter, isOwner = false }: EnhancedProfileViewProps) {
   const { isEnabled } = useFeatureFlags();
   const { caseStudies, isLoading: caseStudiesLoading } = useCaseStudies(user.id);
   
@@ -58,6 +68,13 @@ export function EnhancedProfileView({ user, isOwner = false }: EnhancedProfileVi
 
       {/* Content Below Banner */}
       <div className="mt-20 px-6 space-y-8">
+        {/* Inviter Display - Show at the top for non-owners */}
+        {!isOwner && inviter && (
+          <div className="flex justify-center">
+            <InviterDisplay inviter={inviter} className="max-w-sm" />
+          </div>
+        )}
+
         {/* Profile Info Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Info */}
@@ -108,6 +125,11 @@ export function EnhancedProfileView({ user, isOwner = false }: EnhancedProfileVi
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Show Inviter Display in sidebar for owners */}
+            {isOwner && inviter && (
+              <InviterDisplay inviter={inviter} />
+            )}
+
             {/* Availability */}
             <Card>
               <CardContent className="p-4">
