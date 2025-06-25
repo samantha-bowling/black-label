@@ -10,13 +10,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Report, ReportStatus, ReportSeverity, ModerationActionType } from '@/types/auth';
+import { Report, ReportStatus, ReportSeverity, ModerationActionType, ReportCategory } from '@/types/auth';
 import { AlertTriangle, Eye, Clock, CheckCircle, XCircle, Flag, User, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface ReportWithUser extends Report {
   reporter: { display_name: string; email: string } | null;
-  reported_user: { display_name: string; email: string; avatar_url?: string };
+  reported_user: { display_name: string; email: string; avatar_url?: string } | null;
 }
 
 const SEVERITY_COLORS = {
@@ -47,7 +47,7 @@ export function ModerationDashboard() {
   });
 
   const [actionForm, setActionForm] = useState({
-    type: '' as ModerationActionType,
+    type: '' as ModerationActionType | '',
     reason: '',
     details: '',
     expiresAt: ''
@@ -72,20 +72,28 @@ export function ModerationDashboard() {
         `)
         .order('created_at', { ascending: false });
 
+      // Apply filters with proper type casting
       if (filters.status !== 'all') {
-        query = query.eq('status', filters.status);
+        query = query.eq('status', filters.status as ReportStatus);
       }
       if (filters.severity !== 'all') {
-        query = query.eq('severity', filters.severity);
+        query = query.eq('severity', filters.severity as ReportSeverity);
       }
       if (filters.category !== 'all') {
-        query = query.eq('category', filters.category);
+        query = query.eq('category', filters.category as ReportCategory);
       }
 
       const { data, error } = await query;
       if (error) throw error;
 
-      setReports(data || []);
+      // Transform and validate the data
+      const transformedReports: ReportWithUser[] = (data || []).map(report => ({
+        ...report,
+        reporter: report.reporter || null,
+        reported_user: report.reported_user || null
+      }));
+
+      setReports(transformedReports);
     } catch (error) {
       console.error('Error fetching reports:', error);
       toast({
@@ -155,7 +163,7 @@ export function ModerationDashboard() {
         user_id: selectedReport.reported_user_id,
         admin_id: user?.id,
         report_id: selectedReport.id,
-        action_type: actionForm.type,
+        action_type: actionForm.type as ModerationActionType,
         reason: actionForm.reason,
         details: actionForm.details || null,
         expires_at: actionForm.expiresAt || null
@@ -201,7 +209,7 @@ export function ModerationDashboard() {
 
       setIsActionModalOpen(false);
       setActionForm({
-        type: '' as ModerationActionType,
+        type: '',
         reason: '',
         details: '',
         expiresAt: ''
