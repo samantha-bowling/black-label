@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -82,7 +81,7 @@ const Index = () => {
                 onClick={() => navigate("/auth")}
                 className="group hover:shadow-glow transition-all duration-300"
               >
-                Join BlackLabel.gg
+                Join BlackLabel
               </ButtonPrimary>
             </div>
             
