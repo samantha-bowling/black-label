@@ -1,161 +1,143 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/types/auth";
+import { 
+  ButtonPrimary, 
+  CardLuxe, 
+  HeadingLG,
+  InputLuxe
+} from "@/components/ui/primitives";
 
-import { useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/hooks/useAuth';
+const Auth = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("gig_seeker");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
 
-export default function Auth() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('gig_seeker');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { signIn, signUp, sessionStatus } = useAuth();
-  const location = useLocation();
-
-  const from = location.state?.from?.pathname || '/dashboard';
-
-  // Redirect if already authenticated
-  if (sessionStatus.isAuthenticated) {
-    return <Navigate to={from} replace />;
-  }
-
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    await signIn(email, password);
-    setIsLoading(false);
-  };
+    setError(null);
+    setLoading(true);
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    await signUp(email, password, role);
-    setIsLoading(false);
+    try {
+      if (isSignUp) {
+        await signUp(email, password, selectedRole);
+      } else {
+        await signIn(email, password);
+      }
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">BlackLabel.gg</h1>
-          <p className="text-slate-300">Elite Gaming Talent Platform</p>
-        </div>
+        <CardLuxe className="glow-primary">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-8 h-8 bg-gradient-primary rounded-md"></div>
+              <span className="font-display font-bold text-xl">BlackLabel.gg</span>
+            </div>
+            <HeadingLG as="h2" className="mb-2">
+              {isSignUp ? 'Join the Elite' : 'Welcome Back'}
+            </HeadingLG>
+            <p className="text-muted-foreground">
+              {isSignUp 
+                ? 'Enter the most exclusive gaming talent network' 
+                : 'Access your elite gaming network'
+              }
+            </p>
+          </div>
 
-        <Card className="border-slate-700 bg-slate-800/50 backdrop-blur">
-          <CardHeader>
-            <CardTitle className="text-white">Welcome</CardTitle>
-            <CardDescription className="text-slate-300">
-              Sign in to your account or create a new one
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-slate-700">
-                <TabsTrigger value="signin" className="text-white data-[state=active]:bg-slate-600">
-                  Sign In
-                </TabsTrigger>
-                <TabsTrigger value="signup" className="text-white data-[state=active]:bg-slate-600">
-                  Sign Up
-                </TabsTrigger>
-              </TabsList>
+          <form onSubmit={handleAuth} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
+                Email
+              </label>
+              <InputLuxe
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                error={!!error}
+              />
+            </div>
 
-              <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email" className="text-white">Email</Label>
-                    <Input
-                      id="signin-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="bg-slate-700 border-slate-600 text-white"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password" className="text-white">Password</Label>
-                    <Input
-                      id="signin-password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-slate-700 border-slate-600 text-white"
-                      placeholder="Enter your password"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full bg-purple-600 hover:bg-purple-700"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Signing In...' : 'Sign In'}
-                  </Button>
-                </form>
-              </TabsContent>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-2">
+                Password
+              </label>
+              <InputLuxe
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                error={!!error}
+              />
+            </div>
 
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="text-white">Email</Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="bg-slate-700 border-slate-600 text-white"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="text-white">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-slate-700 border-slate-600 text-white"
-                      placeholder="Create a password"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="role" className="text-white">I want to...</Label>
-                    <Select value={role} onValueChange={setRole}>
-                      <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-700 border-slate-600">
-                        <SelectItem value="gig_seeker" className="text-white">
-                          Find gigs (Freelancer)
-                        </SelectItem>  
-                        <SelectItem value="gig_poster" className="text-white">
-                          Post gigs (Studio/Company)
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full bg-purple-600 hover:bg-purple-700"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Creating Account...' : 'Create Account'}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+            {isSignUp && (
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium mb-2">
+                  Role
+                </label>
+                <select
+                  id="role"
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value as UserRole)}
+                  className="input-luxe w-full"
+                  required
+                >
+                  <option value="gig_seeker">Gig Seeker - Looking for opportunities</option>
+                  <option value="gig_poster">Gig Poster - Posting projects</option>
+                </select>
+              </div>
+            )}
+
+            {error && (
+              <div className="p-3 bg-destructive/20 border border-destructive/30 rounded-md">
+                <p className="text-destructive text-sm">{error}</p>
+              </div>
+            )}
+
+            <ButtonPrimary
+              type="submit"
+              className="w-full"
+              isLoading={loading}
+              size="lg"
+            >
+              {isSignUp ? 'Create Account' : 'Sign In'}
+            </ButtonPrimary>
+          </form>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-sm text-primary hover:text-primary-muted transition-colors"
+            >
+              {isSignUp
+                ? 'Already have an account? Sign in'
+                : "Don't have an account? Sign up"
+              }
+            </button>
+          </div>
+        </CardLuxe>
       </div>
     </div>
   );
-}
+};
+
+export default Auth;
