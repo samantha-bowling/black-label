@@ -18,11 +18,11 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [selectedRole, setSelectedRole] = useState<UserRole>("gig_seeker");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [inviteToken, setInviteToken] = useState<string>("");
   const [inviteValid, setInviteValid] = useState<boolean | null>(null);
+  const [intendedRole, setIntendedRole] = useState<UserRole | null>(null);
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -31,10 +31,18 @@ const Auth = () => {
 
   useEffect(() => {
     const token = searchParams.get('invite');
+    const roleParam = searchParams.get('role');
+    
     if (token) {
+      // User came via invite - they're a seeker
       setInviteToken(token);
       setIsSignUp(true);
+      setIntendedRole('gig_seeker');
       validateInviteToken(token);
+    } else if (roleParam === 'poster') {
+      // User came wanting to post gigs - they're a poster
+      setIsSignUp(true);
+      setIntendedRole('gig_poster');
     }
   }, [searchParams]);
 
@@ -53,19 +61,30 @@ const Auth = () => {
 
     try {
       if (isSignUp) {
-        if (!inviteToken) {
-          setError('An invite token is required to sign up');
-          setLoading(false);
-          return;
+        // For seekers, require invite token
+        if (intendedRole === 'gig_seeker') {
+          if (!inviteToken) {
+            setError('An invite token is required to sign up as a talent seeker');
+            setLoading(false);
+            return;
+          }
+
+          if (inviteValid === false) {
+            setError('Invalid or expired invite token');
+            setLoading(false);
+            return;
+          }
         }
 
-        if (inviteValid === false) {
-          setError('Invalid or expired invite token');
-          setLoading(false);
-          return;
-        }
-
-        const result = await signUp(email, password, displayName, selectedRole, inviteToken);
+        // Use the intended role for signup
+        const result = await signUp(
+          email, 
+          password, 
+          displayName, 
+          intendedRole || 'gig_poster', // Default to poster if no role specified
+          inviteToken || undefined
+        );
+        
         if (result.error) {
           setError(result.error);
         } else {
@@ -104,6 +123,24 @@ const Auth = () => {
     }
   };
 
+  const getSignUpTitle = () => {
+    if (intendedRole === 'gig_seeker') {
+      return 'Join as Gaming Talent';
+    } else if (intendedRole === 'gig_poster') {
+      return 'Join as Project Creator';
+    }
+    return 'Join the Elite';
+  };
+
+  const getSignUpDescription = () => {
+    if (intendedRole === 'gig_seeker') {
+      return 'Complete your invite-only registration to access exclusive gaming opportunities';
+    } else if (intendedRole === 'gig_poster') {
+      return 'Set up your account to start posting gigs and finding talent';
+    }
+    return 'Enter the most exclusive gaming talent network';
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -117,13 +154,10 @@ const Auth = () => {
               />
             </div>
             <HeadingLG as="h2" className="mb-2">
-              {isSignUp ? 'Join the Elite' : 'Welcome Back'}
+              {isSignUp ? getSignUpTitle() : 'Welcome Back'}
             </HeadingLG>
             <p className="text-muted-foreground">
-              {isSignUp 
-                ? 'Enter the most exclusive gaming talent network' 
-                : 'Access your elite gaming network'
-              }
+              {isSignUp ? getSignUpDescription() : 'Access your elite gaming network'}
             </p>
             {isSignUp && inviteToken && (
               <div className="mt-4 p-3 bg-primary/20 border border-primary/30 rounded-md">
@@ -139,7 +173,7 @@ const Auth = () => {
           </div>
 
           <form onSubmit={handleAuth} className="space-y-6">
-            {isSignUp && (
+            {isSignUp && intendedRole === 'gig_seeker' && (
               <div>
                 <label htmlFor="inviteToken" className="block text-sm font-medium mb-2">
                   Invite Token *
@@ -192,38 +226,20 @@ const Auth = () => {
             </div>
 
             {isSignUp && (
-              <>
-                <div>
-                  <label htmlFor="displayName" className="block text-sm font-medium mb-2">
-                    Display Name
-                  </label>
-                  <InputLuxe
-                    id="displayName"
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Enter your display name"
-                    required
-                    error={!!error}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="role" className="block text-sm font-medium mb-2">
-                    Role
-                  </label>
-                  <select
-                    id="role"
-                    value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                    className="input-luxe w-full"
-                    required
-                  >
-                    <option value="gig_seeker">Gig Seeker - Looking for opportunities</option>
-                    <option value="gig_poster">Gig Poster - Posting projects</option>
-                  </select>
-                </div>
-              </>
+              <div>
+                <label htmlFor="displayName" className="block text-sm font-medium mb-2">
+                  Display Name
+                </label>
+                <InputLuxe
+                  id="displayName"
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Enter your display name"
+                  required
+                  error={!!error}
+                />
+              </div>
             )}
 
             {error && (
@@ -237,7 +253,7 @@ const Auth = () => {
               className="w-full"
               isLoading={loading}
               size="lg"
-              disabled={isSignUp && (inviteValid === false || !inviteToken)}
+              disabled={isSignUp && intendedRole === 'gig_seeker' && (inviteValid === false || !inviteToken)}
             >
               {isSignUp ? 'Create Account' : 'Sign In'}
             </ButtonPrimary>

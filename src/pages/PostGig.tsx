@@ -12,13 +12,13 @@ const PostGig = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect non-authenticated users to auth
+    // Redirect non-authenticated users to auth with poster role context
     if (!user) {
-      navigate('/auth');
+      navigate('/auth?role=poster');
       return;
     }
 
-    // If user doesn't have gig_poster role, redirect to role selection
+    // If user doesn't have gig_poster role, they shouldn't be here
     if (user.role && !canPostGigs()) {
       navigate('/dashboard');
       return;

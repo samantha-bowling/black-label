@@ -21,11 +21,6 @@ export function useUserRole() {
     return user?.role === 'gig_seeker' || user?.role === 'admin';
   };
 
-  const needsRoleSelection = (): boolean => {
-    // User needs role selection if they're authenticated but have no role
-    return user ? !user.role : false;
-  };
-
   const needsOnboarding = (): boolean => {
     // User needs onboarding if they have a role but haven't completed onboarding
     return user && user.role ? !user.onboarding_completed : false;
@@ -45,7 +40,6 @@ export function useUserRole() {
     isAdmin,
     canPostGigs,
     canApplyToGigs,
-    needsRoleSelection,
     needsOnboarding,
     isPosterOnboardingComplete,
   };

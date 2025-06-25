@@ -1,7 +1,6 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { useUserRole } from '@/hooks/useUserRole';
-import { RoleSelectionStep } from '@/components/onboarding/RoleSelectionStep';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { InviteManager } from '@/components/invites/InviteManager';
 import { HeadingLG, ButtonSecondary, CardLuxe } from '@/components/ui/primitives';
@@ -10,24 +9,11 @@ import { useState } from 'react';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
-  const { needsRoleSelection, needsOnboarding, userRole } = useUserRole();
+  const { needsOnboarding, userRole } = useUserRole();
   const [activeTab, setActiveTab] = useState<'overview' | 'invites'>('overview');
 
   if (!user) {
     return null; // AuthGuard should handle this
-  }
-
-  // Show role selection if user has no role
-  if (needsRoleSelection) {
-    return (
-      <RoleSelectionStep
-        onComplete={(selectedRole) => {
-          // The role selection component will handle the database update
-          // and the auth context will be updated automatically
-          window.location.reload(); // Simple refresh to update the UI
-        }}
-      />
-    );
   }
 
   // Show onboarding if user has role but hasn't completed onboarding
@@ -105,7 +91,7 @@ export default function Dashboard() {
                   Hello, {user.displayName}!
                 </h2>
                 <p className="text-white/70 mb-4">
-                  Role: {userRole || 'Not set'}
+                  Role: {userRole === 'gig_seeker' ? 'Gaming Talent' : userRole === 'gig_poster' ? 'Project Creator' : userRole || 'Not set'}
                 </p>
                 <div className="space-y-2 text-sm text-white/60">
                   <p>✓ Profile setup complete</p>
