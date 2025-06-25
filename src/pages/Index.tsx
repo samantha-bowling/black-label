@@ -56,6 +56,14 @@ const Index = () => {
               Invite-Only Beta
             </BadgeBeta>
             
+            <div className="flex justify-center animate-fade-in">
+              <img 
+                src="/lovable-uploads/3928092b-3c56-44d8-ab8a-e32eab280559.png" 
+                alt="BlackLabel.gg" 
+                className="h-24 md:h-32 lg:h-40"
+              />
+            </div>
+            
             <HeadingXL glow className="animate-fade-in">
               The Premier Talent Platform for Games
             </HeadingXL>
