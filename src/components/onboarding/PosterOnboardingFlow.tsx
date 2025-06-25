@@ -1,10 +1,9 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { createAuthToasts } from '@/lib/auth/toastUtils';
 import { PosterType } from '@/types/auth';
 import { OnboardingStep } from './OnboardingStep';
 import { PosterOnboardingFields } from './PosterOnboardingFields';
@@ -27,8 +26,7 @@ interface PosterOnboardingFlowProps {
 export function PosterOnboardingFlow({ onComplete }: PosterOnboardingFlowProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const toasts = createAuthToasts();
 
   const form = useForm<PosterOnboardingData>({
     defaultValues: {
@@ -64,19 +62,11 @@ export function PosterOnboardingFlow({ onComplete }: PosterOnboardingFlowProps) 
 
       if (error) throw error;
 
-      toast({
-        title: "Welcome to BLACKLABEL.gg!",
-        description: "Your poster profile has been set up successfully.",
-      });
-
+      toasts.posterOnboardingSuccess();
       onComplete();
     } catch (error) {
       console.error('Error completing poster onboarding:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save your profile. Please try again.",
-        variant: "destructive",
-      });
+      toasts.genericError("Failed to save your profile. Please try again.");
     } finally {
       setIsLoading(false);
     }

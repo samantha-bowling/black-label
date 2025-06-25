@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -6,11 +5,15 @@ import { useInvites } from "@/hooks/useInvites";
 import { UserRole } from "@/types/auth";
 import { 
   ButtonPrimary, 
-  ButtonSecondary,
   CardLuxe, 
   HeadingLG,
-  InputLuxe
 } from "@/components/ui/primitives";
+import { AuthFormField } from "@/components/forms/AuthFormField";
+import { 
+  getSignUpTitle, 
+  getSignUpDescription, 
+  shouldDisableSubmit 
+} from "@/lib/auth/authUtils";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -75,12 +78,11 @@ const Auth = () => {
           }
         }
 
-        // Use the intended role for signup
         const result = await signUp(
           email, 
           password, 
           displayName, 
-          intendedRole || 'gig_poster', // Default to poster if no role specified
+          intendedRole || 'gig_poster',
           inviteToken || undefined
         );
         
@@ -106,24 +108,6 @@ const Auth = () => {
     }
   };
 
-  const getSignUpTitle = () => {
-    if (intendedRole === 'gig_seeker') {
-      return 'Join as Gaming Talent';
-    } else if (intendedRole === 'gig_poster') {
-      return 'Join as Project Creator';
-    }
-    return 'Join the Elite';
-  };
-
-  const getSignUpDescription = () => {
-    if (intendedRole === 'gig_seeker') {
-      return 'Complete your invite-only registration to access exclusive gaming opportunities';
-    } else if (intendedRole === 'gig_poster') {
-      return 'Set up your account to start posting gigs and finding talent';
-    }
-    return 'Enter the most exclusive gaming talent network';
-  };
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -137,10 +121,10 @@ const Auth = () => {
               />
             </div>
             <HeadingLG as="h2" className="mb-2">
-              {isSignUp ? getSignUpTitle() : 'Welcome Back'}
+              {isSignUp ? getSignUpTitle(intendedRole) : 'Welcome Back'}
             </HeadingLG>
             <p className="text-muted-foreground">
-              {isSignUp ? getSignUpDescription() : 'Access your elite gaming network'}
+              {isSignUp ? getSignUpDescription(intendedRole) : 'Access your elite gaming network'}
             </p>
             {isSignUp && inviteToken && (
               <div className="mt-4 p-3 bg-primary/20 border border-primary/30 rounded-md">
@@ -157,72 +141,54 @@ const Auth = () => {
 
           <form onSubmit={handleAuth} className="space-y-6">
             {isSignUp && intendedRole === 'gig_seeker' && (
-              <div>
-                <label htmlFor="inviteToken" className="block text-sm font-medium mb-2">
-                  Invite Token *
-                </label>
-                <InputLuxe
-                  id="inviteToken"
-                  type="text"
-                  value={inviteToken}
-                  onChange={(e) => {
-                    setInviteToken(e.target.value);
-                    if (e.target.value) {
-                      validateInviteToken(e.target.value);
-                    }
-                  }}
-                  placeholder="Enter your invite token"
-                  required
-                  error={inviteValid === false}
-                />
-              </div>
+              <AuthFormField
+                id="inviteToken"
+                label="Invite Token"
+                value={inviteToken}
+                onChange={(e) => {
+                  setInviteToken(e.target.value);
+                  if (e.target.value) {
+                    validateInviteToken(e.target.value);
+                  }
+                }}
+                placeholder="Enter your invite token"
+                required
+                error={inviteValid === false}
+              />
             )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email
-              </label>
-              <InputLuxe
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-                error={!!error}
-              />
-            </div>
+            <AuthFormField
+              id="email"
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              error={!!error}
+            />
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Password
-              </label>
-              <InputLuxe
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-                error={!!error}
-              />
-            </div>
+            <AuthFormField
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+              error={!!error}
+            />
 
             {isSignUp && (
-              <div>
-                <label htmlFor="displayName" className="block text-sm font-medium mb-2">
-                  Display Name
-                </label>
-                <InputLuxe
-                  id="displayName"
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Enter your display name"
-                  required
-                  error={!!error}
-                />
-              </div>
+              <AuthFormField
+                id="displayName"
+                label="Display Name"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Enter your display name"
+                required
+                error={!!error}
+              />
             )}
 
             {error && (
@@ -236,7 +202,7 @@ const Auth = () => {
               className="w-full"
               isLoading={loading}
               size="lg"
-              disabled={isSignUp && intendedRole === 'gig_seeker' && (inviteValid === false || !inviteToken)}
+              disabled={shouldDisableSubmit(isSignUp, intendedRole, inviteValid, inviteToken)}
             >
               {isSignUp ? 'Create Account' : 'Sign In'}
             </ButtonPrimary>

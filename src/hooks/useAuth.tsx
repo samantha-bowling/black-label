@@ -3,7 +3,8 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthUser, SessionStatus, UserRole, UserId } from '@/types/auth';
-import { useToast } from '@/hooks/use-toast';
+import { createAuthToasts } from '@/lib/auth/toastUtils';
+import { getRedirectUrl } from '@/lib/auth/authUtils';
 
 interface AuthContextType {
   session: Session | null;
@@ -20,7 +21,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
+  const toasts = createAuthToasts();
+
+  const fetchUserProfile = async (userId: string, email: string) => {
+    try {
+      const { data: userProfile, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (userProfile && !error) {
+        setUser({
+          id: userProfile.id as UserId,
+          email: email,
+          role: userProfile.role,
+          displayName: userProfile.display_name,
+          bio: userProfile.bio || undefined,
+          avatarUrl: userProfile.avatar_url || undefined,
+          onboarding_completed: userProfile.onboarding_completed,
+          public_profile: userProfile.public_profile,
+          skills: userProfile.skills || undefined,
+          desired_gig_types: userProfile.desired_gig_types || undefined,
+          availability_status: userProfile.availability_status || undefined,
+          past_credits: userProfile.past_credits || undefined,
+          rate_range_min: userProfile.rate_range_min || undefined,
+          rate_range_max: userProfile.rate_range_max || undefined,
+          company_name: userProfile.company_name || undefined,
+          typical_budget_min: userProfile.typical_budget_min || undefined,
+          typical_budget_max: userProfile.typical_budget_max || undefined,
+          timeline_expectations: userProfile.timeline_expectations || undefined,
+          social_links: (userProfile.social_links as Record<string, string>) || undefined,
+          nda_required: userProfile.nda_required || undefined,
+          invites_remaining: userProfile.invites_remaining,
+          invited_by_user_id: userProfile.invited_by_user_id || undefined,
+          invite_token_used: userProfile.invite_token_used || undefined,
+          banner_image_url: userProfile.banner_image_url || undefined,
+          banner_background_color: userProfile.banner_background_color || undefined,
+          signature_quote: userProfile.signature_quote || undefined,
+          expertise_signature: userProfile.expertise_signature || undefined,
+          about_story: userProfile.about_story || undefined,
+          smart_url_slug: userProfile.smart_url_slug || undefined,
+          accepts_intros: userProfile.accepts_intros || undefined,
+          requires_nda: userProfile.requires_nda || undefined,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   useEffect(() => {
     // Set up auth state listener
@@ -31,44 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (session?.user) {
           // Defer user profile fetch to avoid blocking auth state change
-          setTimeout(async () => {
-            try {
-              const { data: userProfile, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
-
-              if (userProfile && !error) {
-                setUser({
-                  id: userProfile.id as UserId,
-                  email: session.user.email!, // Get email from session user object
-                  role: userProfile.role,
-                  displayName: userProfile.display_name,
-                  bio: userProfile.bio || undefined,
-                  avatarUrl: userProfile.avatar_url || undefined,
-                  onboarding_completed: userProfile.onboarding_completed,
-                  public_profile: userProfile.public_profile,
-                  skills: userProfile.skills || undefined,
-                  desired_gig_types: userProfile.desired_gig_types || undefined,
-                  availability_status: userProfile.availability_status || undefined,
-                  past_credits: userProfile.past_credits || undefined,
-                  rate_range_min: userProfile.rate_range_min || undefined,
-                  rate_range_max: userProfile.rate_range_max || undefined,
-                  company_name: userProfile.company_name || undefined,
-                  typical_budget_min: userProfile.typical_budget_min || undefined,
-                  typical_budget_max: userProfile.typical_budget_max || undefined,
-                  timeline_expectations: userProfile.timeline_expectations || undefined,
-                  social_links: (userProfile.social_links as Record<string, string>) || undefined,
-                  nda_required: userProfile.nda_required || undefined,
-                  invites_remaining: userProfile.invites_remaining,
-                  invited_by_user_id: userProfile.invited_by_user_id || undefined,
-                  invite_token_used: userProfile.invite_token_used || undefined,
-                });
-              }
-            } catch (error) {
-              console.error('Error fetching user profile:', error);
-            }
+          setTimeout(() => {
+            fetchUserProfile(session.user.id, session.user.email!);
           }, 0);
         } else {
           setUser(null);
@@ -90,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string, displayName: string, role: UserRole = 'gig_seeker', inviteToken?: string) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = getRedirectUrl();
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -106,15 +119,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) {
-        toast({
-          title: "Sign Up Failed",
-          description: error.message,
-          variant: "destructive",
-        });
+        toasts.signUpError(error.message);
         return { error: error.message };
       }
 
-      // If signup was successful and we have a user ID, process the invite
+      // Process invite token if provided
       if (data.user && inviteToken) {
         const { data: result, error: inviteError } = await supabase.rpc('use_invite_token', {
           token_param: inviteToken,
@@ -123,23 +132,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (inviteError || !result) {
           console.error('Error processing invite token:', inviteError);
-          // Don't fail the signup, but log the issue
         }
       }
 
-      toast({
-        title: "Sign Up Successful",
-        description: "Please check your email to verify your account.",
-      });
-
+      toasts.signUpSuccess();
       return {};
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      toast({
-        title: "Sign Up Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toasts.signUpError(errorMessage);
       return { error: errorMessage };
     }
   };
@@ -152,37 +152,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) {
-        toast({
-          title: "Sign In Failed",
-          description: error.message,
-          variant: "destructive",
-        });
+        toasts.signInError(error.message);
         return { error: error.message };
       }
 
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
-
+      toasts.signInSuccess();
       return {};
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      toast({
-        title: "Sign In Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toasts.signInError(errorMessage);
       return { error: errorMessage };
     }
   };
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    toast({
-      title: "Signed Out",
-      description: "You have been signed out successfully.",
-    });
+    toasts.signOutSuccess();
   };
 
   const isExpired = session ? new Date(session.expires_at! * 1000) < new Date() : false;
