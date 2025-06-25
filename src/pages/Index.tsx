@@ -10,7 +10,7 @@ import {
   HeadingXL,
   HeadingLG
 } from "@/components/ui/primitives";
-import { Star, ArrowUp, ChevronRight } from "lucide-react";
+import { Star, Shield, CheckCircle, ChevronRight } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Index = () => {
       <nav className="nav-glass fixed top-0 w-full z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-primary rounded-md"></div>
+            <div className="w-8 h-8 bg-white rounded-md"></div>
             <span className="font-display font-bold text-xl">BlackLabel.gg</span>
           </div>
           
@@ -46,134 +46,143 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section pt-20">
+      <section className="hero-section pt-16 md:pt-20 pb-12">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <BadgeBeta className="mb-6">
-              Invite Only Beta
+            <BadgeBeta className="mb-6 animate-fade-in">
+              Invite-Only Beta
             </BadgeBeta>
             
-            <HeadingXL gradient glow className="mb-6">
-              Elite Gaming Talent Platform
+            <HeadingXL glow className="mb-6 animate-fade-in">
+              The Premier Talent Platform for Games
             </HeadingXL>
             
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Connect with proven creators. Vetted projects. No filler.
-              <br />
-              <span className="text-primary font-medium">Where elite gaming talent meets ambitious projects.</span>
+            <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto animate-fade-in">
+              Connect with top-tier professionals and studios for contract, consulting, and freelance work—built by veterans who know what it takes to ship.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <p className="text-lg text-white font-medium mb-8 animate-fade-in">
+              Where verified creators and real opportunities meet.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
                 onClick={() => navigate("/auth")}
-                className="group"
+                className="group hover:shadow-glow transition-all duration-300"
               >
                 Join BlackLabel.gg
                 <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </ButtonPrimary>
-              <ButtonSecondary size="lg">
+              <ButtonSecondary 
+                size="lg"
+                className="hover:shadow-glow-lg transition-all duration-300"
+              >
                 View Showcase
               </ButtonSecondary>
             </div>
             
             {/* Trust Indicators */}
-            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground animate-fade-in">
               <div className="flex items-center space-x-2">
-                <Star className="w-4 h-4 text-primary" />
-                <span>Elite Creators</span>
+                <Star className="w-4 h-4 text-white" />
+                <span>Verified Talent</span>
               </div>
               <div className="flex items-center space-x-2">
-                <ArrowUp className="w-4 h-4 text-success" />
-                <span>Vetted Projects</span>
+                <Shield className="w-4 h-4 text-white" />
+                <span>Real Opportunities</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                <span>Invite Only</span>
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <span>By Referral</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20">
+      {/* Benefits Section */}
+      <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <HeadingLG className="mb-4">
               Built for Gaming Excellence
             </HeadingLG>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              A curated ecosystem where top-tier gaming professionals connect with ambitious projects.
+              A curated ecosystem where proven game professionals connect with ambitious teams.
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <CardLuxe className="text-center group hover:glow-primary transition-all duration-300">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <Star className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-white rounded-xl mx-auto mb-6 flex items-center justify-center">
+                <Star className="w-6 h-6 text-black" />
               </div>
-              <h3 className="font-display font-semibold text-xl mb-4">Elite Network</h3>
+              <h3 className="font-display font-semibold text-xl mb-4">Verified Talent</h3>
               <p className="text-muted-foreground mb-4">
-                Access proven professionals with track records in AAA studios, indie successes, and esports.
+                Work with trusted experts from AAA studios, indie gems, and competitive esports.
               </p>
-              <BadgeStatus variant="success">Verified Talent</BadgeStatus>
+              <BadgeStatus variant="success">Verified</BadgeStatus>
             </CardLuxe>
             
             <CardLuxe className="text-center group hover:glow-primary transition-all duration-300">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <ArrowUp className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-white rounded-xl mx-auto mb-6 flex items-center justify-center">
+                <Shield className="w-6 h-6 text-black" />
               </div>
-              <h3 className="font-display font-semibold text-xl mb-4">Curated Projects</h3>
+              <h3 className="font-display font-semibold text-xl mb-4">Real Opportunities</h3>
               <p className="text-muted-foreground mb-4">
-                Only legitimate opportunities from established studios and well-funded indie teams.
+                Only active, funded, and well-scoped gigs. No filler, no ghost jobs.
               </p>
-              <BadgeStatus variant="info">Quality Guaranteed</BadgeStatus>
+              <BadgeStatus variant="info">Curated</BadgeStatus>
             </CardLuxe>
             
             <CardLuxe className="text-center group hover:glow-primary transition-all duration-300">
-              <div className="w-12 h-12 bg-gradient-primary rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+              <div className="w-12 h-12 bg-white rounded-xl mx-auto mb-6 flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-black" />
               </div>
-              <h3 className="font-display font-semibold text-xl mb-4">Exclusive Access</h3>
+              <h3 className="font-display font-semibold text-xl mb-4">Trusted Access</h3>
               <p className="text-muted-foreground mb-4">
-                Invitation-only platform ensuring quality connections and meaningful collaborations.
+                Invite-only platform to ensure meaningful matches and lasting collaborations.
               </p>
-              <BadgeStatus variant="warning">Invite Only</BadgeStatus>
+              <BadgeStatus variant="warning">By Referral</BadgeStatus>
             </CardLuxe>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
+      <section className="py-12 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-3xl mx-auto">
             <HeadingLG className="mb-6">
-              Ready to elevate your gaming career?
+              You're in Good Company.
             </HeadingLG>
             <p className="text-muted-foreground mb-8 text-lg">
-              Join the most exclusive network of gaming professionals and discover opportunities 
-              that match your expertise and ambition.
+              Join a curated network of game dev professionals working on meaningful, paid projects. 
+              Invite-only, built for trust.
             </p>
-            <ButtonPrimary size="lg" onClick={() => navigate("/auth")}>
-              Request Invitation
+            <ButtonPrimary 
+              size="lg" 
+              onClick={() => navigate("/auth")}
+              className="hover:shadow-glow transition-all duration-300"
+            >
+              Request an Invite
             </ButtonPrimary>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12">
+      <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-gradient-primary rounded"></div>
+              <div className="w-6 h-6 bg-white rounded"></div>
               <span className="font-display font-bold">BlackLabel.gg</span>
             </div>
             <div className="text-sm text-muted-foreground">
-              © 2024 BlackLabel.gg. Elite gaming talent platform.
+              © 2024 BlackLabel.gg. The premier talent platform for games.
             </div>
           </div>
         </div>
