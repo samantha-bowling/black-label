@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { AuthUser, SessionStatus, UserRole, UserId } from '@/types/auth';
 import { createAuthToasts } from '@/lib/auth/toastUtils';
 import { getRedirectUrl } from '@/lib/auth/authUtils';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   session: Session | null;
@@ -194,6 +195,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     await supabase.auth.signOut();
     toasts.signOutSuccess();
+    // Redirect to landing page after sign out
+    window.location.href = '/';
   };
 
   const isExpired = session ? new Date(session.expires_at! * 1000) < new Date() : false;
