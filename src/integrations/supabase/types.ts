@@ -63,6 +63,94 @@ export type Database = {
           },
         ]
       }
+      case_studies: {
+        Row: {
+          contributions: string[] | null
+          created_at: string | null
+          display_order: number | null
+          external_link: string | null
+          id: string
+          is_visible: boolean | null
+          media_url: string | null
+          project_name: string
+          role_played: string | null
+          studio_name: string | null
+          timeline: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          contributions?: string[] | null
+          created_at?: string | null
+          display_order?: number | null
+          external_link?: string | null
+          id?: string
+          is_visible?: boolean | null
+          media_url?: string | null
+          project_name: string
+          role_played?: string | null
+          studio_name?: string | null
+          timeline?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          contributions?: string[] | null
+          created_at?: string | null
+          display_order?: number | null
+          external_link?: string | null
+          id?: string
+          is_visible?: boolean | null
+          media_url?: string | null
+          project_name?: string
+          role_played?: string | null
+          studio_name?: string | null
+          timeline?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_studies_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collaboration_options: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          option_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          option_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          option_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaboration_options_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           company_organization: string | null
@@ -235,13 +323,18 @@ export type Database = {
       }
       users: {
         Row: {
+          about_story: string | null
+          accepts_intros: boolean | null
           availability_status: string | null
           avatar_url: string | null
+          banner_background_color: string | null
+          banner_image_url: string | null
           bio: string | null
           company_name: string | null
           created_at: string | null
           desired_gig_types: string[] | null
           display_name: string | null
+          expertise_signature: string | null
           id: string
           invite_token_used: string | null
           invited_by_user_id: string | null
@@ -252,8 +345,11 @@ export type Database = {
           public_profile: boolean
           rate_range_max: number | null
           rate_range_min: number | null
+          requires_nda: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
+          signature_quote: string | null
           skills: string[] | null
+          smart_url_slug: string | null
           social_links: Json | null
           timeline_expectations: string | null
           typical_budget_max: number | null
@@ -261,13 +357,18 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          about_story?: string | null
+          accepts_intros?: boolean | null
           availability_status?: string | null
           avatar_url?: string | null
+          banner_background_color?: string | null
+          banner_image_url?: string | null
           bio?: string | null
           company_name?: string | null
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
+          expertise_signature?: string | null
           id: string
           invite_token_used?: string | null
           invited_by_user_id?: string | null
@@ -278,8 +379,11 @@ export type Database = {
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
+          requires_nda?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          signature_quote?: string | null
           skills?: string[] | null
+          smart_url_slug?: string | null
           social_links?: Json | null
           timeline_expectations?: string | null
           typical_budget_max?: number | null
@@ -287,13 +391,18 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          about_story?: string | null
+          accepts_intros?: boolean | null
           availability_status?: string | null
           avatar_url?: string | null
+          banner_background_color?: string | null
+          banner_image_url?: string | null
           bio?: string | null
           company_name?: string | null
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
+          expertise_signature?: string | null
           id?: string
           invite_token_used?: string | null
           invited_by_user_id?: string | null
@@ -304,8 +413,11 @@ export type Database = {
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
+          requires_nda?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          signature_quote?: string | null
           skills?: string[] | null
+          smart_url_slug?: string | null
           social_links?: Json | null
           timeline_expectations?: string | null
           typical_budget_max?: number | null
@@ -337,6 +449,10 @@ export type Database = {
       current_user_is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      generate_smart_url_slug: {
+        Args: { display_name_param: string }
+        Returns: string
       }
       get_user_role: {
         Args: { user_id: string }
