@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -60,11 +59,11 @@ export function ModerationDashboard() {
         .from('reports')
         .select(`
           *,
-          reporter:reporter_id (
+          reporter:users!reporter_id (
             display_name,
             email
           ),
-          reported_user:reported_user_id (
+          reported_user:users!reported_user_id (
             display_name,
             email,
             avatar_url
