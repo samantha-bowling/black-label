@@ -425,6 +425,131 @@ export type Database = {
           },
         ]
       }
+      lead_inquiries: {
+        Row: {
+          additional_details: string | null
+          budget_range: string | null
+          contacted_at: string | null
+          created_at: string
+          follow_up_date: string | null
+          id: string
+          inquirer_company: string | null
+          inquirer_email: string
+          inquirer_name: string
+          ip_address: unknown | null
+          lead_score: number | null
+          priority: string | null
+          profile_user_id: string
+          project_description: string
+          project_title: string
+          project_type: string
+          referrer_url: string | null
+          source: string | null
+          status: string | null
+          timeline: string
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          additional_details?: string | null
+          budget_range?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          follow_up_date?: string | null
+          id?: string
+          inquirer_company?: string | null
+          inquirer_email: string
+          inquirer_name: string
+          ip_address?: unknown | null
+          lead_score?: number | null
+          priority?: string | null
+          profile_user_id: string
+          project_description: string
+          project_title: string
+          project_type: string
+          referrer_url?: string | null
+          source?: string | null
+          status?: string | null
+          timeline: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          additional_details?: string | null
+          budget_range?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          follow_up_date?: string | null
+          id?: string
+          inquirer_company?: string | null
+          inquirer_email?: string
+          inquirer_name?: string
+          ip_address?: unknown | null
+          lead_score?: number | null
+          priority?: string | null
+          profile_user_id?: string
+          project_description?: string
+          project_title?: string
+          project_type?: string
+          referrer_url?: string | null
+          source?: string | null
+          status?: string | null
+          timeline?: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_inquiries_profile_user_id_fkey"
+            columns: ["profile_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_notes: {
+        Row: {
+          created_at: string
+          created_by_user_id: string
+          id: string
+          lead_inquiry_id: string
+          note: string
+          note_type: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by_user_id: string
+          id?: string
+          lead_inquiry_id: string
+          note: string
+          note_type?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by_user_id?: string
+          id?: string
+          lead_inquiry_id?: string
+          note?: string
+          note_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_created_by_user_id_fkey"
+            columns: ["created_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_notes_lead_inquiry_id_fkey"
+            columns: ["lead_inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "lead_inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       moderation_actions: {
         Row: {
           action_type: Database["public"]["Enums"]["moderation_action_type"]

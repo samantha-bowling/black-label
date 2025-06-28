@@ -6,6 +6,7 @@ import { CaseStudyCard } from './CaseStudyCard';
 import { CollaborationBadges } from './CollaborationBadges';
 import { AvailabilityIndicator } from './AvailabilityIndicator';
 import { InviterDisplay } from './InviterDisplay';
+import { ProfileCTA } from './ProfileCTA';
 import { AuthUser } from '@/types/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -125,6 +126,19 @@ export function EnhancedProfileView({ user, inviter, isOwner = false }: Enhanced
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Contact CTA - Only show for non-owners */}
+            {!isOwner && (
+              <ProfileCTA
+                userId={user.id}
+                displayName={user.displayName}
+                availabilityStatus={user.availability_status}
+                rateRangeMin={user.rate_range_min}
+                rateRangeMax={user.rate_range_max}
+                acceptsIntros={user.accepts_intros}
+                requiresNda={user.requires_nda}
+              />
+            )}
+
             {/* Show Inviter Display in sidebar for owners */}
             {isOwner && inviter && (
               <InviterDisplay inviter={inviter} />
