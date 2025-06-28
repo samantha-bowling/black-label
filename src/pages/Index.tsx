@@ -15,7 +15,7 @@ import { Star, Shield, CheckCircle } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const handlePostGigSignup = () => {
     navigate("/auth?role=poster");
@@ -27,6 +27,14 @@ const Index = () => {
 
   const handleSignIn = () => {
     navigate("/auth?mode=signin");
+  };
+
+  const handleDashboard = () => {
+    navigate("/dashboard");
+  };
+
+  const handlePostGig = () => {
+    navigate("/post-a-gig");
   };
 
   return (
@@ -42,10 +50,24 @@ const Index = () => {
             />
           </div>
           
-          <div className="flex items-center">
-            <ButtonSecondary onClick={handleSignIn}>
-              Sign In
-            </ButtonSecondary>
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <>
+                <span className="text-white/80 text-sm">
+                  Welcome back, {user.displayName}!
+                </span>
+                <ButtonSecondary onClick={handleDashboard}>
+                  Dashboard
+                </ButtonSecondary>
+                <ButtonSecondary onClick={signOut}>
+                  Sign Out
+                </ButtonSecondary>
+              </>
+            ) : (
+              <ButtonSecondary onClick={handleSignIn}>
+                Sign In
+              </ButtonSecondary>
+            )}
           </div>
         </div>
       </nav>
@@ -77,24 +99,64 @@ const Index = () => {
             </div>
             
             <div className="flex flex-col justify-center items-center space-y-4 animate-fade-in">
-              <ButtonPrimary 
-                size="lg" 
-                onClick={handlePostGigSignup}
-                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
-              >
-                <div className="text-center leading-tight">
-                  <div className="text-base font-bold">Looking for Talent?</div>
-                  <div className="text-sm font-semibold">Sign Up to Post Opportunities</div>
-                </div>
-              </ButtonPrimary>
-              
-              <ButtonSecondary 
-                size="lg" 
-                onClick={handleTalentSignup}
-                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
-              >
-                I have an invite
-              </ButtonSecondary>
+              {user ? (
+                // Show different CTAs for authenticated users
+                <>
+                  {user.role === 'gig_poster' ? (
+                    <ButtonPrimary 
+                      size="lg" 
+                      onClick={handlePostGig}
+                      className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
+                    >
+                      <div className="text-center leading-tight">
+                        <div className="text-base font-bold">Post a New Gig</div>
+                        <div className="text-sm font-semibold">Find the perfect talent</div>
+                      </div>
+                    </ButtonPrimary>
+                  ) : (
+                    <ButtonPrimary 
+                      size="lg" 
+                      onClick={handleDashboard}
+                      className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
+                    >
+                      <div className="text-center leading-tight">
+                        <div className="text-base font-bold">Go to Dashboard</div>
+                        <div className="text-sm font-semibold">Manage your profile</div>
+                      </div>
+                    </ButtonPrimary>
+                  )}
+                  
+                  <ButtonSecondary 
+                    size="lg" 
+                    onClick={handleDashboard}
+                    className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
+                  >
+                    View Profile & Settings
+                  </ButtonSecondary>
+                </>
+              ) : (
+                // Show signup CTAs for non-authenticated users
+                <>
+                  <ButtonPrimary 
+                    size="lg" 
+                    onClick={handlePostGigSignup}
+                    className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
+                  >
+                    <div className="text-center leading-tight">
+                      <div className="text-base font-bold">Looking for Talent?</div>
+                      <div className="text-sm font-semibold">Sign Up to Post Opportunities</div>
+                    </div>
+                  </ButtonPrimary>
+                  
+                  <ButtonSecondary 
+                    size="lg" 
+                    onClick={handleTalentSignup}
+                    className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
+                  >
+                    I have an invite
+                  </ButtonSecondary>
+                </>
+              )}
             </div>
             
             {/* Trust Indicators */}

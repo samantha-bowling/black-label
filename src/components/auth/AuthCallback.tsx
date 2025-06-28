@@ -28,17 +28,9 @@ export function AuthCallback() {
         return;
       }
 
-      // Now we have a user, determine where to redirect
+      // Now we have a user, redirect to landing page
       setIsProcessing(false);
-      
-      if (user.role === 'gig_poster') {
-        navigate('/post-a-gig');
-      } else if (user.role === 'gig_seeker') {
-        navigate('/dashboard');
-      } else {
-        // Fallback to dashboard
-        navigate('/dashboard');
-      }
+      navigate('/');
     };
 
     // Start processing after a brief delay to allow auth state to settle

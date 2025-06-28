@@ -16,6 +16,7 @@ import {
   getSignUpDescription, 
   shouldDisableSubmit 
 } from "@/lib/auth/authUtils";
+import { ArrowLeft } from "lucide-react";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -222,7 +223,20 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      {/* Navigation Header */}
+      <div className="fixed top-0 left-0 w-full bg-background/95 backdrop-blur border-b border-border z-50">
+        <div className="container mx-auto px-4 py-4">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center space-x-2 text-muted-foreground hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Home</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="w-full max-w-md mt-16">
         <CardLuxe className="glow-primary">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-2 mb-4">
