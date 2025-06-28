@@ -10,33 +10,44 @@ export function useInvites() {
 
   const validateInvite = async (token: string): Promise<boolean> => {
     try {
-      console.log('Starting invite validation for token:', token);
+      console.log('🔍 Starting invite validation for token:', token);
       
       // Validate UUID format first
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(token)) {
-        console.log('Invalid UUID format:', token);
+        console.log('❌ Invalid UUID format:', token);
         return false;
       }
 
-      // Direct query with maybeSingle() for better error handling
+      console.log('✅ Token format is valid, querying database...');
+
+      // Primary validation via direct database query
       const { data, error } = await supabase
         .from('invites')
         .select('token, used_by_user_id, expires_at, created_by_user_id, email')
         .eq('token', token)
         .maybeSingle();
 
+      console.log('📊 Database query result:', { data, error });
+
       if (error) {
-        console.error('Database query error:', error);
+        console.error('❌ Database query error:', error);
+        
+        // Check if this is an RLS error and try fallback
+        if (error.message?.includes('RLS') || error.message?.includes('policy')) {
+          console.log('🔄 RLS error detected, trying fallback validation...');
+          return await validateInviteViaEdgeFunction(token);
+        }
+        
         return false;
       }
 
       if (!data) {
-        console.log('No invite found with token:', token);
+        console.log('❌ No invite found with token:', token);
         return false;
       }
 
-      console.log('Found invite data:', {
+      console.log('✅ Found invite data:', {
         token: data.token,
         used_by_user_id: data.used_by_user_id,
         expires_at: data.expires_at,
@@ -46,7 +57,7 @@ export function useInvites() {
 
       // Check if invite is already used
       if (data.used_by_user_id) {
-        console.log('Invite already used by user:', data.used_by_user_id);
+        console.log('❌ Invite already used by user:', data.used_by_user_id);
         return false;
       }
 
@@ -54,15 +65,43 @@ export function useInvites() {
       const expiresAt = new Date(data.expires_at);
       const now = new Date();
       if (expiresAt <= now) {
-        console.log('Invite expired. Expires:', expiresAt.toISOString(), 'Now:', now.toISOString());
+        console.log('❌ Invite expired. Expires:', expiresAt.toISOString(), 'Now:', now.toISOString());
         return false;
       }
 
-      console.log('✓ Invite is valid and can be used');
+      console.log('✅ Invite is valid and ready to use!');
       return true;
 
     } catch (error) {
-      console.error('Unexpected error during invite validation:', error);
+      console.error('💥 Unexpected error during invite validation:', error);
+      
+      // Try fallback validation if primary method fails
+      console.log('🔄 Attempting fallback validation...');
+      return await validateInviteViaEdgeFunction(token);
+    }
+  };
+
+  const validateInviteViaEdgeFunction = async (token: string): Promise<boolean> => {
+    try {
+      console.log('🌐 Using edge function for invite validation...');
+      
+      const { data, error } = await supabase.functions.invoke('validate-invite', {
+        body: { token }
+      });
+
+      console.log('📡 Edge function response:', { data, error });
+
+      if (error) {
+        console.error('❌ Edge function error:', error);
+        return false;
+      }
+
+      const isValid = data?.isValid === true;
+      console.log('🔍 Edge function validation result:', isValid);
+      
+      return isValid;
+    } catch (error) {
+      console.error('💥 Edge function validation failed:', error);
       return false;
     }
   };

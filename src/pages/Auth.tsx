@@ -74,9 +74,10 @@ const Auth = () => {
     console.log('🔍 Starting comprehensive invite validation for token:', token);
     setValidationInProgress(true);
     setValidationDetails("🔍 Validating invite token...");
+    setError(null);
     
     try {
-      console.log('Token format check:', {
+      console.log('Token details:', {
         length: token.length,
         containsDashes: token.includes('-'),
         format: token
