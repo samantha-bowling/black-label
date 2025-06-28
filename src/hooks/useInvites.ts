@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -13,25 +12,7 @@ export function useInvites() {
     try {
       console.log('Validating invite token:', token);
       
-      // First try the database function approach
-      try {
-        const { data, error } = await supabase.rpc('validate_invite_token', {
-          token_param: token
-        });
-
-        if (error) {
-          console.error('RPC validation error:', error);
-          // Fall back to direct query if RPC fails
-        } else if (data && data.length > 0) {
-          const result = data[0];
-          console.log('RPC validation result:', result);
-          return result.is_valid === true;
-        }
-      } catch (rpcError) {
-        console.error('RPC call failed, falling back to direct query:', rpcError);
-      }
-
-      // Fallback: Direct query approach with better error handling
+      // Direct query approach with better error handling
       const { data, error } = await supabase
         .from('invites')
         .select('token, used_by_user_id, expires_at, created_by_user_id, email')
