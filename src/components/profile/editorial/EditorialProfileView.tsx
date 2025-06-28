@@ -2,10 +2,10 @@
 import { AuthUser } from '@/types/auth';
 import { CaseStudy } from '@/hooks/useCaseStudies';
 import { EditorialHeroSection } from './EditorialHeroSection';
-import { ProfileDNASection } from './ProfileDNASection';
-import { SelectedCreditsSection } from './SelectedCreditsSection';
+import { PersonalBackgroundSection } from './PersonalBackgroundSection';
+import { CollaborationDetailsSection } from './CollaborationDetailsSection';
 import { ProfessionalNarrativeSection } from './ProfessionalNarrativeSection';
-import { GigPreferencesSection } from './GigPreferencesSection';
+import { SelectedCreditsSection } from './SelectedCreditsSection';
 import { SocialProofSection } from './SocialProofSection';
 import { CallToActionSection } from './CallToActionSection';
 
@@ -29,36 +29,22 @@ export function EditorialProfileView({ user, caseStudies, inviter }: EditorialPr
       {/* Hero Section */}
       <EditorialHeroSection user={user} />
 
-      {/* Main Content */}
+      {/* Main Content - Single Column Layout */}
       <div className="relative">
-        {/* Core Profile DNA */}
-        <ProfileDNASection user={user} />
+        {/* Personal Background */}
+        <PersonalBackgroundSection user={user} />
 
-        {/* Two Column Layout */}
-        <div className="py-16 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-12">
-              {/* Main Content Column */}
-              <div className="lg:col-span-2 space-y-16">
-                {/* Professional Narrative */}
-                <ProfessionalNarrativeSection user={user} />
+        {/* Collaboration Details */}
+        <CollaborationDetailsSection user={user} />
 
-                {/* Selected Credits */}
-                <SelectedCreditsSection 
-                  caseStudies={caseStudies} 
-                  pastCredits={user.past_credits} 
-                />
-              </div>
+        {/* Professional Narrative */}
+        <ProfessionalNarrativeSection user={user} />
 
-              {/* Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-8 space-y-8">
-                  <GigPreferencesSection user={user} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Selected Credits */}
+        <SelectedCreditsSection 
+          caseStudies={caseStudies} 
+          pastCredits={user.past_credits} 
+        />
 
         {/* Social Proof */}
         <SocialProofSection inviter={inviter} />

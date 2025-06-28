@@ -9,17 +9,18 @@ interface EditorialHeroSectionProps {
 export function EditorialHeroSection({ user }: EditorialHeroSectionProps) {
   return (
     <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-      {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 opacity-95">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
+      {/* Clean Background */}
+      <div className="absolute inset-0 bg-background">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
       </div>
       
       {/* BLACKLABEL Logo */}
       <div className="absolute top-8 left-8">
-        <div className="text-white font-display text-xl tracking-wider">
-          <span className="hidden md:block">BLACKLABEL.gg</span>
-          <span className="md:hidden">BL</span>
-        </div>
+        <img 
+          src="/lovable-uploads/85f63ced-9364-4e81-a72f-044f549c0757.png" 
+          alt="BLACKLABEL" 
+          className="h-8 md:h-10 w-auto"
+        />
       </div>
 
       {/* Content */}
