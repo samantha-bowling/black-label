@@ -1,4 +1,3 @@
-
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -52,6 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .single();
 
       if (userProfile && !error) {
+        // Extract social links properly
+        const socialLinks = userProfile.social_links as Record<string, string> || {};
+        
         setUser({
           id: userProfile.id as UserId,
           email: email,
@@ -71,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           typical_budget_min: userProfile.typical_budget_min || undefined,
           typical_budget_max: userProfile.typical_budget_max || undefined,
           timeline_expectations: userProfile.timeline_expectations || undefined,
-          social_links: (userProfile.social_links as Record<string, string>) || undefined,
+          social_links: socialLinks,
           nda_required: userProfile.nda_required || undefined,
           invites_remaining: userProfile.invites_remaining,
           invited_by_user_id: userProfile.invited_by_user_id || undefined,
@@ -84,6 +86,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           smart_url_slug: userProfile.smart_url_slug || undefined,
           accepts_intros: userProfile.accepts_intros || undefined,
           requires_nda: userProfile.requires_nda || undefined,
+          poster_type: userProfile.poster_type || undefined,
+          location: userProfile.location || undefined,
+          website_url: socialLinks.website || userProfile.website_url || undefined,
+          linkedin_url: socialLinks.linkedin || userProfile.linkedin_url || undefined,
         });
         return true;
       } else if (retryCount < 3) {
