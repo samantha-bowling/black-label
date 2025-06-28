@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
 import { ProfileTagSelector } from '@/components/profile/ProfileTagSelector';
-import { ButtonPrimary } from '@/components/ui/primitives';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button, Card, Heading, Text } from '@/components/ui/design-primitives';
 import { TagCategory } from '@/types/profile-tags';
 import { UserRole } from '@/types/auth';
 import { useUserProfileTags } from '@/hooks/useProfileTags';
+import { LoadingSpinner } from '@/components/ui/design-primitives';
 
 interface ProfileDNATagsStepProps {
   userId: string;
@@ -68,31 +68,25 @@ export function ProfileDNATagsStep({ userId, userRole, onNext, onBack }: Profile
 
   if (isLoadingUserTags) {
     return (
-      <Card>
-        <CardContent className="p-8">
-          <div className="animate-pulse space-y-4">
-            <div className="h-6 bg-muted rounded w-1/3" />
-            <div className="space-y-3">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-12 bg-muted rounded" />
-              ))}
-            </div>
-          </div>
-        </CardContent>
+      <Card padding="lg" className="max-w-2xl mx-auto">
+        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+          <LoadingSpinner size="lg" />
+          <Text variant="secondary">Loading your profile tags...</Text>
+        </div>
       </Card>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-2xl mx-auto space-y-8">
       {/* Progress indicator */}
-      <div className="flex justify-center space-x-2 mb-6">
+      <div className="flex justify-center space-x-2">
         {categories.map((category, index) => (
           <div
             key={category}
-            className={`w-3 h-3 rounded-full transition-colors ${
+            className={`w-3 h-3 rounded-full transition-colors duration-200 ${
               index <= currentCategoryIndex 
-                ? 'bg-primary' 
+                ? 'bg-white' 
                 : 'bg-white/20'
             }`}
           />
@@ -100,15 +94,13 @@ export function ProfileDNATagsStep({ userId, userRole, onNext, onBack }: Profile
       </div>
 
       {/* Category header */}
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl text-white">
-            {getCategoryLabel(currentCategory)}
-          </CardTitle>
-          <p className="text-white/70">
-            Step {currentCategoryIndex + 1} of {categories.length}
-          </p>
-        </CardHeader>
+      <Card padding="lg" className="text-center">
+        <Heading as="h2" size="xl" className="mb-2">
+          {getCategoryLabel(currentCategory)}
+        </Heading>
+        <Text variant="secondary" size="lg">
+          Step {currentCategoryIndex + 1} of {categories.length}
+        </Text>
       </Card>
 
       {/* Tag selector */}
@@ -120,29 +112,31 @@ export function ProfileDNATagsStep({ userId, userRole, onNext, onBack }: Profile
       />
 
       {/* Navigation buttons */}
-      <div className="flex justify-between pt-4">
-        <ButtonPrimary
-          type="button"
-          onClick={handleBack}
+      <div className="flex justify-between items-center">
+        <Button
+          variant="secondary"
           size="lg"
-          className="bg-white/10 hover:bg-white/20"
+          onClick={handleBack}
         >
           {isFirstCategory ? 'Back to Profile' : 'Previous'}
-        </ButtonPrimary>
-        <ButtonPrimary
-          type="button"
-          onClick={handleNext}
+        </Button>
+        
+        <Button
+          variant="primary"
           size="lg"
+          onClick={handleNext}
           disabled={!hasMinimumTags()}
         >
           {isLastCategory ? 'Continue' : 'Next Category'}
-        </ButtonPrimary>
+        </Button>
       </div>
 
       {/* Help text for required fields */}
       {currentCategory === 'core_discipline' && !hasMinimumTags() && (
-        <div className="text-center text-destructive text-sm">
-          Please select at least 1 core discipline to continue
+        <div className="text-center">
+          <Text size="sm" className="text-red-400">
+            Please select at least 1 core discipline to continue
+          </Text>
         </div>
       )}
     </div>

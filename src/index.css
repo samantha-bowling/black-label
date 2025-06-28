@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700&display=swap');
 
-/* BlackLabel.gg Monochromatic Design System */
+/* BlackLabel.gg Consolidated Design System */
 
 @layer base {
   :root {
@@ -15,51 +15,46 @@
     --font-display: 'Orbitron', 'Rajdhani', sans-serif;
     --font-body: 'Satoshi', 'Inter', sans-serif;
 
-    /* Monochromatic Color Palette */
-    --primary: 0 0% 100%; /* Pure white for primary accent */
-    --primary-muted: 0 0% 85%; /* Light gray for muted primary */
-    --primary-foreground: 0 0% 0%; /* Pure black on white */
+    /* Core Color System - HSL for better control */
+    --primary: 0 0% 100%; /* Pure white */
+    --primary-muted: 0 0% 85%; /* Light gray */
+    --primary-foreground: 0 0% 0%; /* Pure black */
 
-    /* Backgrounds */
+    /* Backgrounds - Dark luxury */
     --background: 215 25% 4%; /* #0B0C10 - Near-black luxe */
     --surface: 220 12% 11%; /* #1A1B1F - Dark neutral surface */
     --card: 220 12% 11%;
     --card-foreground: 0 0% 100%;
 
     /* Text Colors */
-    --foreground: 0 0% 100%; /* #FFFFFF - Primary text */
-    --muted-foreground: 0 0% 71%; /* #B4B4B4 - Secondary text */
-    --text-tertiary: 0 0% 47%; /* #777 - Tertiary text */
+    --foreground: 0 0% 100%; /* Primary text */
+    --muted-foreground: 0 0% 71%; /* Secondary text */
+    --text-tertiary: 0 0% 47%; /* Tertiary text */
 
     /* Semantic Colors */
-    --success: 142 76% 66%; /* Keep green for success */
-    --warning: 45 93% 53%; /* Keep yellow for warning */
-    --destructive: 0 85% 68%; /* Keep red for errors */
+    --success: 142 76% 66%;
+    --warning: 45 93% 53%;
+    --destructive: 0 85% 68%;
     --destructive-foreground: 210 40% 98%;
 
     /* UI Elements */
-    --border: 220 9% 20%; /* #2C2D33 - Medium gray */
-    --input: 215 16% 12%; /* #1F2024 - Dark input background */
+    --border: 220 9% 20%; /* Medium gray borders */
+    --input: 215 16% 12%; /* Dark input background */
     --ring: 0 0% 100%; /* White focus ring */
-    --focus-ring: 0 0% 100%;
 
     /* Accent & Secondary */
     --secondary: 220 12% 11%;
     --secondary-foreground: 0 0% 100%;
     --accent: 220 12% 15%;
     --accent-foreground: 0 0% 100%;
-
-    /* Muted Elements */
     --muted: 220 9% 20%;
     
     /* Popover */
     --popover: 220 12% 11%;
     --popover-foreground: 0 0% 100%;
 
-    /* Border Radius */
+    /* Design Tokens */
     --radius: 0.5rem;
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
     --radius-xl: 1.25rem;
     --radius-full: 9999px;
 
@@ -70,14 +65,10 @@
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
 
-    /* Shadows & Elevation - Monochromatic */
+    /* Shadows - Monochromatic */
     --shadow-card: 0 0 20px rgba(0, 0, 0, 0.3);
     --shadow-hover: 0 0 40px rgba(0, 0, 0, 0.4);
     --shadow-focus: 0 0 0 2px rgba(255, 255, 255, 0.3);
-
-    /* Simplified Backgrounds - No gradients */
-    --background-surface: #1A1B1F;
-    --background-card: linear-gradient(145deg, #1A1B1F, #16171A);
   }
 
   .light {
@@ -91,7 +82,7 @@
     --muted-foreground: 215 16% 47%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --primary: 0 0% 0%; /* Black primary in light mode */
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
   }
 }
@@ -113,63 +104,32 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Typography Scale */
-  h1, .heading-xl {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    @apply text-4xl lg:text-5xl xl:text-6xl tracking-tight;
-    font-size: clamp(2rem, 4vw, 3.25rem);
+  /* Global focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-white ring-offset-2 ring-offset-background;
   }
 
-  h2, .heading-lg {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    @apply text-2xl lg:text-3xl tracking-tight;
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 6px;
   }
 
-  h3, .heading-md {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    @apply text-xl lg:text-2xl tracking-tight;
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--surface));
   }
 
-  h4, .heading-sm {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    @apply text-lg;
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
   }
 
-  /* Monochromatic text effects */
-  .text-gradient-primary {
-    @apply bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent;
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground));
   }
+}
 
-  .text-glow {
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  }
-
-  /* Card Components - Simplified */
-  .card-luxe {
-    @apply bg-surface border border-border rounded-xl p-6;
-    background: var(--background-card);
-    box-shadow: var(--shadow-card);
-    transition: all 0.3s ease;
-  }
-
-  .card-luxe:hover {
-    box-shadow: var(--shadow-hover);
-    background: linear-gradient(145deg, #1A1B1F, #222327);
-  }
-
-  /* Button Components - Monochromatic */
+@layer components {
+  /* Legacy compatibility - will be replaced by design primitives */
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-black bg-white;
     font-family: var(--font-display);
@@ -199,9 +159,18 @@
     box-shadow: var(--shadow-card);
   }
 
-  /* Input Components */
+  .card-luxe {
+    @apply bg-surface border border-border rounded-xl p-6;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
+  }
+
+  .card-luxe:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
   .input-luxe {
-    @apply w-full rounded-md border border-border bg-input px-3 py-2 text-sm;
+    @apply w-full rounded-md border border-border bg-input px-3 py-2 text-sm text-white placeholder:text-white/50;
     font-family: var(--font-body);
     background-color: hsl(var(--input));
     transition: all 0.2s ease;
@@ -212,11 +181,6 @@
     box-shadow: var(--shadow-focus);
   }
 
-  .input-luxe::placeholder {
-    color: hsl(var(--text-tertiary));
-  }
-
-  /* Badge Components */
   .badge-beta {
     @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white text-black;
     font-family: var(--font-display);
@@ -225,62 +189,7 @@
     text-transform: uppercase;
   }
 
-  /* Utility Classes */
-  .glow-primary {
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-  }
-
-  .border-glow {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-
-  /* Animations */
-  .pulse-glow {
-    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
-    }
-  }
-
-  /* Loading States */
-  .loading-line {
-    background: linear-gradient(90deg, transparent, hsl(var(--foreground)), transparent);
-    background-size: 200% 100%;
-    animation: loading-line 1.5s infinite;
-  }
-
-  @keyframes loading-line {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Scrollbar Styling */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: hsl(var(--surface));
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--foreground));
-  }
-}
-
-/* Component-specific styles */
-@layer components {
+  /* Layout utilities */
   .hero-section {
     @apply relative min-h-screen flex items-center justify-center;
     background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
@@ -297,4 +206,49 @@
   .empty-state-icon {
     @apply w-12 h-12 mx-auto mb-4 text-white/30;
   }
+
+  /* Animation utilities */
+  .glow-primary {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  }
+
+  .border-glow {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .loading-line {
+    background: linear-gradient(90deg, transparent, hsl(var(--foreground)), transparent);
+    background-size: 200% 100%;
+    animation: loading-line 1.5s infinite;
+  }
+
+  @keyframes loading-line {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
+
+/* Responsive typography */
+@layer utilities {
+  .text-responsive-xs { font-size: clamp(0.75rem, 2vw, 0.875rem); }
+  .text-responsive-sm { font-size: clamp(0.875rem, 2.5vw, 1rem); }
+  .text-responsive-base { font-size: clamp(1rem, 3vw, 1.125rem); }
+  .text-responsive-lg { font-size: clamp(1.125rem, 3.5vw, 1.25rem); }
+  .text-responsive-xl { font-size: clamp(1.25rem, 4vw, 1.5rem); }
+  .text-responsive-2xl { font-size: clamp(1.5rem, 5vw, 1.875rem); }
+  .text-responsive-3xl { font-size: clamp(1.875rem, 6vw, 2.25rem); }
+  .text-responsive-4xl { font-size: clamp(2.25rem, 7vw, 3rem); }
 }
