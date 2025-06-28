@@ -56,6 +56,9 @@ export default function PublicProfile() {
         }
       }
 
+      // Safely parse social_links from Json type
+      const socialLinks = userData.social_links as Record<string, string> | null;
+
       const user: AuthUser = {
         id: userData.id as UserId,
         email: '', // Don't expose email in public profiles
@@ -75,7 +78,7 @@ export default function PublicProfile() {
         typical_budget_min: userData.typical_budget_min || undefined,
         typical_budget_max: userData.typical_budget_max || undefined,
         timeline_expectations: userData.timeline_expectations || undefined,
-        social_links: (userData.social_links as Record<string, string>) || undefined,
+        social_links: socialLinks || undefined,
         nda_required: userData.nda_required || undefined,
         invites_remaining: userData.invites_remaining,
         invited_by_user_id: userData.invited_by_user_id || undefined,
@@ -91,8 +94,8 @@ export default function PublicProfile() {
         requires_nda: userData.requires_nda || undefined,
         poster_type: userData.poster_type || undefined,
         location: userData.location || undefined,
-        website_url: userData.social_links?.website || userData.website_url || undefined,
-        linkedin_url: userData.social_links?.linkedin || userData.linkedin_url || undefined,
+        website_url: socialLinks?.website || userData.website_url || undefined,
+        linkedin_url: socialLinks?.linkedin || userData.linkedin_url || undefined,
       };
 
       return { user, inviter: inviterInfo };

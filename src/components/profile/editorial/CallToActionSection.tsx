@@ -41,8 +41,8 @@ export function CallToActionSection({ user }: CallToActionSectionProps) {
 
       {showContactForm && (
         <ProfileContactForm
-          userId={user.id}
-          displayName={user.displayName}
+          profileUserId={user.id}
+          profileName={user.displayName}
           isOpen={showContactForm}
           onClose={() => setShowContactForm(false)}
         />
