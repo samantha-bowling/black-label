@@ -27,14 +27,12 @@ export function ProfileDNATagsStep({ userId, userRole, onNext, onBack }: Profile
         case 'core_discipline': return 'Disciplines You Need';
         case 'specialty_skill': return 'Skills You Require';
         case 'project_type': return 'Your Project Types';
-        default: return category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
       }
     } else {
       switch (category) {
         case 'core_discipline': return 'Your Core Disciplines';
         case 'specialty_skill': return 'Your Specialty Skills';
         case 'project_type': return 'Project Types You Work On';
-        default: return category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
       }
     }
   };
