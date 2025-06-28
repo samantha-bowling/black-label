@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { InviteManager } from "@/components/invites/InviteManager";
+import { ProfileSettings } from "@/components/profile/ProfileSettings";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -142,14 +142,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="profile">
-            <Card className="bg-white/5 border-white/10">
-              <CardHeader>
-                <CardTitle className="text-white">Profile Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-white/70">Profile management coming soon...</p>
-              </CardContent>
-            </Card>
+            <ProfileSettings />
           </TabsContent>
 
           {showInvites && (
