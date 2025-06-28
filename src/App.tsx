@@ -10,6 +10,7 @@ import { AuthCallback } from "@/components/auth/AuthCallback";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Onboarding from "./pages/Onboarding";
 import PostGig from "./pages/PostGig";
 import Admin from "./pages/Admin";
 import PublicProfile from "./pages/PublicProfile";
@@ -33,6 +34,14 @@ const App = () => (
               element={
                 <AuthGuard requireAuth>
                   <Dashboard />
+                </AuthGuard>
+              } 
+            />
+            <Route 
+              path="/onboarding" 
+              element={
+                <AuthGuard requireAuth>
+                  <Onboarding />
                 </AuthGuard>
               } 
             />

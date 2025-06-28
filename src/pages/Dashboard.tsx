@@ -130,7 +130,10 @@ const Dashboard = () => {
                   <p className="text-white/80 mb-4">
                     Finish setting up your profile to get the most out of the platform.
                   </p>
-                  <Button variant="secondary">
+                  <Button 
+                    variant="secondary"
+                    onClick={() => navigate('/onboarding')}
+                  >
                     Complete Onboarding
                   </Button>
                 </CardContent>
