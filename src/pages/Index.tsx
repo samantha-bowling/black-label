@@ -62,25 +62,30 @@ const Index = () => {
               />
             </div>
             
-            <HeadingXL glow className="animate-fade-in">
-              The Premier Talent Platform for Games
-            </HeadingXL>
-            
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in">
-              Connect with top-tier professionals and studios for contract, consulting, and freelance work—built by veterans who know what it takes to ship.
-            </p>
-            
-            <p className="text-lg text-white font-medium animate-fade-in">
-              Where verified creators and real opportunities meet.
-            </p>
+            <div className="space-y-4">
+              <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-white uppercase tracking-wide animate-fade-in">
+                The Premier Talent Platform for Games
+              </h1>
+              
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in">
+                Connect with top-tier professionals and studios for contract, consulting, and freelance work—built by veterans who know what it takes to ship.
+              </p>
+              
+              <p className="text-lg text-white font-medium animate-fade-in">
+                Where verified creators and real opportunities meet.
+              </p>
+            </div>
             
             <div className="flex flex-col justify-center items-center space-y-4 animate-fade-in">
               <ButtonPrimary 
                 size="lg" 
                 onClick={handlePostGigSignup}
-                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
+                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
               >
-                Looking for Talent? Sign Up to Post Gigs
+                <div className="text-center leading-tight">
+                  <div className="text-base font-bold">Looking for Talent?</div>
+                  <div className="text-sm font-semibold">Sign Up to Post Opportunities</div>
+                </div>
               </ButtonPrimary>
               
               <ButtonSecondary 
@@ -115,9 +120,9 @@ const Index = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 space-y-4">
-            <HeadingLG>
+            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-white uppercase tracking-wide">
               Built for Gaming Excellence
-            </HeadingLG>
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               A curated ecosystem where proven game professionals connect with ambitious teams.
             </p>
@@ -165,9 +170,9 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-3xl mx-auto space-y-4">
-            <HeadingLG className="font-display">
+            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-white uppercase tracking-wide">
               WHITEGLOVE. BLACKLABEL.
-            </HeadingLG>
+            </h2>
             <p className="text-muted-foreground text-lg">
               Where credibility meets craft.
             </p>
