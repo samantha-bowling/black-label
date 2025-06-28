@@ -2,11 +2,10 @@
 import { AuthUser } from '@/types/auth';
 import { CaseStudy } from '@/hooks/useCaseStudies';
 import { EditorialHeroSection } from './EditorialHeroSection';
-import { PersonalBackgroundSection } from './PersonalBackgroundSection';
+import { AboutSection } from './AboutSection';
+import { ProfileDNASection } from './ProfileDNASection';
+import { HighlightedProjectsSection } from './HighlightedProjectsSection';
 import { CollaborationDetailsSection } from './CollaborationDetailsSection';
-import { ProfessionalNarrativeSection } from './ProfessionalNarrativeSection';
-import { SelectedCreditsSection } from './SelectedCreditsSection';
-import { SocialProofSection } from './SocialProofSection';
 import { CallToActionSection } from './CallToActionSection';
 
 interface InviterInfo {
@@ -29,29 +28,20 @@ export function EditorialProfileView({ user, caseStudies, inviter }: EditorialPr
       {/* Hero Section */}
       <EditorialHeroSection user={user} />
 
-      {/* Main Content - Single Column Layout */}
-      <div className="relative">
-        {/* Personal Background */}
-        <PersonalBackgroundSection user={user} />
+      {/* About Section */}
+      <AboutSection user={user} />
 
-        {/* Collaboration Details */}
-        <CollaborationDetailsSection user={user} />
+      {/* Profile DNA Section */}
+      <ProfileDNASection user={user} />
 
-        {/* Professional Narrative */}
-        <ProfessionalNarrativeSection user={user} />
+      {/* Highlighted Projects Section */}
+      <HighlightedProjectsSection caseStudies={caseStudies} />
 
-        {/* Selected Credits */}
-        <SelectedCreditsSection 
-          caseStudies={caseStudies} 
-          pastCredits={user.past_credits} 
-        />
+      {/* Collaboration Details Section */}
+      <CollaborationDetailsSection user={user} />
 
-        {/* Social Proof */}
-        <SocialProofSection inviter={inviter} />
-
-        {/* Call to Action */}
-        <CallToActionSection user={user} />
-      </div>
+      {/* Call to Action Section */}
+      <CallToActionSection user={user} />
     </div>
   );
 }

@@ -13,29 +13,28 @@ export function CallToActionSection({ user }: CallToActionSectionProps) {
 
   return (
     <>
-      <section className="py-24 px-6 bg-gradient-to-t from-slate-900/50 to-transparent">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4 font-display">
-              READY TO COLLABORATE?
-            </h2>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Connect with {user.displayName} for your next creative project
-            </p>
+      <section className="max-w-4xl mx-auto px-4 pt-8">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold text-white">
+            Ready to collaborate?
+          </h2>
+          <p className="text-white/70 text-lg">
+            Connect with {user.displayName} for your next creative project.
+          </p>
+          
+          <div className="pt-4">
+            <Button
+              onClick={() => setShowContactForm(true)}
+              className="border border-white text-white font-semibold px-6 py-2 bg-transparent hover:bg-white hover:text-black transition-all duration-150"
+              data-profile-id={user.id}
+            >
+              Request to Collaborate
+            </Button>
           </div>
 
-          <Button
-            size="lg"
-            className="bg-black border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 transform hover:scale-105 px-12 py-4 text-lg font-semibold"
-            onClick={() => setShowContactForm(true)}
-            data-profile-id={user.id}
-          >
-            Request to Collaborate
-          </Button>
-
-          <div className="mt-8 text-white/40 text-sm">
-            All inquiries are reviewed personally by {user.displayName}
-          </div>
+          <p className="text-white/50 text-sm pt-2">
+            All inquiries are reviewed personally by {user.displayName}.
+          </p>
         </div>
       </section>
 
