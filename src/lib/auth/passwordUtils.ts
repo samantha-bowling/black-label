@@ -19,7 +19,7 @@ const commonPasswords = [
 
 export const checkPasswordStrength = (password: string): PasswordStrength => {
   const requirements = {
-    length: password.length >= 8,
+    length: password.length >= 12,
     uppercase: /[A-Z]/.test(password),
     lowercase: /[a-z]/.test(password),
     numbers: /\d/.test(password),
@@ -34,8 +34,8 @@ export const checkPasswordStrength = (password: string): PasswordStrength => {
 
   // Length check
   if (!requirements.length) {
-    feedback.push('Use at least 8 characters');
-  } else if (password.length >= 12) {
+    feedback.push('Use at least 12 characters');
+  } else if (password.length >= 16) {
     score += 1;
   }
 

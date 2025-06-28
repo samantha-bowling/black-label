@@ -48,7 +48,7 @@ export function PasswordStrengthIndicator({
       <div className="space-y-1">
         <RequirementItem 
           met={strength.requirements.length} 
-          text="At least 8 characters" 
+          text="At least 12 characters" 
         />
         <RequirementItem 
           met={strength.requirements.uppercase} 
