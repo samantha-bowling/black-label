@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,6 +30,7 @@ const Auth = () => {
   const [intendedRole, setIntendedRole] = useState<UserRole | null>(null);
   const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
   const [validationDetails, setValidationDetails] = useState<string>("");
+  const [validationInProgress, setValidationInProgress] = useState(false);
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -71,27 +71,37 @@ const Auth = () => {
   }, [searchParams]);
 
   const validateInviteToken = async (token: string) => {
-    console.log('Starting invite validation for token:', token);
-    setValidationDetails("Validating invite token...");
+    console.log('🔍 Starting comprehensive invite validation for token:', token);
+    setValidationInProgress(true);
+    setValidationDetails("🔍 Validating invite token...");
     
     try {
+      console.log('Token format check:', {
+        length: token.length,
+        containsDashes: token.includes('-'),
+        format: token
+      });
+
       const isValid = await validateInvite(token);
-      console.log('Validation result:', isValid);
+      console.log('✨ Final validation result:', isValid);
       
       setInviteValid(isValid);
+      setValidationInProgress(false);
       
       if (!isValid) {
-        setError('Invalid or expired invite token');
-        setValidationDetails("❌ Token validation failed - token may be invalid, expired, or already used");
+        setError('❌ Invalid, expired, or already used invite token');
+        setValidationDetails("❌ Validation failed - token may be invalid, expired, or already used");
       } else {
         setError(null);
-        setValidationDetails("✓ Valid invite token");
+        setValidationDetails("✅ Valid invite token - ready to proceed with signup");
       }
     } catch (error) {
-      console.error('Validation error:', error);
+      console.error('💥 Validation error:', error);
       setInviteValid(false);
-      setError('Error validating invite token');
-      setValidationDetails(`❌ Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setValidationInProgress(false);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown validation error';
+      setError(`❌ Validation error: ${errorMsg}`);
+      setValidationDetails(`❌ Technical error during validation: ${errorMsg}`);
     }
   };
 
@@ -232,13 +242,32 @@ const Auth = () => {
             </p>
             {isSignUp && inviteToken && (
               <div className="mt-4 p-3 bg-primary/20 border border-primary/30 rounded-md">
-                <p className="text-primary text-sm font-medium">
+                <p className={`text-sm font-medium ${
+                  validationInProgress ? 'text-yellow-400' : 
+                  inviteValid === true ? 'text-green-400' : 
+                  inviteValid === false ? 'text-red-400' : 'text-primary'
+                }`}>
                   {validationDetails}
                 </p>
+                {validationInProgress && (
+                  <div className="mt-2 flex items-center text-xs text-yellow-300">
+                    <div className="animate-spin w-3 h-3 border border-yellow-400 border-t-transparent rounded-full mr-2"></div>
+                    Checking token validity...
+                  </div>
+                )}
                 {inviteValid === false && (
-                  <p className="text-destructive text-xs mt-1">
-                    Please check your invite link or contact support
-                  </p>
+                  <div className="mt-2">
+                    <p className="text-destructive text-xs">
+                      Please check your invite link or contact support
+                    </p>
+                    <button
+                      onClick={() => validateInviteToken(inviteToken)}
+                      className="text-xs text-primary hover:text-primary-muted mt-1 underline"
+                      disabled={validationInProgress}
+                    >
+                      Retry validation
+                    </button>
+                  </div>
                 )}
               </div>
             )}
@@ -321,7 +350,8 @@ const Auth = () => {
               size="lg"
               disabled={
                 shouldDisableSubmit(isSignUp, intendedRole, inviteValid, inviteToken) || 
-                (isSignUp && !isFormValid())
+                (isSignUp && !isFormValid()) ||
+                validationInProgress
               }
             >
               {isSignUp ? 'Create Account' : 'Sign In'}

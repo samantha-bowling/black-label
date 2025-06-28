@@ -10,30 +10,39 @@ export function useInvites() {
 
   const validateInvite = async (token: string): Promise<boolean> => {
     try {
-      console.log('Validating invite token:', token);
+      console.log('Starting invite validation for token:', token);
       
-      // Direct query approach with better error handling
+      // Validate UUID format first
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(token)) {
+        console.log('Invalid UUID format:', token);
+        return false;
+      }
+
+      // Direct query with maybeSingle() for better error handling
       const { data, error } = await supabase
         .from('invites')
         .select('token, used_by_user_id, expires_at, created_by_user_id, email')
         .eq('token', token)
-        .single();
+        .maybeSingle();
 
       if (error) {
-        console.error('Direct query error:', error);
-        if (error.code === 'PGRST116') {
-          console.log('No invite found with this token');
-          return false;
-        }
-        throw error;
-      }
-
-      if (!data) {
-        console.log('No invite data returned');
+        console.error('Database query error:', error);
         return false;
       }
 
-      console.log('Direct query result:', data);
+      if (!data) {
+        console.log('No invite found with token:', token);
+        return false;
+      }
+
+      console.log('Found invite data:', {
+        token: data.token,
+        used_by_user_id: data.used_by_user_id,
+        expires_at: data.expires_at,
+        created_by_user_id: data.created_by_user_id,
+        email: data.email
+      });
 
       // Check if invite is already used
       if (data.used_by_user_id) {
@@ -45,15 +54,15 @@ export function useInvites() {
       const expiresAt = new Date(data.expires_at);
       const now = new Date();
       if (expiresAt <= now) {
-        console.log('Invite expired. Expires:', expiresAt, 'Now:', now);
+        console.log('Invite expired. Expires:', expiresAt.toISOString(), 'Now:', now.toISOString());
         return false;
       }
 
-      console.log('Invite is valid');
+      console.log('✓ Invite is valid and can be used');
       return true;
 
     } catch (error) {
-      console.error('Error validating invite:', error);
+      console.error('Unexpected error during invite validation:', error);
       return false;
     }
   };
