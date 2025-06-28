@@ -30,7 +30,7 @@ serve(async (req) => {
 
     console.log('Validating invite token:', token)
 
-    // Use the secure validation function we created in the database
+    // Use the database function we created
     const { data, error } = await supabase.rpc('validate_invite_token', {
       token_param: token
     })
@@ -43,6 +43,9 @@ serve(async (req) => {
       )
     }
 
+    console.log('Raw validation data:', data)
+
+    // The function returns an array, get the first result
     const validationResult = data?.[0]
     
     if (!validationResult) {

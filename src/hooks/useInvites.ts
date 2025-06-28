@@ -11,19 +11,66 @@ export function useInvites() {
 
   const validateInvite = async (token: string): Promise<boolean> => {
     try {
+      console.log('Validating invite token:', token);
+      
+      // First try the database function approach
+      try {
+        const { data, error } = await supabase.rpc('validate_invite_token', {
+          token_param: token
+        });
+
+        if (error) {
+          console.error('RPC validation error:', error);
+          // Fall back to direct query if RPC fails
+        } else if (data && data.length > 0) {
+          const result = data[0];
+          console.log('RPC validation result:', result);
+          return result.is_valid === true;
+        }
+      } catch (rpcError) {
+        console.error('RPC call failed, falling back to direct query:', rpcError);
+      }
+
+      // Fallback: Direct query approach with better error handling
       const { data, error } = await supabase
         .from('invites')
-        .select('*')
+        .select('token, used_by_user_id, expires_at, created_by_user_id, email')
         .eq('token', token)
-        .is('used_by_user_id', null)
-        .gt('expires_at', new Date().toISOString())
         .single();
 
-      if (error || !data) {
+      if (error) {
+        console.error('Direct query error:', error);
+        if (error.code === 'PGRST116') {
+          console.log('No invite found with this token');
+          return false;
+        }
+        throw error;
+      }
+
+      if (!data) {
+        console.log('No invite data returned');
         return false;
       }
 
+      console.log('Direct query result:', data);
+
+      // Check if invite is already used
+      if (data.used_by_user_id) {
+        console.log('Invite already used by user:', data.used_by_user_id);
+        return false;
+      }
+
+      // Check if invite is expired
+      const expiresAt = new Date(data.expires_at);
+      const now = new Date();
+      if (expiresAt <= now) {
+        console.log('Invite expired. Expires:', expiresAt, 'Now:', now);
+        return false;
+      }
+
+      console.log('Invite is valid');
       return true;
+
     } catch (error) {
       console.error('Error validating invite:', error);
       return false;

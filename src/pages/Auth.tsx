@@ -30,6 +30,7 @@ const Auth = () => {
   const [inviteValid, setInviteValid] = useState<boolean | null>(null);
   const [intendedRole, setIntendedRole] = useState<UserRole | null>(null);
   const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
+  const [validationDetails, setValidationDetails] = useState<string>("");
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -70,10 +71,27 @@ const Auth = () => {
   }, [searchParams]);
 
   const validateInviteToken = async (token: string) => {
-    const isValid = await validateInvite(token);
-    setInviteValid(isValid);
-    if (!isValid) {
-      setError('Invalid or expired invite token');
+    console.log('Starting invite validation for token:', token);
+    setValidationDetails("Validating invite token...");
+    
+    try {
+      const isValid = await validateInvite(token);
+      console.log('Validation result:', isValid);
+      
+      setInviteValid(isValid);
+      
+      if (!isValid) {
+        setError('Invalid or expired invite token');
+        setValidationDetails("❌ Token validation failed - token may be invalid, expired, or already used");
+      } else {
+        setError(null);
+        setValidationDetails("✓ Valid invite token");
+      }
+    } catch (error) {
+      console.error('Validation error:', error);
+      setInviteValid(false);
+      setError('Error validating invite token');
+      setValidationDetails(`❌ Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -137,14 +155,11 @@ const Auth = () => {
           setPassword("");
           setConfirmPassword("");
           setDisplayName("");
-          // Don't navigate here - let the auth state change handle it
         }
       } else {
         const result = await signIn(email, password);
         if (result.error) {
           setError(result.error);
-        } else {
-          // Don't navigate here - let the auth state change handle it
         }
       }
     } catch (err: any) {
@@ -217,13 +232,14 @@ const Auth = () => {
             </p>
             {isSignUp && inviteToken && (
               <div className="mt-4 p-3 bg-primary/20 border border-primary/30 rounded-md">
-                <p className="text-primary text-sm">
-                  {inviteValid === true 
-                    ? '✓ Valid invite token' 
-                    : inviteValid === false 
-                    ? '✗ Invalid invite token' 
-                    : 'Validating invite...'}
+                <p className="text-primary text-sm font-medium">
+                  {validationDetails}
                 </p>
+                {inviteValid === false && (
+                  <p className="text-destructive text-xs mt-1">
+                    Please check your invite link or contact support
+                  </p>
+                )}
               </div>
             )}
           </div>
