@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthUser, UserId } from '@/types/auth';
-import { EnhancedProfileView } from '@/components/profile/EnhancedProfileView';
+import { useCaseStudies } from '@/hooks/useCaseStudies';
+import { EditorialProfileView } from '@/components/profile/editorial/EditorialProfileView';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 
@@ -88,23 +89,31 @@ export default function PublicProfile() {
         smart_url_slug: userData.smart_url_slug || undefined,
         accepts_intros: userData.accepts_intros || undefined,
         requires_nda: userData.requires_nda || undefined,
+        poster_type: userData.poster_type || undefined,
+        location: userData.location || undefined,
+        website_url: userData.social_links?.website || userData.website_url || undefined,
+        linkedin_url: userData.social_links?.linkedin || userData.linkedin_url || undefined,
       };
 
       return { user, inviter: inviterInfo };
     },
   });
 
+  // Fetch case studies for the user
+  const { caseStudies } = useCaseStudies(profileData?.user?.id);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="max-w-6xl mx-auto">
-          <div className="h-64 bg-muted animate-pulse rounded-lg mb-8" />
-          <div className="px-6 space-y-6">
-            <div className="h-8 bg-muted animate-pulse rounded w-1/3" />
-            <div className="h-32 bg-muted animate-pulse rounded" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-48 bg-muted animate-pulse rounded" />
+        <div className="animate-pulse">
+          {/* Hero Loading */}
+          <div className="h-[60vh] bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800" />
+          
+          {/* Content Loading */}
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <div className="grid md:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-32 bg-white/5 rounded-lg" />
               ))}
             </div>
           </div>
@@ -116,11 +125,11 @@ export default function PublicProfile() {
   if (error || !profileData?.user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <Card className="max-w-md">
+        <Card className="max-w-md bg-white/5 border-white/10">
           <CardContent className="p-8 text-center">
-            <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h1 className="text-xl font-semibold mb-2">Profile Not Found</h1>
-            <p className="text-muted-foreground">
+            <AlertCircle className="w-12 h-12 text-white/50 mx-auto mb-4" />
+            <h1 className="text-xl font-semibold mb-2 text-white">Profile Not Found</h1>
+            <p className="text-white/60">
               The profile you're looking for doesn't exist or isn't publicly available.
             </p>
           </CardContent>
@@ -130,12 +139,10 @@ export default function PublicProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <EnhancedProfileView 
-        user={profileData.user} 
-        inviter={profileData.inviter}
-        isOwner={false} 
-      />
-    </div>
+    <EditorialProfileView 
+      user={profileData.user} 
+      caseStudies={caseStudies}
+      inviter={profileData.inviter}
+    />
   );
 }
