@@ -8,16 +8,11 @@ interface EditorialHeroSectionProps {
 
 export function EditorialHeroSection({ user }: EditorialHeroSectionProps) {
   return (
-    <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-      {/* Clean Background */}
-      <div className="absolute inset-0 bg-background">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
-      </div>
-      
+    <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-background">
       {/* BLACKLABEL Logo */}
       <div className="absolute top-8 left-8">
         <img 
-          src="/lovable-uploads/85f63ced-9364-4e81-a72f-044f549c0757.png" 
+          src="/lovable-uploads/44d33ed2-1a46-498d-9cf3-cde6180ba786.png" 
           alt="BLACKLABEL" 
           className="h-8 md:h-10 w-auto"
         />
