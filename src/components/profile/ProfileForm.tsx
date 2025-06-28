@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { FormFieldGroup } from '@/components/forms/FormFieldGroup';
+import { PosterType } from '@/types/auth';
 import { 
   sharedOnboardingFields, 
   socialLinksFields, 
@@ -93,7 +94,7 @@ export function ProfileForm() {
         rate_range_max: user.rate_range_max,
         desired_gig_types: user.desired_gig_types?.join(', ') || '',
         company_name: user.company_name || '',
-        poster_type: user.poster_type,
+        poster_type: user.poster_type || undefined,
         typical_budget_min: user.typical_budget_min,
         typical_budget_max: user.typical_budget_max,
         timeline_expectations: user.timeline_expectations || '',
@@ -124,6 +125,12 @@ export function ProfileForm() {
         }
       });
 
+      // Safely cast poster_type to PosterType or null
+      const posterType = data.poster_type && 
+        ['individual', 'indie_dev', 'studio', 'agency', 'publisher'].includes(data.poster_type) 
+        ? data.poster_type as PosterType 
+        : null;
+
       const updateData = {
         display_name: data.display_name,
         bio: data.bio || null,
@@ -138,7 +145,7 @@ export function ProfileForm() {
         desired_gig_types: data.desired_gig_types ? data.desired_gig_types.split(',').map(s => s.trim()).filter(s => s) : null,
         // Gig poster fields
         company_name: data.company_name || null,
-        poster_type: data.poster_type || null,
+        poster_type: posterType,
         typical_budget_min: data.typical_budget_min || null,
         typical_budget_max: data.typical_budget_max || null,
         timeline_expectations: data.timeline_expectations || null,
