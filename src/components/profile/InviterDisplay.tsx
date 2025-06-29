@@ -63,7 +63,7 @@ export function InviterDisplay({ inviter, className = '' }: InviterDisplayProps)
 
   // If inviter profile is public and has slug, make it clickable
   return (
-    <Link to={`/profile/${inviter.smartUrlSlug}`} className="block">
+    <Link to={`/${inviter.smartUrlSlug}`} className="block">
       <Card className={`${className} bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200/50 hover:shadow-md transition-all duration-200 hover:scale-[1.02] cursor-pointer`}>
         <CardContent className="p-4">
           <div className="flex items-center space-x-3">

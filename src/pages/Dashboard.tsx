@@ -90,7 +90,7 @@ const Dashboard = () => {
                     </Button>
                     <Button 
                       variant="outline" 
-                      onClick={() => navigate('/profile/' + user.smart_url_slug)}
+                      onClick={() => navigate('/' + user.smart_url_slug)}
                       className="w-full"
                     >
                       View Public Profile

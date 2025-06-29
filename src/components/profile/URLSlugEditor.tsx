@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { validateSlug, sanitizeSlug } from '@/lib/routing/slugValidation';
 
 export function URLSlugEditor() {
   const { user } = useAuth();
@@ -14,7 +15,8 @@ export function URLSlugEditor() {
   const [slug, setSlug] = useState(user?.smart_url_slug || '');
   const [isChecking, setIsChecking] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [availability, setAvailability] = useState<'available' | 'taken' | 'checking' | null>(null);
+  const [availability, setAvailability] = useState<'available' | 'taken' | 'checking' | 'invalid' | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [checkTimeout, setCheckTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -24,11 +26,21 @@ export function URLSlugEditor() {
   const checkAvailability = async (slugToCheck: string) => {
     if (!slugToCheck || slugToCheck === user?.smart_url_slug) {
       setAvailability(null);
+      setValidationError(null);
+      return;
+    }
+
+    // Validate slug format first
+    const validation = validateSlug(slugToCheck);
+    if (!validation.isValid) {
+      setAvailability('invalid');
+      setValidationError(validation.error || 'Invalid slug format');
       return;
     }
 
     setIsChecking(true);
     setAvailability('checking');
+    setValidationError(null);
 
     try {
       const { data, error } = await supabase
@@ -53,13 +65,8 @@ export function URLSlugEditor() {
   };
 
   const handleSlugChange = (value: string) => {
-    // Clean the input - only allow alphanumeric and hyphens
-    const cleanedValue = value
-      .toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-      .replace(/^-+|-+$/g, '');
-
+    // Clean the input using our sanitization utility
+    const cleanedValue = sanitizeSlug(value);
     setSlug(cleanedValue);
 
     // Clear existing timeout
@@ -116,7 +123,7 @@ export function URLSlugEditor() {
     if (availability === 'available') {
       return <CheckCircle className="w-4 h-4 text-green-500" />;
     }
-    if (availability === 'taken') {
+    if (availability === 'taken' || availability === 'invalid') {
       return <AlertCircle className="w-4 h-4 text-red-500" />;
     }
     return null;
@@ -126,10 +133,11 @@ export function URLSlugEditor() {
     if (isChecking || availability === 'checking') return 'Checking availability...';
     if (availability === 'available') return 'Available!';
     if (availability === 'taken') return 'This URL is already taken';
+    if (availability === 'invalid') return validationError || 'Invalid URL format';
     return '';
   };
 
-  const currentUrl = `${window.location.origin}/profile/${user?.smart_url_slug}`;
+  const currentUrl = `${window.location.origin}/${user?.smart_url_slug}`;
 
   return (
     <div className="space-y-4">
@@ -137,7 +145,7 @@ export function URLSlugEditor() {
         <Label htmlFor="url-slug">Profile URL</Label>
         <div className="flex items-center space-x-2 mt-1">
           <span className="text-sm text-muted-foreground">
-            {window.location.origin}/profile/
+            {window.location.origin}/
           </span>
           <Input
             id="url-slug"
@@ -151,7 +159,7 @@ export function URLSlugEditor() {
         {getStatusText() && (
           <p className={`text-sm mt-1 ${
             availability === 'available' ? 'text-green-600' : 
-            availability === 'taken' ? 'text-red-600' : 
+            (availability === 'taken' || availability === 'invalid') ? 'text-red-600' : 
             'text-muted-foreground'
           }`}>
             {getStatusText()}
@@ -181,6 +189,7 @@ export function URLSlugEditor() {
           !slug ||
           slug === user?.smart_url_slug ||
           availability === 'taken' ||
+          availability === 'invalid' ||
           isChecking
         }
       >

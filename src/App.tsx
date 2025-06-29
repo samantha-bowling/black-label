@@ -7,13 +7,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { AuthCallback } from "@/components/auth/AuthCallback";
+import { ProfileRouteHandler } from "@/components/routing/ProfileRouteHandler";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Onboarding from "./pages/Onboarding";
 import PostGig from "./pages/PostGig";
 import Admin from "./pages/Admin";
-import PublicProfile from "./pages/PublicProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +26,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            {/* Static routes - MUST come first */}
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
@@ -61,8 +62,11 @@ const App = () => (
                 </AuthGuard>
               } 
             />
-            <Route path="/profile/:slug" element={<PublicProfile />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            
+            {/* Dynamic profile route - MUST come after all static routes */}
+            <Route path="/:slug" element={<ProfileRouteHandler />} />
+            
+            {/* Catch-all 404 route - MUST be last */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

@@ -12,7 +12,7 @@ export function ProfileSettings() {
   const { user } = useAuth();
 
   const currentProfileUrl = user?.smart_url_slug 
-    ? `${window.location.origin}/profile/${user.smart_url_slug}`
+    ? `${window.location.origin}/${user.smart_url_slug}`
     : null;
 
   return (
