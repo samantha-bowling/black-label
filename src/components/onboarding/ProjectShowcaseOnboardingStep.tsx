@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormSection } from '@/components/forms/FormSection';
@@ -36,7 +37,7 @@ const projectFields = [
     validation: { required: 'Your role is required' }
   },
   {
-    id: 'timeline',
+    id: 'dates',
     label: 'Timeline',
     type: 'text' as const,
     placeholder: 'e.g., 3 months, 2023',
@@ -79,7 +80,7 @@ export function ProjectShowcaseOnboardingStep({
     defaultValues: {
       name: '',
       role: '',
-      timeline: '',
+      dates: '',
       description: '',
       link: ''
     }
@@ -144,8 +145,8 @@ export function ProjectShowcaseOnboardingStep({
                   <div className="flex-1">
                     <h4 className="text-white font-medium">{project.name}</h4>
                     <p className="text-white/70 text-sm">{project.role}</p>
-                    {project.timeline && (
-                      <p className="text-white/50 text-xs">{project.timeline}</p>
+                    {project.dates && (
+                      <p className="text-white/50 text-xs">{project.dates}</p>
                     )}
                   </div>
                   <div className="flex gap-2">
