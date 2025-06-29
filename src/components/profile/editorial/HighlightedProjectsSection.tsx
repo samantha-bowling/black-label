@@ -1,4 +1,5 @@
 
+import { SectionHeader } from '@/components/ui/section-header';
 import { CaseStudy } from '@/hooks/useCaseStudies';
 
 interface HighlightedProjectsSectionProps {
@@ -14,7 +15,11 @@ export function HighlightedProjectsSection({ caseStudies }: HighlightedProjectsS
 
   return (
     <section className="max-w-4xl mx-auto px-4 mb-6">
-      <h2 className="text-white font-semibold mb-4 text-lg">Highlighted Projects</h2>
+      <SectionHeader 
+        title="HIGHLIGHTED PROJECTS" 
+        level={2}
+        className="mb-6"
+      />
       
       <div className="space-y-6">
         {visibleProjects.map((project) => (

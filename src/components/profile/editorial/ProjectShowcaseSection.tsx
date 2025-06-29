@@ -1,6 +1,8 @@
 
 import { ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { SectionHeader } from '@/components/ui/section-header';
+import { Pill } from '@/components/ui/pill';
 import { AuthUser, ProjectShowcase } from '@/types/auth';
 
 interface ProjectShowcaseSectionProps {
@@ -16,7 +18,11 @@ export function ProjectShowcaseSection({ user }: ProjectShowcaseSectionProps) {
 
   return (
     <section className="max-w-4xl mx-auto px-4 mb-8">
-      <h2 className="text-2xl font-bold text-white mb-6">Featured Projects</h2>
+      <SectionHeader 
+        title="FEATURED PROJECTS" 
+        level={2}
+        className="mb-6"
+      />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project, index) => (
@@ -50,9 +56,9 @@ export function ProjectShowcaseSection({ user }: ProjectShowcaseSectionProps) {
               {/* Role */}
               {project.role && (
                 <div className="mb-3">
-                  <span className="text-white/70 text-sm font-medium bg-white/10 px-2 py-1 rounded">
+                  <Pill variant="primary" size="sm">
                     {project.role}
-                  </span>
+                  </Pill>
                 </div>
               )}
 

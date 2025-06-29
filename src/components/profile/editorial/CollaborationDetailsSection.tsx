@@ -1,5 +1,6 @@
 
-import { Badge } from '@/components/ui/badge';
+import { Pill } from '@/components/ui/pill';
+import { SectionHeader } from '@/components/ui/section-header';
 import { AuthUser } from '@/types/auth';
 
 interface CollaborationDetailsSectionProps {
@@ -17,13 +18,13 @@ export function CollaborationDetailsSection({ user }: CollaborationDetailsSectio
   const getStatusBadge = () => {
     switch (user.availability_status) {
       case 'available':
-        return { text: 'Actively Seeking', color: 'bg-green-600 text-white' };
+        return { text: 'Actively Seeking', variant: 'success' as const };
       case 'limited':
-        return { text: 'Open to Projects', color: 'bg-yellow-600 text-white' };
+        return { text: 'Open to Projects', variant: 'warning' as const };
       case 'unavailable':
-        return { text: 'Booked', color: 'bg-red-600 text-white' };
+        return { text: 'Booked', variant: 'status' as const };
       default:
-        return { text: 'Open to Projects', color: 'bg-blue-600 text-white' };
+        return { text: 'Open to Projects', variant: 'info' as const };
     }
   };
 
@@ -38,17 +39,19 @@ export function CollaborationDetailsSection({ user }: CollaborationDetailsSectio
         {/* Project Types */}
         {projectTypes.length > 0 && (
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-              Project Types
-            </h3>
+            <SectionHeader 
+              title="PROJECT TYPES" 
+              level={3}
+              className="mb-4"
+            />
             <div className="flex flex-wrap gap-2">
               {projectTypes.slice(0, 6).map((type, index) => (
-                <Badge 
+                <Pill 
                   key={index}
-                  className="bg-white/10 text-white/90 border-white/20 hover:bg-white/20 transition-colors px-3 py-1"
+                  variant="default"
                 >
                   {type}
-                </Badge>
+                </Pill>
               ))}
             </div>
           </div>
@@ -57,17 +60,19 @@ export function CollaborationDetailsSection({ user }: CollaborationDetailsSectio
         {/* Available For */}
         {availableFor.length > 0 && (
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-              Available For
-            </h3>
+            <SectionHeader 
+              title="AVAILABLE FOR" 
+              level={3}
+              className="mb-4"
+            />
             <div className="flex flex-wrap gap-2">
               {availableFor.map((type, index) => (
-                <Badge 
+                <Pill 
                   key={index}
-                  className="bg-green-600/20 text-green-200 border-green-400/30 hover:bg-green-600/30 transition-colors px-3 py-1"
+                  variant="success"
                 >
                   {type}
-                </Badge>
+                </Pill>
               ))}
             </div>
           </div>
@@ -75,31 +80,39 @@ export function CollaborationDetailsSection({ user }: CollaborationDetailsSectio
 
         {/* Work Style */}
         <div>
-          <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-            Work Style
-          </h3>
+          <SectionHeader 
+            title="WORK STYLE" 
+            level={3}
+            className="mb-4"
+          />
           <div className="flex flex-wrap gap-2">
             {workStyle.map((style, index) => (
-              <Badge 
+              <Pill 
                 key={index}
-                className="bg-blue-600/20 text-blue-200 border-blue-400/30 hover:bg-blue-600/30 transition-colors px-3 py-1"
+                variant="info"
               >
                 {style}
-              </Badge>
+              </Pill>
             ))}
           </div>
         </div>
 
         {/* Current Status */}
         <div>
-          <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-            Current Status
-          </h3>
+          <SectionHeader 
+            title="CURRENT STATUS" 
+            level={3}
+            className="mb-4"
+          />
           <div className="flex items-center gap-3">
-            <div className={`w-3 h-3 rounded-full ${status.color.includes('green') ? 'bg-green-500' : status.color.includes('yellow') ? 'bg-yellow-500' : status.color.includes('red') ? 'bg-red-500' : 'bg-blue-500'}`} />
-            <Badge className={`${status.color} px-3 py-1`}>
+            <div className={`w-3 h-3 rounded-full ${
+              status.variant === 'success' ? 'bg-green-500' : 
+              status.variant === 'warning' ? 'bg-yellow-500' : 
+              status.variant === 'status' ? 'bg-red-500' : 'bg-blue-500'
+            }`} />
+            <Pill variant={status.variant}>
               {status.text}
-            </Badge>
+            </Pill>
           </div>
         </div>
       </div>

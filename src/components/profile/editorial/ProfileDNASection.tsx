@@ -1,5 +1,6 @@
 
-import { Badge } from '@/components/ui/badge';
+import { Pill } from '@/components/ui/pill';
+import { SectionHeader } from '@/components/ui/section-header';
 import { AuthUser } from '@/types/auth';
 
 interface ProfileDNASectionProps {
@@ -17,22 +18,24 @@ export function ProfileDNASection({ user }: ProfileDNASectionProps) {
   }
 
   return (
-    <section className="max-w-4xl mx-auto px-4 gap-y-3 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <section className="max-w-4xl mx-auto px-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Disciplines */}
         {disciplines.length > 0 && (
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-              DISCIPLINES
-            </h3>
+            <SectionHeader 
+              title="DISCIPLINES" 
+              level={3}
+              className="mb-4"
+            />
             <div className="flex flex-wrap gap-2">
               {disciplines.map((discipline, index) => (
-                <Badge 
+                <Pill 
                   key={index}
-                  className="bg-neutral-800 text-white text-sm font-medium px-3 py-1 rounded-full hover:bg-neutral-700"
+                  variant="secondary"
                 >
                   {discipline}
-                </Badge>
+                </Pill>
               ))}
             </div>
           </div>
@@ -41,17 +44,19 @@ export function ProfileDNASection({ user }: ProfileDNASectionProps) {
         {/* Project Types */}
         {projectTypes.length > 0 && (
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-              PROJECT TYPES
-            </h3>
+            <SectionHeader 
+              title="PROJECT TYPES" 
+              level={3}
+              className="mb-4"
+            />
             <div className="flex flex-wrap gap-2">
               {projectTypes.map((type, index) => (
-                <Badge 
+                <Pill 
                   key={index}
-                  className="bg-neutral-800 text-white text-sm font-medium px-3 py-1 rounded-full hover:bg-neutral-700"
+                  variant="secondary"
                 >
                   {type}
-                </Badge>
+                </Pill>
               ))}
             </div>
           </div>
@@ -60,17 +65,19 @@ export function ProfileDNASection({ user }: ProfileDNASectionProps) {
         {/* Specialties */}
         {specialties.length > 0 && (
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-              SPECIALTIES
-            </h3>
+            <SectionHeader 
+              title="SPECIALTIES" 
+              level={3}
+              className="mb-4"
+            />
             <div className="flex flex-wrap gap-2">
               {specialties.map((specialty, index) => (
-                <Badge 
+                <Pill 
                   key={index}
-                  className="bg-neutral-800 text-white text-sm font-medium px-3 py-1 rounded-full hover:bg-neutral-700"
+                  variant="secondary"
                 >
                   {specialty}
-                </Badge>
+                </Pill>
               ))}
             </div>
           </div>

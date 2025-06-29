@@ -1,9 +1,10 @@
 
 import { useCollaborationOptions, COLLABORATION_TYPES } from '@/hooks/useCollaborationOptions';
-import { Badge } from '@/components/ui/badge';
+import { Pill } from '@/components/ui/pill';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { SectionHeader } from '@/components/ui/section-header';
 
 interface CollaborationBadgesProps {
   userId?: string;
@@ -17,7 +18,9 @@ export function CollaborationBadges({ userId, isOwner = false }: CollaborationBa
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Collaboration Options</CardTitle>
+          <CardTitle className="text-lg uppercase tracking-wide">
+            COLLABORATION OPTIONS
+          </CardTitle>
           <p className="text-sm text-muted-foreground">
             Select the types of collaboration you're open to:
           </p>
@@ -62,16 +65,19 @@ export function CollaborationBadges({ userId, isOwner = false }: CollaborationBa
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3">Available For</h3>
+      <SectionHeader 
+        title="AVAILABLE FOR" 
+        level={3}
+        className="mb-4"
+      />
       <div className="flex flex-wrap gap-2">
         {collaborationOptions.map((option) => (
-          <Badge 
+          <Pill 
             key={option.id} 
-            variant="secondary"
-            className="bg-green-100 text-green-800 hover:bg-green-200"
+            variant="success"
           >
             {COLLABORATION_TYPES[option.option_type as keyof typeof COLLABORATION_TYPES] || option.option_type}
-          </Badge>
+          </Pill>
         ))}
       </div>
     </div>

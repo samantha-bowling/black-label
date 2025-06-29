@@ -1,5 +1,7 @@
-import { Badge } from '@/components/ui/badge';
+
+import { Pill } from '@/components/ui/pill';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { SectionHeader } from '@/components/ui/section-header';
 import { useUserProfileTags } from '@/hooks/useProfileTags';
 import { TagCategory, TAG_CATEGORY_LABELS } from '@/types/profile-tags';
 
@@ -60,13 +62,13 @@ export function ProfileTagDisplay({
     return (
       <div className="flex flex-wrap gap-2">
         {allTags.map((userTag) => (
-          <Badge 
+          <Pill 
             key={userTag.id} 
             variant="secondary"
-            className="text-xs"
+            size="sm"
           >
             {userTag.tag?.name}
-          </Badge>
+          </Pill>
         ))}
       </div>
     );
@@ -82,19 +84,19 @@ export function ProfileTagDisplay({
         return (
           <Card key={category}>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">
+              <CardTitle className="text-base uppercase tracking-wide">
                 {TAG_CATEGORY_LABELS[category]}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="flex flex-wrap gap-2">
                 {categoryTags.map((userTag) => (
-                  <Badge 
+                  <Pill 
                     key={userTag.id} 
-                    variant={category === 'core_discipline' ? 'default' : 'secondary'}
+                    variant={category === 'core_discipline' ? 'primary' : 'secondary'}
                   >
                     {userTag.tag?.name}
-                  </Badge>
+                  </Pill>
                 ))}
               </div>
             </CardContent>
