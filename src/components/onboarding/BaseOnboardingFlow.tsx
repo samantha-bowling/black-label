@@ -1,11 +1,16 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { UserRole, PosterType, ProjectShowcase } from '@/types/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { useOnboardingSubmission } from '@/hooks/useOnboardingSubmission';
+import { useOnboardingValidation } from '@/hooks/useOnboardingValidation';
+import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
 import { getOnboardingConfig } from '@/lib/onboarding/onboardingConfig';
+import { gigSeekerSchema, gigPosterSchema } from '@/lib/validation/onboardingValidation';
 import { OnboardingStep } from './OnboardingStep';
+import { OnboardingProgressIndicator } from './OnboardingProgressIndicator';
 import { SharedOnboardingFields } from './SharedOnboardingFields';
 import { ProfileDNATagsStep } from './ProfileDNATagsStep';
 import { ProjectShowcaseOnboardingStep } from './ProjectShowcaseOnboardingStep';
@@ -51,7 +56,6 @@ interface OnboardingFormData {
 }
 
 export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowProps) {
-  const [currentStep, setCurrentStep] = useState(1);
   const [projectShowcaseData, setProjectShowcaseData] = useState<ProjectShowcase[]>([]);
   const { user } = useAuth();
   const config = getOnboardingConfig(userRole);
@@ -60,9 +64,27 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
     onComplete
   });
 
+  // Use progress management hook
+  const {
+    currentStep,
+    totalSteps,
+    completedSteps,
+    goToNextStep,
+    goToPreviousStep,
+    goToStep,
+    markStepComplete,
+    canGoToStep,
+    getCurrentStepConfig
+  } = useOnboardingProgress({ userRole });
+
+  // Form setup with validation schema
+  const validationSchema = userRole === 'gig_seeker' ? gigSeekerSchema : gigPosterSchema;
+  
   const form = useForm<OnboardingFormData>({
+    resolver: zodResolver(validationSchema),
+    mode: 'onChange',
     defaultValues: {
-      display_name: user?.displayName || '',
+      display_name: user?.display_name || '',
       bio: user?.bio || '',
       location: user?.location || '',
       years_experience: user?.years_experience,
@@ -87,28 +109,41 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
     }
   });
 
-  const handleNext = () => {
-    if (currentStep < config.totalSteps) {
-      setCurrentStep(currentStep + 1);
+  // Use validation hook
+  const { validateStep } = useOnboardingValidation({ form, userRole });
+
+  const handleNext = async () => {
+    const isValid = await form.trigger();
+    const stepValid = validateStep(form.getValues());
+    
+    if (isValid && stepValid) {
+      markStepComplete(currentStep, form.getValues());
+      goToNextStep();
     }
   };
 
   const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+    goToPreviousStep();
+  };
+
+  const handleStepClick = (step: number) => {
+    if (canGoToStep(step)) {
+      goToStep(step);
     }
   };
 
   const handleProjectShowcaseNext = () => {
     // Store project data and continue
     form.setValue('project_showcase', projectShowcaseData);
-    handleNext();
+    markStepComplete(currentStep, { project_showcase: projectShowcaseData });
+    goToNextStep();
   };
 
-  const currentStepConfig = config.steps[currentStep - 1];
+  const currentStepConfig = getCurrentStepConfig();
+  const stepTitles = config.steps.map(step => step.title.replace("Let's set up your profile", "Setup").replace("Define your professional DNA", "DNA").replace("Showcase your best work", "Projects").replace("Professional story & experience", "Experience").replace("Privacy & profile settings", "Privacy"));
 
   const renderStepContent = () => {
-    const isLastStep = currentStep === config.totalSteps;
+    const isLastStep = currentStep === totalSteps;
 
     switch (currentStepConfig.component) {
       case 'shared':
@@ -212,9 +247,22 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
       title={currentStepConfig.title}
       description={currentStepConfig.description}
       currentStep={currentStep}
-      totalSteps={config.totalSteps}
+      totalSteps={totalSteps}
     >
-      {renderStepContent()}
+      <div className="space-y-8">
+        {/* Enhanced Progress Indicator */}
+        <OnboardingProgressIndicator
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          completedSteps={completedSteps}
+          stepTitles={stepTitles}
+          onStepClick={handleStepClick}
+          canNavigate={true}
+        />
+
+        {/* Step Content */}
+        {renderStepContent()}
+      </div>
     </OnboardingStep>
   );
 }
