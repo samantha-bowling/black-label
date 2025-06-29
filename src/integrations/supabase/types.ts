@@ -964,11 +964,14 @@ export type Database = {
           about_story: string | null
           accepts_intros: boolean | null
           availability_status: string | null
+          available_for: string[] | null
           avatar_url: string | null
+          awards: string[] | null
           banner_background_color: string | null
           banner_image_url: string | null
           bio: string | null
           company_name: string | null
+          core_disciplines: string[] | null
           created_at: string | null
           desired_gig_types: string[] | null
           display_name: string | null
@@ -989,9 +992,11 @@ export type Database = {
           past_credits: string | null
           poster_type: Database["public"]["Enums"]["poster_type"] | null
           project_showcase: Json | null
+          project_types: string[] | null
           public_profile: boolean
           rate_range_max: number | null
           rate_range_min: number | null
+          rate_type: string | null
           requires_nda: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
           search_visibility_reduced: boolean
@@ -1005,17 +1010,21 @@ export type Database = {
           typical_budget_min: number | null
           updated_at: string | null
           website_url: string | null
+          work_style: string[] | null
           years_experience: number | null
         }
         Insert: {
           about_story?: string | null
           accepts_intros?: boolean | null
           availability_status?: string | null
+          available_for?: string[] | null
           avatar_url?: string | null
+          awards?: string[] | null
           banner_background_color?: string | null
           banner_image_url?: string | null
           bio?: string | null
           company_name?: string | null
+          core_disciplines?: string[] | null
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
@@ -1036,9 +1045,11 @@ export type Database = {
           past_credits?: string | null
           poster_type?: Database["public"]["Enums"]["poster_type"] | null
           project_showcase?: Json | null
+          project_types?: string[] | null
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
+          rate_type?: string | null
           requires_nda?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
           search_visibility_reduced?: boolean
@@ -1052,17 +1063,21 @@ export type Database = {
           typical_budget_min?: number | null
           updated_at?: string | null
           website_url?: string | null
+          work_style?: string[] | null
           years_experience?: number | null
         }
         Update: {
           about_story?: string | null
           accepts_intros?: boolean | null
           availability_status?: string | null
+          available_for?: string[] | null
           avatar_url?: string | null
+          awards?: string[] | null
           banner_background_color?: string | null
           banner_image_url?: string | null
           bio?: string | null
           company_name?: string | null
+          core_disciplines?: string[] | null
           created_at?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
@@ -1083,9 +1098,11 @@ export type Database = {
           past_credits?: string | null
           poster_type?: Database["public"]["Enums"]["poster_type"] | null
           project_showcase?: Json | null
+          project_types?: string[] | null
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
+          rate_type?: string | null
           requires_nda?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
           search_visibility_reduced?: boolean
@@ -1099,6 +1116,7 @@ export type Database = {
           typical_budget_min?: number | null
           updated_at?: string | null
           website_url?: string | null
+          work_style?: string[] | null
           years_experience?: number | null
         }
         Relationships: [

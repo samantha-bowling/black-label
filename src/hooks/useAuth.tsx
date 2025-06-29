@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthUser, SessionStatus, UserRole, UserId } from '@/types/auth';
+import { AuthUser, SessionStatus, UserRole, UserId, ProjectShowcase } from '@/types/auth';
 import { createAuthToasts } from '@/lib/auth/toastUtils';
 import { getRedirectUrl } from '@/lib/auth/authUtils';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +54,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Extract social links properly
         const socialLinks = userProfile.social_links as Record<string, string> || {};
         
+        // Safely parse project_showcase from jsonb
+        let projectShowcase: ProjectShowcase[] = [];
+        try {
+          if (userProfile.project_showcase) {
+            if (typeof userProfile.project_showcase === 'string') {
+              projectShowcase = JSON.parse(userProfile.project_showcase);
+            } else if (Array.isArray(userProfile.project_showcase)) {
+              projectShowcase = userProfile.project_showcase as ProjectShowcase[];
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing project_showcase:', error);
+          projectShowcase = [];
+        }
+        
         setUser({
           id: userProfile.id as UserId,
           email: email,
@@ -88,11 +103,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           requires_nda: userProfile.requires_nda || undefined,
           poster_type: userProfile.poster_type || undefined,
           location: userProfile.location || undefined,
-          website_url: socialLinks.website || userProfile.website_url || undefined,
-          linkedin_url: socialLinks.linkedin || userProfile.linkedin_url || undefined,
+          website_url: socialLinks?.website || userProfile.website_url || undefined,
+          linkedin_url: socialLinks?.linkedin || userProfile.linkedin_url || undefined,
           years_experience: userProfile.years_experience || undefined,
-          project_showcase: userProfile.project_showcase || undefined,
-          // New profile form fields
+          project_showcase: projectShowcase,
+          // New profile form fields - accessing the newly added columns
           core_disciplines: userProfile.core_disciplines || undefined,
           project_types: userProfile.project_types || undefined,
           awards: userProfile.awards || undefined,

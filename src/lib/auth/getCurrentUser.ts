@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { AuthUser, UserId } from '@/types/auth';
+import { AuthUser, UserId, ProjectShowcase } from '@/types/auth';
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
@@ -21,6 +21,21 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     if (profileError || !userProfile) {
       console.error('Error fetching user profile:', profileError);
       return null;
+    }
+
+    // Safely parse project_showcase from jsonb
+    let projectShowcase: ProjectShowcase[] = [];
+    try {
+      if (userProfile.project_showcase) {
+        if (typeof userProfile.project_showcase === 'string') {
+          projectShowcase = JSON.parse(userProfile.project_showcase);
+        } else if (Array.isArray(userProfile.project_showcase)) {
+          projectShowcase = userProfile.project_showcase as ProjectShowcase[];
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing project_showcase:', error);
+      projectShowcase = [];
     }
 
     return {
@@ -47,6 +62,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       invites_remaining: userProfile.invites_remaining,
       invited_by_user_id: userProfile.invited_by_user_id || undefined,
       invite_token_used: userProfile.invite_token_used || undefined,
+      years_experience: userProfile.years_experience || undefined,
+      project_showcase: projectShowcase,
+      // New profile form fields
+      core_disciplines: userProfile.core_disciplines || undefined,
+      project_types: userProfile.project_types || undefined,
+      awards: userProfile.awards || undefined,
+      available_for: userProfile.available_for || undefined,
+      work_style: userProfile.work_style || undefined,
+      rate_type: userProfile.rate_type || undefined,
     };
   } catch (error) {
     console.error('Error getting current user:', error);
