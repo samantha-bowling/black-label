@@ -22,13 +22,19 @@ export function BasicInformationSection({ form }: BasicInformationSectionProps) 
               id: 'location',
               label: 'Location',
               type: 'text',
-              placeholder: 'City, Country'
+              placeholder: 'City, Country',
+              description: 'Where are you based?'
             },
             {
               id: 'years_experience',
               label: 'Years of Professional Experience',
               type: 'number',
-              placeholder: 'e.g., 5'
+              placeholder: 'e.g., 5',
+              description: 'How many years have you been working professionally?',
+              validation: {
+                min: { value: 0, message: 'Experience cannot be negative' },
+                max: { value: 50, message: 'Please enter a realistic number of years' }
+              }
             }
           ]}
           form={form}

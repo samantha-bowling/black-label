@@ -15,15 +15,20 @@ interface ProfileFormData {
   display_name: string;
   bio?: string;
   location?: string;
-  skills?: string;
-  past_credits?: string;
+  years_experience?: number;
+  skills?: string[];
+  core_disciplines?: string[];
+  project_types?: string[];
+  awards?: string[];
+  available_for?: string[];
+  work_style?: string[];
+  rate_type?: 'hourly' | 'project' | 'salary' | null;
+  rate_min?: number;
+  rate_max?: number;
   'social_links.linkedin'?: string;
   'social_links.github'?: string;
   'social_links.website'?: string;
   availability_status?: string;
-  rate_range_min?: number;
-  rate_range_max?: number;
-  desired_gig_types?: string;
   company_name?: string;
   poster_type?: string;
   typical_budget_min?: number;
@@ -32,7 +37,6 @@ interface ProfileFormData {
   nda_required?: boolean;
   website_url?: string;
   linkedin_url?: string;
-  years_experience?: number;
 }
 
 export function ProfileForm() {
@@ -44,15 +48,20 @@ export function ProfileForm() {
       display_name: '',
       bio: '',
       location: '',
-      skills: '',
-      past_credits: '',
+      years_experience: undefined,
+      skills: [],
+      core_disciplines: [],
+      project_types: [],
+      awards: [],
+      available_for: [],
+      work_style: [],
+      rate_type: null,
+      rate_min: undefined,
+      rate_max: undefined,
       'social_links.linkedin': '',
       'social_links.github': '',
       'social_links.website': '',
       availability_status: '',
-      rate_range_min: undefined,
-      rate_range_max: undefined,
-      desired_gig_types: '',
       company_name: '',
       poster_type: undefined,
       typical_budget_min: undefined,
@@ -61,7 +70,6 @@ export function ProfileForm() {
       nda_required: false,
       website_url: '',
       linkedin_url: '',
-      years_experience: undefined,
     }
   });
 

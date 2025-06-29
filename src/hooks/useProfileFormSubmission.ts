@@ -10,15 +10,20 @@ interface ProfileFormData {
   display_name: string;
   bio?: string;
   location?: string;
-  skills?: string;
-  past_credits?: string;
+  years_experience?: number;
+  skills?: string[];
+  core_disciplines?: string[];
+  project_types?: string[];
+  awards?: string[];
+  available_for?: string[];
+  work_style?: string[];
+  rate_type?: 'hourly' | 'project' | 'salary' | null;
+  rate_min?: number;
+  rate_max?: number;
   'social_links.linkedin'?: string;
   'social_links.github'?: string;
   'social_links.website'?: string;
   availability_status?: string;
-  rate_range_min?: number;
-  rate_range_max?: number;
-  desired_gig_types?: string;
   company_name?: string;
   poster_type?: string;
   typical_budget_min?: number;
@@ -27,7 +32,6 @@ interface ProfileFormData {
   nda_required?: boolean;
   website_url?: string;
   linkedin_url?: string;
-  years_experience?: number;
 }
 
 export function useProfileFormSubmission(projectShowcase: ProjectShowcase[]) {
@@ -65,14 +69,27 @@ export function useProfileFormSubmission(projectShowcase: ProjectShowcase[]) {
         display_name: data.display_name,
         bio: data.bio || null,
         location: data.location || null,
-        skills: data.skills ? data.skills.split(',').map(s => s.trim()).filter(s => s) : null,
-        past_credits: data.past_credits || null,
+        years_experience: data.years_experience || null,
         social_links: Object.keys(socialLinks).length > 0 ? socialLinks : null,
+        
+        // New work preference fields
+        available_for: data.available_for?.length ? data.available_for : null,
+        work_style: data.work_style?.length ? data.work_style : null,
+        
+        // New skill and discipline fields
+        skills: data.skills?.length ? data.skills : null,
+        core_disciplines: data.core_disciplines?.length ? data.core_disciplines : null,
+        project_types: data.project_types?.length ? data.project_types : null,
+        awards: data.awards?.length ? data.awards : null,
+        
+        // Rate information
+        rate_type: data.rate_type || null,
+        rate_range_min: data.rate_min || null,
+        rate_range_max: data.rate_max || null,
+        
         // Gig seeker fields
         availability_status: data.availability_status || null,
-        rate_range_min: data.rate_range_min || null,
-        rate_range_max: data.rate_range_max || null,
-        desired_gig_types: data.desired_gig_types ? data.desired_gig_types.split(',').map(s => s.trim()).filter(s => s) : null,
+        
         // Gig poster fields
         company_name: data.company_name || null,
         poster_type: posterType,
@@ -80,11 +97,10 @@ export function useProfileFormSubmission(projectShowcase: ProjectShowcase[]) {
         typical_budget_max: data.typical_budget_max || null,
         timeline_expectations: data.timeline_expectations || null,
         nda_required: data.nda_required || false,
+        
         // Legacy fields for backward compatibility
         website_url: socialLinks.website || null,
         linkedin_url: socialLinks.linkedin || null,
-        // New Phase 1 fields
-        years_experience: data.years_experience || null,
         project_showcase: projectShowcase as any,
       };
 

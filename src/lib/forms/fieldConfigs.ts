@@ -1,7 +1,7 @@
 import { FormFieldConfig } from '@/components/forms/FormFieldGroup';
 import { PosterType } from '@/types/auth';
 
-// Shared onboarding fields - updated with location, years experience, and bio character limit
+// Shared onboarding fields - removed location and years_experience to avoid duplication
 export const sharedOnboardingFields: FormFieldConfig[] = [
   {
     id: 'display_name',
@@ -22,24 +22,6 @@ export const sharedOnboardingFields: FormFieldConfig[] = [
         value: 750, 
         message: 'Bio must be 750 characters or less' 
       } 
-    }
-  },
-  {
-    id: 'location',
-    label: 'Location',
-    type: 'text',
-    placeholder: 'City, Country',
-    description: 'Where are you based?'
-  },
-  {
-    id: 'years_experience',
-    label: 'Years of Professional Experience',
-    type: 'number',
-    placeholder: 'e.g., 5',
-    description: 'How many years have you been working professionally?',
-    validation: {
-      min: { value: 0, message: 'Experience cannot be negative' },
-      max: { value: 50, message: 'Please enter a realistic number of years' }
     }
   }
 ];
@@ -66,49 +48,40 @@ export const socialLinksFields: FormFieldConfig[] = [
   }
 ];
 
-// Gig seeker fields
+// Gig seeker fields - updated availability options
 export const gigSeekerWorkPreferencesFields: FormFieldConfig[] = [
   {
     id: 'availability_status',
-    label: 'Availability Status',
+    label: 'Current Status',
     type: 'select',
     placeholder: 'Select your availability',
     options: [
       { value: 'open', label: 'Open to offers' },
       { value: 'selective', label: 'Selective about offers' },
-      { value: 'not-looking', label: 'Not currently looking' }
+      { value: 'not-looking', label: 'Not currently looking' },
+      { value: 'taking-break', label: 'Taking a break' },
+      { value: 'busy-interested', label: 'Busy but interested' }
     ]
   }
 ];
 
-export const gigSeekerRateFields: FormFieldConfig[] = [
-  {
-    id: 'rate_range_min',
-    label: 'Rate Range ($/hour) - Min',
-    type: 'number',
-    placeholder: '25',
-    gridSpan: 1
-  },
-  {
-    id: 'rate_range_max',
-    label: 'Rate Range ($/hour) - Max',
-    type: 'number',
-    placeholder: '75',
-    gridSpan: 1
-  }
+// Available for options
+export const AVAILABLE_FOR_OPTIONS = [
+  'Freelance', 'Embedded', 'Retainer', 'Contract', 'Full-time', 'Part-time', 'Consulting'
 ];
 
-export const gigSeekerStoryFields: FormFieldConfig[] = [
-  {
-    id: 'past_credits',
-    label: 'Notable Projects & Accomplishments',
-    type: 'textarea',
-    placeholder: 'Share your standout projects, games you\'ve shipped, notable achievements, or impactful work that demonstrates your expertise...',
-    description: 'Focus on outcomes and impact rather than just responsibilities'
-  }
+// Work style options
+export const WORK_STYLE_OPTIONS = [
+  'Remote OK', 'Async Friendly', 'Open to Intros', 'Hybrid', 'On-Site', 'Flexible Hours', 'Cross-timezone'
 ];
 
-// Gig poster fields
+// Remove the old rate fields - they'll be handled by RateSelector component
+export const gigSeekerRateFields: FormFieldConfig[] = [];
+
+// Remove the story fields - removing Notable Projects & Accomplishments
+export const gigSeekerStoryFields: FormFieldConfig[] = [];
+
+// Gig poster fields remain the same
 export const gigPosterCompanyFields: FormFieldConfig[] = [
   {
     id: 'company_name',
