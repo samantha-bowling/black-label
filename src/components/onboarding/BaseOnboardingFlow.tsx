@@ -1,13 +1,14 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { UserRole, PosterType } from '@/types/auth';
+import { UserRole, PosterType, ProjectShowcase } from '@/types/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { useOnboardingSubmission } from '@/hooks/useOnboardingSubmission';
 import { getOnboardingConfig } from '@/lib/onboarding/onboardingConfig';
 import { OnboardingStep } from './OnboardingStep';
 import { SharedOnboardingFields } from './SharedOnboardingFields';
 import { ProfileDNATagsStep } from './ProfileDNATagsStep';
+import { ProjectShowcaseOnboardingStep } from './ProjectShowcaseOnboardingStep';
 import { GigSeekerFields } from './GigSeekerFields';
 import { GigPosterFields } from './GigPosterFields';
 import { PrivacyProfileSettingsStep } from './PrivacyProfileSettingsStep';
@@ -21,6 +22,9 @@ interface BaseOnboardingFlowProps {
 interface OnboardingFormData {
   display_name: string;
   bio?: string;
+  location?: string;
+  years_experience?: number;
+  project_showcase?: ProjectShowcase[];
   social_links?: {
     linkedin?: string;
     github?: string;
@@ -42,13 +46,13 @@ interface OnboardingFormData {
   timeline_expectations?: string;
   nda_required?: boolean;
   poster_type?: PosterType;
-  location?: string;
   website_url?: string;
   linkedin_url?: string;
 }
 
 export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [projectShowcaseData, setProjectShowcaseData] = useState<ProjectShowcase[]>([]);
   const { user } = useAuth();
   const config = getOnboardingConfig(userRole);
   const { handleSubmit: handleOnboardingSubmit, isLoading } = useOnboardingSubmission({
@@ -60,6 +64,9 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
     defaultValues: {
       display_name: user?.displayName || '',
       bio: user?.bio || '',
+      location: user?.location || '',
+      years_experience: user?.years_experience,
+      project_showcase: user?.project_showcase || [],
       social_links: user?.social_links || {},
       desired_gig_types: user?.desired_gig_types || [],
       availability_status: user?.availability_status || '',
@@ -75,7 +82,6 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
       timeline_expectations: user?.timeline_expectations || '',
       nda_required: user?.nda_required || false,
       poster_type: user?.poster_type || undefined,
-      location: user?.location || '',
       website_url: user?.website_url || '',
       linkedin_url: user?.linkedin_url || '',
     }
@@ -91,6 +97,12 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleProjectShowcaseNext = () => {
+    // Store project data and continue
+    form.setValue('project_showcase', projectShowcaseData);
+    handleNext();
   };
 
   const currentStepConfig = config.steps[currentStep - 1];
@@ -118,6 +130,16 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
             userRole={userRole}
             onNext={handleNext}
             onBack={handleBack}
+          />
+        );
+
+      case 'project-showcase':
+        return (
+          <ProjectShowcaseOnboardingStep
+            userId={user?.id || ''}
+            onNext={handleProjectShowcaseNext}
+            onBack={handleBack}
+            initialData={projectShowcaseData}
           />
         );
 

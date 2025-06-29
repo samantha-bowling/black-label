@@ -5,7 +5,7 @@ export interface OnboardingStepConfig {
   id: string;
   title: string;
   description: string;
-  component: 'shared' | 'profile-dna' | 'gig-seeker' | 'gig-poster' | 'privacy';
+  component: 'shared' | 'profile-dna' | 'project-showcase' | 'gig-seeker' | 'gig-poster' | 'privacy';
 }
 
 export interface OnboardingFlowConfig {
@@ -17,7 +17,7 @@ export interface OnboardingFlowConfig {
 export const ONBOARDING_CONFIGS: Record<UserRole, OnboardingFlowConfig> = {
   gig_seeker: {
     role: 'gig_seeker',
-    totalSteps: 4,
+    totalSteps: 5, // Updated from 4 to 5
     steps: [
       {
         id: 'basic',
@@ -30,6 +30,12 @@ export const ONBOARDING_CONFIGS: Record<UserRole, OnboardingFlowConfig> = {
         title: "Define your professional DNA",
         description: "Help others understand your expertise and specialization",
         component: 'profile-dna'
+      },
+      {
+        id: 'showcase',
+        title: "Showcase your best work",
+        description: "Highlight up to 3 projects that demonstrate your expertise",
+        component: 'project-showcase'
       },
       {
         id: 'professional',
