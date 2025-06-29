@@ -54,7 +54,7 @@ export function useOnboardingSubmission({ userRole, onComplete }: OnboardingSubm
         social_links: data.social_links,
         onboarding_completed: true,
         years_experience: data.years_experience,
-        project_showcase: data.project_showcase || [],
+        project_showcase: (data.project_showcase || []) as any,
       };
 
       // Create role-specific data with proper typing

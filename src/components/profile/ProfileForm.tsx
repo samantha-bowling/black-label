@@ -162,7 +162,7 @@ export function ProfileForm() {
         linkedin_url: socialLinks.linkedin || null,
         // New Phase 1 fields
         years_experience: data.years_experience || null,
-        project_showcase: projectShowcase,
+        project_showcase: projectShowcase as any,
       };
 
       const { error } = await supabase
