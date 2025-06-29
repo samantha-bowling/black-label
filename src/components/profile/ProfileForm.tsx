@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { FormFieldGroup } from '@/components/forms/FormFieldGroup';
-import { PosterType } from '@/types/auth';
+import { PosterType, ProjectShowcase } from '@/types/auth';
 import { 
   sharedOnboardingFields, 
   socialLinksFields, 
@@ -44,12 +44,15 @@ interface ProfileFormData {
   nda_required?: boolean;
   website_url?: string;
   linkedin_url?: string;
+  // New Phase 1 fields
+  years_experience?: number;
 }
 
 export function ProfileForm() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [projectShowcase, setProjectShowcase] = useState<ProjectShowcase[]>([]);
 
   const form = useForm<ProfileFormData>({
     defaultValues: {
@@ -73,6 +76,7 @@ export function ProfileForm() {
       nda_required: false,
       website_url: '',
       linkedin_url: '',
+      years_experience: undefined,
     }
   });
 
@@ -101,7 +105,10 @@ export function ProfileForm() {
         nda_required: user.nda_required || false,
         website_url: user.website_url || '',
         linkedin_url: user.linkedin_url || '',
+        years_experience: user.years_experience,
       });
+
+      setProjectShowcase(user.project_showcase || []);
     }
   }, [user, form]);
 
@@ -153,6 +160,9 @@ export function ProfileForm() {
         // Legacy fields for backward compatibility
         website_url: socialLinks.website || null,
         linkedin_url: socialLinks.linkedin || null,
+        // New Phase 1 fields
+        years_experience: data.years_experience || null,
+        project_showcase: projectShowcase,
       };
 
       const { error } = await supabase
@@ -208,6 +218,12 @@ export function ProfileForm() {
                 label: 'Location',
                 type: 'text',
                 placeholder: 'City, Country'
+              },
+              {
+                id: 'years_experience',
+                label: 'Years of Professional Experience',
+                type: 'number',
+                placeholder: 'e.g., 5'
               }
             ]}
             form={form}

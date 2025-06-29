@@ -988,6 +988,7 @@ export type Database = {
           onboarding_completed: boolean
           past_credits: string | null
           poster_type: Database["public"]["Enums"]["poster_type"] | null
+          project_showcase: Json | null
           public_profile: boolean
           rate_range_max: number | null
           rate_range_min: number | null
@@ -1004,6 +1005,7 @@ export type Database = {
           typical_budget_min: number | null
           updated_at: string | null
           website_url: string | null
+          years_experience: number | null
         }
         Insert: {
           about_story?: string | null
@@ -1033,6 +1035,7 @@ export type Database = {
           onboarding_completed?: boolean
           past_credits?: string | null
           poster_type?: Database["public"]["Enums"]["poster_type"] | null
+          project_showcase?: Json | null
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
@@ -1049,6 +1052,7 @@ export type Database = {
           typical_budget_min?: number | null
           updated_at?: string | null
           website_url?: string | null
+          years_experience?: number | null
         }
         Update: {
           about_story?: string | null
@@ -1078,6 +1082,7 @@ export type Database = {
           onboarding_completed?: boolean
           past_credits?: string | null
           poster_type?: Database["public"]["Enums"]["poster_type"] | null
+          project_showcase?: Json | null
           public_profile?: boolean
           rate_range_max?: number | null
           rate_range_min?: number | null
@@ -1094,6 +1099,7 @@ export type Database = {
           typical_budget_min?: number | null
           updated_at?: string | null
           website_url?: string | null
+          years_experience?: number | null
         }
         Relationships: [
           {

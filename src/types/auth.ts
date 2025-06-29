@@ -36,6 +36,15 @@ export type CollaborationRequestId = string & { readonly __brand: unique symbol 
 export type ReportId = string & { readonly __brand: unique symbol };
 export type ModerationActionId = string & { readonly __brand: unique symbol };
 
+// Project showcase interface
+export interface ProjectShowcase {
+  name: string;
+  link?: string;
+  role: string;
+  dates: string;
+  description: string;
+}
+
 export interface AuthUser {
   id: UserId;
   email: string;
@@ -87,6 +96,9 @@ export interface AuthUser {
     specialty_skills: string[];
     project_types: string[];
   };
+  // New Phase 1 fields
+  years_experience?: number;
+  project_showcase?: ProjectShowcase[];
 }
 
 export interface SessionStatus {

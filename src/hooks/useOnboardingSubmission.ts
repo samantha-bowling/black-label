@@ -4,7 +4,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { createAuthToasts } from '@/lib/auth/toastUtils';
-import { UserRole, PosterType } from '@/types/auth';
+import { UserRole, PosterType, ProjectShowcase } from '@/types/auth';
 
 interface OnboardingSubmissionConfig {
   userRole: UserRole;
@@ -33,6 +33,9 @@ interface OnboardingFormData {
   location?: string;
   website_url?: string;
   linkedin_url?: string;
+  // New Phase 1 fields
+  years_experience?: number;
+  project_showcase?: ProjectShowcase[];
 }
 
 export function useOnboardingSubmission({ userRole, onComplete }: OnboardingSubmissionConfig) {
@@ -50,6 +53,8 @@ export function useOnboardingSubmission({ userRole, onComplete }: OnboardingSubm
         bio: data.bio,
         social_links: data.social_links,
         onboarding_completed: true,
+        years_experience: data.years_experience,
+        project_showcase: data.project_showcase || [],
       };
 
       // Create role-specific data with proper typing
