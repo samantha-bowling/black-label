@@ -90,6 +90,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           location: userProfile.location || undefined,
           website_url: socialLinks.website || userProfile.website_url || undefined,
           linkedin_url: socialLinks.linkedin || userProfile.linkedin_url || undefined,
+          years_experience: userProfile.years_experience || undefined,
+          project_showcase: userProfile.project_showcase || undefined,
+          // New profile form fields
+          core_disciplines: userProfile.core_disciplines || undefined,
+          project_types: userProfile.project_types || undefined,
+          awards: userProfile.awards || undefined,
+          available_for: userProfile.available_for || undefined,
+          work_style: userProfile.work_style || undefined,
+          rate_type: userProfile.rate_type || undefined,
         });
         return true;
       } else if (retryCount < 3) {

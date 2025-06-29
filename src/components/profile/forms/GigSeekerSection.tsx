@@ -18,7 +18,7 @@ interface GigSeekerSectionProps {
 
 export function GigSeekerSection({ form }: GigSeekerSectionProps) {
   const { watch, setValue } = form;
-  const { tagsByCategory, isLoading } = useProfileTags();
+  const { tagsByCategory, isLoadingTags } = useProfileTags();
 
   // Get specialty skills for dropdown
   const specialtySkills = tagsByCategory.specialty_skill || [];
@@ -36,7 +36,7 @@ export function GigSeekerSection({ form }: GigSeekerSectionProps) {
   const minRate = watch('rate_min');
   const maxRate = watch('rate_max');
 
-  if (isLoading) {
+  if (isLoadingTags) {
     return (
       <div className="space-y-6">
         <Card className="bg-white/5 border-white/10">

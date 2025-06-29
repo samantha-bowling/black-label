@@ -99,6 +99,13 @@ export interface AuthUser {
   // New Phase 1 fields
   years_experience?: number;
   project_showcase?: ProjectShowcase[];
+  // New profile form fields
+  core_disciplines?: string[];
+  project_types?: string[];
+  awards?: string[];
+  available_for?: string[];
+  work_style?: string[];
+  rate_type?: 'hourly' | 'project' | 'salary' | null;
 }
 
 export interface SessionStatus {
