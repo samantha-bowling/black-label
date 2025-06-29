@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (typeof userProfile.project_showcase === 'string') {
               projectShowcase = JSON.parse(userProfile.project_showcase);
             } else if (Array.isArray(userProfile.project_showcase)) {
-              projectShowcase = userProfile.project_showcase as ProjectShowcase[];
+              projectShowcase = userProfile.project_showcase as unknown as ProjectShowcase[];
             }
           }
         } catch (error) {
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           awards: userProfile.awards || undefined,
           available_for: userProfile.available_for || undefined,
           work_style: userProfile.work_style || undefined,
-          rate_type: userProfile.rate_type || undefined,
+          rate_type: (userProfile.rate_type as 'hourly' | 'project' | 'salary') || undefined,
         });
         return true;
       } else if (retryCount < 3) {

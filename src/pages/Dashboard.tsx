@@ -1,3 +1,4 @@
+
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { InviteManager } from "@/components/invites/InviteManager";
 import { ProfileSettings } from "@/components/profile/ProfileSettings";
+import { ProfileCompletionModal } from "@/components/dashboard/ProfileCompletionModal";
+import { ProfileProgress } from "@/components/dashboard/ProfileProgress";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -25,6 +28,8 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+      <ProfileCompletionModal />
+      
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">
@@ -54,6 +59,9 @@ const Dashboard = () => {
 
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Profile Progress Card */}
+              <ProfileProgress />
+
               <Card className="bg-white/5 border-white/10">
                 <CardHeader>
                   <CardTitle className="text-white">Profile Status</CardTitle>

@@ -4,6 +4,8 @@ import { CaseStudy } from '@/hooks/useCaseStudies';
 import { EditorialHeroSection } from './EditorialHeroSection';
 import { AboutSection } from './AboutSection';
 import { ProfileDNASection } from './ProfileDNASection';
+import { AwardsSection } from './AwardsSection';
+import { WorkPreferencesSection } from './WorkPreferencesSection';
 import { ProjectShowcaseSection } from './ProjectShowcaseSection';
 import { HighlightedProjectsSection } from './HighlightedProjectsSection';
 import { CollaborationDetailsSection } from './CollaborationDetailsSection';
@@ -32,8 +34,14 @@ export function EditorialProfileView({ user, caseStudies, inviter }: EditorialPr
       {/* About Section */}
       <AboutSection user={user} />
 
+      {/* Awards Section */}
+      <AwardsSection user={user} />
+
       {/* Profile DNA Section */}
       <ProfileDNASection user={user} />
+
+      {/* Work Preferences Section */}
+      <WorkPreferencesSection user={user} />
 
       {/* Project Showcase Section */}
       <ProjectShowcaseSection user={user} />
