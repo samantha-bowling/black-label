@@ -1,6 +1,5 @@
 
 import { z } from 'zod';
-import { PosterType } from '@/types/auth';
 
 // Shared validation schemas
 export const displayNameSchema = z.string()
@@ -63,7 +62,7 @@ export const gigSeekerSchema = sharedOnboardingSchema.extend({
 // Gig poster specific validation
 export const gigPosterSchema = sharedOnboardingSchema.extend({
   company_name: z.string().max(100, 'Company name must be 100 characters or less').optional(),
-  poster_type: z.nativeEnum(PosterType).optional(),
+  poster_type: z.enum(['individual', 'startup', 'agency', 'enterprise']).optional(),
   typical_budget_min: z.number().min(0, 'Budget cannot be negative').optional(),
   typical_budget_max: z.number().min(0, 'Budget cannot be negative').optional(),
   timeline_expectations: z.string().max(500, 'Timeline expectations must be 500 characters or less').optional(),

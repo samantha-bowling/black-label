@@ -52,9 +52,8 @@ export function OnboardingProgressIndicator({
                   "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-200",
                   "bg-black", // Always black background
                   {
-                    "border-white text-white": current,
+                    "border-white text-white": current || completed,
                     "border-white/50 text-white/50": !current && !completed,
-                    "border-white text-white": completed,
                     "cursor-pointer hover:scale-110": clickable,
                     "cursor-default": !clickable
                   }

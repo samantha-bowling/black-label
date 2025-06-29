@@ -84,7 +84,7 @@ export function BaseOnboardingFlow({ userRole, onComplete }: BaseOnboardingFlowP
     resolver: zodResolver(validationSchema),
     mode: 'onChange',
     defaultValues: {
-      display_name: user?.display_name || '',
+      display_name: user?.displayName || '',
       bio: user?.bio || '',
       location: user?.location || '',
       years_experience: user?.years_experience,
