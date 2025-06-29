@@ -1,8 +1,7 @@
-
 import { FormFieldConfig } from '@/components/forms/FormFieldGroup';
 import { PosterType } from '@/types/auth';
 
-// Shared onboarding fields
+// Shared onboarding fields - updated with location, years experience, and bio character limit
 export const sharedOnboardingFields: FormFieldConfig[] = [
   {
     id: 'display_name',
@@ -17,7 +16,31 @@ export const sharedOnboardingFields: FormFieldConfig[] = [
     label: 'Bio',
     type: 'textarea',
     placeholder: 'Tell us about yourself...',
-    description: 'Share your background, interests, and what makes you unique'
+    description: 'Share your background, interests, and what makes you unique (750 characters max)',
+    validation: { 
+      maxLength: { 
+        value: 750, 
+        message: 'Bio must be 750 characters or less' 
+      } 
+    }
+  },
+  {
+    id: 'location',
+    label: 'Location',
+    type: 'text',
+    placeholder: 'City, Country',
+    description: 'Where are you based?'
+  },
+  {
+    id: 'years_experience',
+    label: 'Years of Professional Experience',
+    type: 'number',
+    placeholder: 'e.g., 5',
+    description: 'How many years have you been working professionally?',
+    validation: {
+      min: { value: 0, message: 'Experience cannot be negative' },
+      max: { value: 50, message: 'Please enter a realistic number of years' }
+    }
   }
 ];
 

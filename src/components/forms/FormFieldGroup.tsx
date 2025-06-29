@@ -1,4 +1,3 @@
-
 import { ReactNode } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
@@ -62,8 +61,11 @@ export function FormFieldGroup({ fields, form, columns = 1, className = '' }: Fo
 
     switch (field.type) {
       case 'textarea':
+        const textValue = fieldValue || '';
+        const maxLength = field.validation?.maxLength?.value;
+        
         return fieldContainer(
-          <>
+          <div className="space-y-2">
             <Label htmlFor={field.id} className="text-white">
               {field.label} {field.required && '*'}
             </Label>
@@ -73,7 +75,14 @@ export function FormFieldGroup({ fields, form, columns = 1, className = '' }: Fo
               placeholder={field.placeholder}
               className="min-h-[100px] bg-black/20 border-white/20 text-white placeholder:text-white/50"
             />
-          </>
+            {maxLength && (
+              <div className="text-right text-xs">
+                <span className={`${textValue.length > maxLength ? 'text-red-400' : 'text-white/50'}`}>
+                  {textValue.length}/{maxLength}
+                </span>
+              </div>
+            )}
+          </div>
         );
 
       case 'select':
