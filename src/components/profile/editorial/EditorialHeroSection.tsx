@@ -1,5 +1,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { AuthUser } from '@/types/auth';
 
 interface EditorialHeroSectionProps {
@@ -7,6 +8,21 @@ interface EditorialHeroSectionProps {
 }
 
 export function EditorialHeroSection({ user }: EditorialHeroSectionProps) {
+  const getStatusBadge = () => {
+    switch (user.availability_status) {
+      case 'available':
+        return { text: 'Available', color: 'bg-green-600 text-white' };
+      case 'limited':
+        return { text: 'Limited Availability', color: 'bg-yellow-600 text-white' };
+      case 'unavailable':
+        return { text: 'Unavailable', color: 'bg-red-600 text-white' };
+      default:
+        return { text: 'Open to Projects', color: 'bg-blue-600 text-white' };
+    }
+  };
+
+  const status = getStatusBadge();
+
   return (
     <div className="relative bg-background py-12">
       {/* BLACKLABEL Logo */}
@@ -32,21 +48,34 @@ export function EditorialHeroSection({ user }: EditorialHeroSectionProps) {
           </div>
 
           {/* Name and Details */}
-          <div className="flex-1 space-y-2">
-            {/* Name */}
-            <h1 className="text-4xl font-bold text-white font-display">
-              {user.displayName}
-            </h1>
+          <div className="flex-1 space-y-3">
+            {/* Name and Status */}
+            <div className="flex flex-col md:flex-row md:items-center gap-3">
+              <h1 className="text-4xl font-bold text-white font-display">
+                {user.displayName}
+              </h1>
+              <Badge className={`${status.color} px-3 py-1`}>
+                {status.text}
+              </Badge>
+            </div>
 
-            {/* Role and Experience */}
-            <div className="text-white/80 text-lg">
+            {/* Role, Skills, and Experience Info Bar */}
+            <div className="text-white/80 text-lg space-y-2">
               {user.skills && user.skills.length > 0 && (
-                <span>{user.skills.slice(0, 2).join(' · ')}</span>
+                <div className="flex flex-wrap gap-2">
+                  {user.skills.slice(0, 3).map((skill, index) => (
+                    <span key={index} className="text-white/90">
+                      {skill}
+                      {index < Math.min(user.skills!.length, 3) - 1 && ' •'}
+                    </span>
+                  ))}
+                </div>
               )}
-              {user.past_credits && (
-                <span className="block text-white/60">
-                  Years of Experience in Creative Industries
-                </span>
+              
+              {user.years_experience && (
+                <div className="text-white/70 text-base">
+                  {user.years_experience} {user.years_experience === 1 ? 'year' : 'years'} of professional experience
+                </div>
               )}
             </div>
 

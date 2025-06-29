@@ -7,28 +7,58 @@ interface AboutSectionProps {
 }
 
 export function AboutSection({ user }: AboutSectionProps) {
-  const socialLinks = [
-    { key: 'website', url: user.website_url, icon: Globe, label: 'Website' },
-    { key: 'linkedin', url: user.linkedin_url, icon: Linkedin, label: 'LinkedIn' },
-    ...(user.social_links ? Object.entries(user.social_links).map(([platform, url]) => ({
-      key: platform,
-      url,
-      icon: platform === 'github' ? Github : ExternalLink,
-      label: platform.charAt(0).toUpperCase() + platform.slice(1)
-    })) : [])
-  ].filter(link => link.url);
+  // Clean up and deduplicate social links
+  const socialLinksMap = new Map();
+  
+  // Add social_links first (preferred source)
+  if (user.social_links) {
+    Object.entries(user.social_links).forEach(([platform, url]) => {
+      if (url && url.trim()) {
+        socialLinksMap.set(platform, {
+          url: url.trim(),
+          icon: platform === 'github' ? Github : platform === 'linkedin' ? Linkedin : Globe,
+          label: platform.charAt(0).toUpperCase() + platform.slice(1)
+        });
+      }
+    });
+  }
 
-  if (!user.bio && !user.about_story && socialLinks.length === 0) {
+  // Add legacy fields if not already present
+  if (user.website_url && !socialLinksMap.has('website')) {
+    socialLinksMap.set('website', {
+      url: user.website_url,
+      icon: Globe,
+      label: 'Website'
+    });
+  }
+
+  if (user.linkedin_url && !socialLinksMap.has('linkedin')) {
+    socialLinksMap.set('linkedin', {
+      url: user.linkedin_url,
+      icon: Linkedin,
+      label: 'LinkedIn'
+    });
+  }
+
+  const socialLinks = Array.from(socialLinksMap.values());
+
+  // Truncate bio/about_story to 750 characters
+  const bioText = user.about_story || user.bio;
+  const truncatedBio = bioText && bioText.length > 750 
+    ? bioText.substring(0, 750).trim() + '...'
+    : bioText;
+
+  if (!truncatedBio && socialLinks.length === 0) {
     return null;
   }
 
   return (
     <section className="max-w-4xl mx-auto px-4 mt-4 mb-6">
       {/* Bio */}
-      {(user.bio || user.about_story) && (
+      {truncatedBio && (
         <div className="mb-4">
           <p className="text-white/80 text-lg leading-relaxed">
-            {user.about_story || user.bio}
+            {truncatedBio}
           </p>
         </div>
       )}
@@ -40,7 +70,7 @@ export function AboutSection({ user }: AboutSectionProps) {
             const IconComponent = link.icon;
             return (
               <a
-                key={link.key}
+                key={link.label}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"

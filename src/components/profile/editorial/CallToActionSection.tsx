@@ -13,7 +13,7 @@ export function CallToActionSection({ user }: CallToActionSectionProps) {
 
   return (
     <>
-      <section className="max-w-4xl mx-auto px-4 pt-8">
+      <section className="max-w-4xl mx-auto px-4 pt-8 pb-16">
         <div className="text-center space-y-4">
           <h2 className="text-2xl font-bold text-white">
             Ready to collaborate?
@@ -32,7 +32,7 @@ export function CallToActionSection({ user }: CallToActionSectionProps) {
             </Button>
           </div>
 
-          <p className="text-white/50 text-sm pt-2">
+          <p className="text-white/50 text-sm pt-2 pb-8">
             All inquiries are reviewed personally by {user.displayName}.
           </p>
         </div>
