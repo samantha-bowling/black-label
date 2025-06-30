@@ -1,4 +1,3 @@
-
 import { Database } from '@/integrations/supabase/types';
 
 export type UserRole = Database['public']['Enums']['user_role'];
@@ -43,6 +42,8 @@ export interface ProjectShowcase {
   role: string;
   dates: string;
   description: string;
+  studio?: string;
+  platforms?: string;
 }
 
 export interface AuthUser {
