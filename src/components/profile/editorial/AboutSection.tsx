@@ -53,10 +53,10 @@ export function AboutSection({ user }: AboutSectionProps) {
   }
 
   return (
-    <section className="max-w-4xl mx-auto px-4 mt-4 mb-6">
+    <section className="max-w-5xl mx-auto px-4 mb-8">
       {/* Bio */}
       {truncatedBio && (
-        <div className="mb-4">
+        <div className="mb-6">
           <p className="text-white/80 text-lg leading-relaxed">
             {truncatedBio}
           </p>
@@ -65,7 +65,7 @@ export function AboutSection({ user }: AboutSectionProps) {
 
       {/* Social Links */}
       {socialLinks.length > 0 && (
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-6 flex-wrap">
           {socialLinks.map((link) => {
             const IconComponent = link.icon;
             return (
@@ -77,7 +77,7 @@ export function AboutSection({ user }: AboutSectionProps) {
                 className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
               >
                 <IconComponent className="w-4 h-4" />
-                <span className="text-sm">{link.label}</span>
+                <span className="text-sm font-medium">{link.label}</span>
               </a>
             );
           })}

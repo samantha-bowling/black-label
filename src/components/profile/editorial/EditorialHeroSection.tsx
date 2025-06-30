@@ -19,13 +19,13 @@ export function EditorialHeroSection({ user, inviter }: EditorialHeroSectionProp
   const getStatusBadge = () => {
     switch (user.availability_status) {
       case 'available':
-        return { text: 'Available', color: 'bg-green-600 text-white' };
+        return { text: 'OPEN TO OPPORTUNITIES', color: 'bg-green-600 text-white' };
       case 'limited':
-        return { text: 'Limited Availability', color: 'bg-yellow-600 text-white' };
+        return { text: 'LIMITED AVAILABILITY', color: 'bg-yellow-600 text-white' };
       case 'unavailable':
-        return { text: 'Unavailable', color: 'bg-red-600 text-white' };
+        return { text: 'CURRENTLY UNAVAILABLE', color: 'bg-red-600 text-white' };
       default:
-        return { text: 'Open to Projects', color: 'bg-blue-600 text-white' };
+        return null;
     }
   };
 
@@ -43,7 +43,7 @@ export function EditorialHeroSection({ user, inviter }: EditorialHeroSectionProp
       </div>
 
       {/* Content Container */}
-      <div className="max-w-4xl mx-auto px-4 pt-8">
+      <div className="max-w-5xl mx-auto px-4 pt-8">
         <div className="flex flex-col md:flex-row md:items-start gap-6">
           {/* Avatar */}
           <div className="flex-shrink-0">
@@ -56,37 +56,37 @@ export function EditorialHeroSection({ user, inviter }: EditorialHeroSectionProp
           </div>
 
           {/* Name and Details */}
-          <div className="flex-1 space-y-3">
-            {/* Name and Status */}
-            <div className="flex flex-col md:flex-row md:items-center gap-3">
-              <h1 className="text-4xl font-bold text-white font-display">
-                {user.displayName}
-              </h1>
-              <Badge className={`${status.color} px-3 py-1`}>
-                {status.text}
-              </Badge>
+          <div className="flex-1 space-y-4">
+            {/* Name */}
+            <h1 className="text-4xl font-bold text-white font-display">
+              {user.displayName}
+            </h1>
+
+            {/* Location and Experience Meta Line */}
+            <div className="text-white/70 text-lg">
+              {user.location && user.years_experience ? (
+                <span>
+                  {user.location} | {user.years_experience} {user.years_experience === 1 ? 'Year' : 'Years'} of Professional Experience
+                </span>
+              ) : user.location ? (
+                <span>{user.location}</span>
+              ) : user.years_experience ? (
+                <span>{user.years_experience} {user.years_experience === 1 ? 'Year' : 'Years'} of Professional Experience</span>
+              ) : null}
             </div>
 
-            {/* Location, Years of Experience, and Referred By */}
+            {/* Status and Referral Inline Meta Line */}
             <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
-              {user.location && (
-                <div className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  <span>{user.location}</span>
-                </div>
-              )}
-              
-              {user.years_experience && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{user.years_experience} {user.years_experience === 1 ? 'year' : 'years'} experience</span>
-                </div>
+              {status && (
+                <Badge className={`${status.color} px-3 py-1 text-xs font-medium uppercase tracking-wide`}>
+                  {status.text}
+                </Badge>
               )}
               
               {inviter && (
                 <div className="flex items-center gap-1">
                   <UserCheck className="w-4 h-4" />
-                  <span>Referred by {inviter.displayName}</span>
+                  <span className="uppercase tracking-wide">Referred by: {inviter.displayName}</span>
                 </div>
               )}
             </div>

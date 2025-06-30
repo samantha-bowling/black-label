@@ -13,9 +13,9 @@ export function CallToActionSection({ user }: CallToActionSectionProps) {
 
   return (
     <>
-      <section className="max-w-4xl mx-auto px-4 pt-8 pb-16">
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold text-white">
+      <section className="max-w-5xl mx-auto px-4 pt-8 pb-16">
+        <div className="text-center space-y-6">
+          <h2 className="text-3xl font-bold text-white">
             Ready to collaborate?
           </h2>
           <p className="text-white/70 text-lg">
@@ -25,14 +25,14 @@ export function CallToActionSection({ user }: CallToActionSectionProps) {
           <div className="pt-4">
             <Button
               onClick={() => setShowContactForm(true)}
-              className="border border-white text-white font-semibold px-6 py-2 bg-transparent hover:bg-white hover:text-black transition-all duration-150"
+              className="bg-white text-black font-bold px-8 py-3 hover:bg-white/90 transition-all duration-150 text-base"
               data-profile-id={user.id}
             >
               Request to Collaborate
             </Button>
           </div>
 
-          <p className="text-white/50 text-sm pt-2 pb-8">
+          <p className="text-white/50 text-sm pt-4">
             All inquiries are reviewed personally by {user.displayName}.
           </p>
         </div>

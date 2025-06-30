@@ -34,11 +34,11 @@ export function EditorialProfileView({ user, caseStudies, inviter }: EditorialPr
       {/* About Section */}
       <AboutSection user={user} />
 
-      {/* Profile DNA Section - 3 columns */}
-      <ProfileDNASection user={user} />
-
       {/* Awards Section */}
       <AwardsSection user={user} />
+
+      {/* Profile DNA Section - 3 columns */}
+      <ProfileDNASection user={user} />
 
       {/* Project Showcase Section */}
       <ProjectShowcaseSection user={user} />
