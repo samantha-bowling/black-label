@@ -2,12 +2,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { AuthUser } from '@/types/auth';
+import { MapPin, Calendar, UserCheck } from 'lucide-react';
 
 interface EditorialHeroSectionProps {
   user: AuthUser;
+  inviter?: {
+    id: string;
+    displayName: string;
+    avatarUrl?: string;
+    smartUrlSlug?: string;
+    publicProfile: boolean;
+  } | null;
 }
 
-export function EditorialHeroSection({ user }: EditorialHeroSectionProps) {
+export function EditorialHeroSection({ user, inviter }: EditorialHeroSectionProps) {
   const getStatusBadge = () => {
     switch (user.availability_status) {
       case 'available':
@@ -59,22 +67,26 @@ export function EditorialHeroSection({ user }: EditorialHeroSectionProps) {
               </Badge>
             </div>
 
-            {/* Role, Skills, and Experience Info Bar */}
-            <div className="text-white/80 text-lg space-y-2">
-              {user.skills && user.skills.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {user.skills.slice(0, 3).map((skill, index) => (
-                    <span key={index} className="text-white/90">
-                      {skill}
-                      {index < Math.min(user.skills!.length, 3) - 1 && ' •'}
-                    </span>
-                  ))}
+            {/* Location, Years of Experience, and Referred By */}
+            <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
+              {user.location && (
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>{user.location}</span>
                 </div>
               )}
               
               {user.years_experience && (
-                <div className="text-white/70 text-base">
-                  {user.years_experience} {user.years_experience === 1 ? 'year' : 'years'} of professional experience
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  <span>{user.years_experience} {user.years_experience === 1 ? 'year' : 'years'} experience</span>
+                </div>
+              )}
+              
+              {inviter && (
+                <div className="flex items-center gap-1">
+                  <UserCheck className="w-4 h-4" />
+                  <span>Referred by {inviter.displayName}</span>
                 </div>
               )}
             </div>

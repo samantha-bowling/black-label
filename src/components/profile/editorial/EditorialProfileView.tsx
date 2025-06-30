@@ -29,22 +29,22 @@ export function EditorialProfileView({ user, caseStudies, inviter }: EditorialPr
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <EditorialHeroSection user={user} />
+      <EditorialHeroSection user={user} inviter={inviter} />
 
       {/* About Section */}
       <AboutSection user={user} />
 
+      {/* Profile DNA Section - 3 columns */}
+      <ProfileDNASection user={user} />
+
       {/* Awards Section */}
       <AwardsSection user={user} />
 
-      {/* Profile DNA Section */}
-      <ProfileDNASection user={user} />
-
-      {/* Work Preferences Section */}
-      <WorkPreferencesSection user={user} />
-
       {/* Project Showcase Section */}
       <ProjectShowcaseSection user={user} />
+
+      {/* Work Preferences Section - 2 columns */}
+      <WorkPreferencesSection user={user} />
 
       {/* Highlighted Projects Section */}
       <HighlightedProjectsSection caseStudies={caseStudies} />

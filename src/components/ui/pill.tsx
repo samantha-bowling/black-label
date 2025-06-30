@@ -9,10 +9,10 @@ const pillVariants = cva(
     variants: {
       variant: {
         default: "bg-white/10 text-white/90 border border-white/20 hover:bg-white/20",
-        primary: "bg-white text-black hover:bg-gray-200",
-        secondary: "bg-neutral-800 text-white hover:bg-neutral-700",
+        primary: "bg-blue-600/20 text-blue-200 border border-blue-400/30 hover:bg-blue-600/30",
+        secondary: "bg-purple-600/20 text-purple-200 border border-purple-400/30 hover:bg-purple-600/30",
         success: "bg-green-600/20 text-green-200 border border-green-400/30 hover:bg-green-600/30",
-        info: "bg-blue-600/20 text-blue-200 border border-blue-400/30 hover:bg-blue-600/30",
+        info: "bg-cyan-600/20 text-cyan-200 border border-cyan-400/30 hover:bg-cyan-600/30",
         warning: "bg-yellow-600/20 text-yellow-200 border border-yellow-400/30 hover:bg-yellow-600/30",
         status: "bg-green-600 text-white",
       },

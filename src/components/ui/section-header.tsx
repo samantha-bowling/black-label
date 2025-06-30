@@ -6,12 +6,14 @@ interface SectionHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
   subtitle?: string
   level?: 1 | 2 | 3
+  icon?: React.ReactNode
 }
 
 export function SectionHeader({ 
   title, 
   subtitle, 
   level = 2, 
+  icon,
   className, 
   ...props 
 }: SectionHeaderProps) {
@@ -26,9 +28,10 @@ export function SectionHeader({
   return (
     <div className={cn("mb-6", className)} {...props}>
       <HeadingTag className={cn(
-        "text-white uppercase tracking-wide",
+        "text-white uppercase tracking-wide flex items-center gap-2",
         headingClasses[level]
       )}>
+        {icon}
         {title}
       </HeadingTag>
       {subtitle && (

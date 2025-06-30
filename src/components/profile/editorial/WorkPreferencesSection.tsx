@@ -2,7 +2,7 @@
 import { Pill } from '@/components/ui/pill';
 import { SectionHeader } from '@/components/ui/section-header';
 import { AuthUser } from '@/types/auth';
-import { Briefcase, DollarSign } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 
 interface WorkPreferencesSectionProps {
   user: AuthUser;
@@ -10,11 +10,9 @@ interface WorkPreferencesSectionProps {
 
 export function WorkPreferencesSection({ user }: WorkPreferencesSectionProps) {
   const availableFor = user.available_for || [];
-  const rateType = user.rate_type;
-  const rateMin = user.rate_range_min;
-  const rateMax = user.rate_range_max;
+  const workStyle = user.work_style || [];
 
-  if (availableFor.length === 0 && !rateType && !rateMin && !rateMax) {
+  if (availableFor.length === 0 && workStyle.length === 0) {
     return null;
   }
 
@@ -36,7 +34,7 @@ export function WorkPreferencesSection({ user }: WorkPreferencesSectionProps) {
               {availableFor.map((type, index) => (
                 <Pill 
                   key={index}
-                  variant="info"
+                  variant="primary"
                 >
                   {type}
                 </Pill>
@@ -45,26 +43,19 @@ export function WorkPreferencesSection({ user }: WorkPreferencesSectionProps) {
           </div>
         )}
 
-        {/* Rate Information */}
-        {(rateType || (rateMin && rateMax)) && (
+        {/* Work Style */}
+        {workStyle.length > 0 && (
           <div>
-            <h3 className="text-lg font-medium mb-3 text-white/90 flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
-              Rate Information
-            </h3>
-            <div className="space-y-2">
-              {rateType && (
-                <Pill variant="secondary">
-                  {rateType === 'hourly' ? 'Hourly Rate' : 
-                   rateType === 'project' ? 'Project Rate' : 'Salary'}
+            <h3 className="text-lg font-medium mb-3 text-white/90">Work Style</h3>
+            <div className="flex flex-wrap gap-2">
+              {workStyle.map((style, index) => (
+                <Pill 
+                  key={index}
+                  variant="info"
+                >
+                  {style}
                 </Pill>
-              )}
-              {rateMin && rateMax && (
-                <div className="text-white/80">
-                  ${rateMin.toLocaleString()} - ${rateMax.toLocaleString()}
-                  {rateType === 'hourly' ? '/hour' : rateType === 'project' ? '/project' : '/year'}
-                </div>
-              )}
+              ))}
             </div>
           </div>
         )}

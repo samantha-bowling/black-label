@@ -1,157 +1,190 @@
 
+import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FormFieldGroup } from '@/components/forms/FormFieldGroup';
-import { MultiSelectPills } from '@/components/forms/MultiSelectPills';
-import { RateSelector } from '@/components/forms/RateSelector';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AwardsSelector } from '@/components/forms/AwardsSelector';
-import { 
-  gigSeekerWorkPreferencesFields,
-  AVAILABLE_FOR_OPTIONS,
-  WORK_STYLE_OPTIONS
-} from '@/lib/forms/fieldConfigs';
-import { useProfileTags } from '@/hooks/useProfileTags';
+import { MultiSelectPills } from '@/components/forms/MultiSelectPills';
+import { ProjectShowcaseSection } from './ProjectShowcaseSection';
+import { ProjectShowcase } from '@/types/auth';
+
+const CORE_DISCIPLINES_OPTIONS = [
+  'Game Design', 'Level Design', 'Systems Design', 'UI/UX Design', 'Narrative Design',
+  'Programming', 'Art Direction', 'Concept Art', '3D Modeling', 'Animation',
+  'Audio Design', 'Music Composition', 'Voice Acting', 'Quality Assurance',
+  'Project Management', 'Producer', 'Marketing', 'Community Management'
+];
+
+const SPECIALTY_SKILLS_OPTIONS = [
+  'Unity', 'Unreal Engine', 'C#', 'C++', 'JavaScript', 'Python',
+  'Maya', 'Blender', '3ds Max', 'Photoshop', 'Illustrator', 'Figma',
+  'Wwise', 'FMOD', 'Pro Tools', 'Ableton', 'Logic Pro',
+  'Scrum', 'Agile', 'Jira', 'Confluence', 'Perforce', 'Git'
+];
+
+const AVAILABLE_FOR_OPTIONS = [
+  'Full-time Contract', 'Part-time Contract', 'Freelance Projects',
+  'Consulting', 'Remote Work', 'On-site Work', 'Hybrid Work',
+  'Short-term Projects', 'Long-term Projects'
+];
+
+const WORK_STYLE_OPTIONS = [
+  'Independent Worker', 'Team Collaborator', 'Leadership Role',
+  'Mentoring Others', 'Learning New Skills', 'Cross-functional',
+  'Detail-oriented', 'Big Picture Thinker', 'Problem Solver',
+  'Creative Thinker', 'Technical Expert', 'Communication Focused'
+];
 
 interface GigSeekerSectionProps {
   form: UseFormReturn<any>;
 }
 
 export function GigSeekerSection({ form }: GigSeekerSectionProps) {
-  const { watch, setValue } = form;
-  const { tagsByCategory, isLoadingTags } = useProfileTags();
-
-  // Get specialty skills for dropdown
-  const specialtySkills = tagsByCategory.specialty_skill || [];
-  const coreDisciplines = tagsByCategory.core_discipline || [];
-  const projectTypes = tagsByCategory.project_type || [];
-
-  // Watch current values
-  const availableFor = watch('available_for') || [];
-  const workStyle = watch('work_style') || [];
-  const selectedSkills = watch('skills') || [];
-  const selectedCoreDisciplines = watch('core_disciplines') || [];
-  const selectedProjectTypes = watch('project_types') || [];
-  const selectedAwards = watch('awards') || [];
-  const rateType = watch('rate_type');
-  const minRate = watch('rate_min');
-  const maxRate = watch('rate_max');
-
-  if (isLoadingTags) {
-    return (
-      <div className="space-y-6">
-        <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-6">
-            <div className="animate-pulse space-y-4">
-              <div className="h-4 bg-white/10 rounded w-1/3"></div>
-              <div className="h-8 bg-white/10 rounded"></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const [projectShowcase, setProjectShowcase] = useState<ProjectShowcase[]>([]);
 
   return (
-    <>
+    <div className="space-y-6">
+      {/* Skills & Expertise */}
+      <Card className="bg-white/5 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white">Skills & Expertise</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <Label className="text-white text-sm">Years of Experience</Label>
+              <Input
+                type="number"
+                min="0"
+                max="50"
+                {...form.register('years_experience', { valueAsNumber: true })}
+                className="bg-white/5 border-white/20 text-white"
+                placeholder="e.g., 5"
+              />
+            </div>
+          </div>
+
+          <MultiSelectPills
+            label="Core Disciplines"
+            options={CORE_DISCIPLINES_OPTIONS}
+            selectedOptions={form.watch('core_disciplines') || []}
+            onChange={(selected) => form.setValue('core_disciplines', selected)}
+            maxSelections={3}
+            description="Your main areas of expertise (max 3)"
+          />
+
+          <MultiSelectPills
+            label="Specialty Skills"
+            options={SPECIALTY_SKILLS_OPTIONS}
+            selectedOptions={form.watch('skills') || []}
+            onChange={(selected) => form.setValue('skills', selected)}
+            description="Technical skills, tools, and technologies you're proficient in"
+          />
+
+          <AwardsSelector
+            selectedAwards={form.watch('awards') || []}
+            onChange={(selected) => form.setValue('awards', selected)}
+          />
+        </CardContent>
+      </Card>
+
       {/* Work Preferences */}
       <Card className="bg-white/5 border-white/10">
         <CardHeader>
           <CardTitle className="text-white">Work Preferences</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <FormFieldGroup
-            fields={gigSeekerWorkPreferencesFields}
-            form={form}
-            columns={1}
-          />
-          
+        <CardContent className="space-y-4">
           <MultiSelectPills
             label="Available For"
             options={AVAILABLE_FOR_OPTIONS}
-            selectedOptions={availableFor}
-            onChange={(selected) => setValue('available_for', selected)}
-            description="Types of engagements you're open to"
+            selectedOptions={form.watch('available_for') || []}
+            onChange={(selected) => form.setValue('available_for', selected)}
+            description="Types of work arrangements you're open to"
           />
-          
+
           <MultiSelectPills
             label="Work Style"
             options={WORK_STYLE_OPTIONS}
-            selectedOptions={workStyle}
-            onChange={(selected) => setValue('work_style', selected)}
-            description="Your preferred working arrangements"
+            selectedOptions={form.watch('work_style') || []}
+            onChange={(selected) => form.setValue('work_style', selected)}
+            description="How you prefer to work and contribute to teams"
           />
+
+          <div>
+            <Label className="text-white text-sm">Availability Status</Label>
+            <Select 
+              value={form.watch('availability_status') || ''} 
+              onValueChange={(value) => form.setValue('availability_status', value)}
+            >
+              <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                <SelectValue placeholder="Select availability status" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-800 border-gray-600">
+                <SelectItem value="available">Available Now</SelectItem>
+                <SelectItem value="limited">Limited Availability</SelectItem>
+                <SelectItem value="unavailable">Currently Unavailable</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Core Disciplines */}
+      {/* Rate Information */}
       <Card className="bg-white/5 border-white/10">
         <CardHeader>
-          <CardTitle className="text-white">Core Disciplines</CardTitle>
+          <CardTitle className="text-white">Rate Information</CardTitle>
         </CardHeader>
-        <CardContent>
-          <MultiSelectPills
-            label="Your Core Disciplines"
-            options={coreDisciplines.map(tag => tag.name)}
-            selectedOptions={selectedCoreDisciplines}
-            onChange={(selected) => setValue('core_disciplines', selected)}
-            description="Primary areas of expertise"
-          />
+        <CardContent className="space-y-4">
+          <div>
+            <Label className="text-white text-sm">Rate Type</Label>
+            <Select 
+              value={form.watch('rate_type') || ''} 
+              onValueChange={(value) => form.setValue('rate_type', value === '' ? null : value)}
+            >
+              <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                <SelectValue placeholder="Select rate type" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-800 border-gray-600">
+                <SelectItem value="hourly">Hourly Rate</SelectItem>
+                <SelectItem value="project">Project Rate</SelectItem>
+                <SelectItem value="salary">Annual Salary</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="text-white text-sm">Minimum Rate</Label>
+              <Input
+                type="number"
+                min="0"
+                {...form.register('rate_min', { valueAsNumber: true })}
+                className="bg-white/5 border-white/20 text-white"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <Label className="text-white text-sm">Maximum Rate</Label>
+              <Input
+                type="number"
+                min="0"
+                {...form.register('rate_max', { valueAsNumber: true })}
+                className="bg-white/5 border-white/20 text-white"
+                placeholder="0"
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Project Types */}
-      <Card className="bg-white/5 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white">Project Types</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <MultiSelectPills
-            label="Preferred Project Types"
-            options={projectTypes.map(tag => tag.name)}
-            selectedOptions={selectedProjectTypes}
-            onChange={(selected) => setValue('project_types', selected)}
-            description="Types of projects you enjoy working on"
-          />
-        </CardContent>
-      </Card>
-
-      {/* Rate & Experience */}
-      <Card className="bg-white/5 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white">Rate & Experience</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <RateSelector
-            rateType={rateType}
-            onRateTypeChange={(type) => setValue('rate_type', type)}
-            minRate={minRate}
-            maxRate={maxRate}
-            onMinRateChange={(value) => setValue('rate_min', value)}
-            onMaxRateChange={(value) => setValue('rate_max', value)}
-          />
-          
-          <MultiSelectPills
-            label="Skills"
-            options={specialtySkills.map(tag => tag.name)}
-            selectedOptions={selectedSkills}
-            onChange={(selected) => setValue('skills', selected)}
-            description="Your technical and creative skills"
-          />
-        </CardContent>
-      </Card>
-
-      {/* Awards & Accolades */}
-      <Card className="bg-white/5 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white">Awards & Accolades</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <AwardsSelector
-            selectedAwards={selectedAwards}
-            onChange={(awards) => setValue('awards', awards)}
-          />
-        </CardContent>
-      </Card>
-    </>
+      {/* Project Showcase */}
+      <ProjectShowcaseSection
+        form={form}
+        projectShowcase={projectShowcase}
+        setProjectShowcase={setProjectShowcase}
+      />
+    </div>
   );
 }
