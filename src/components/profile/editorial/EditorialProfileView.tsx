@@ -5,8 +5,8 @@ import { EditorialHeroSection } from './EditorialHeroSection';
 import { AboutSection } from './AboutSection';
 import { ProfileDNASection } from './ProfileDNASection';
 import { AwardsSection } from './AwardsSection';
-import { WorkPreferencesSection } from './WorkPreferencesSection';
 import { ProjectShowcaseSection } from './ProjectShowcaseSection';
+import { WorkPreferencesSection } from './WorkPreferencesSection';
 import { HighlightedProjectsSection } from './HighlightedProjectsSection';
 import { CollaborationDetailsSection } from './CollaborationDetailsSection';
 import { CallToActionSection } from './CallToActionSection';
@@ -46,7 +46,7 @@ export function EditorialProfileView({ user, caseStudies, inviter }: EditorialPr
       {/* Work Preferences Section - 2 columns */}
       <WorkPreferencesSection user={user} />
 
-      {/* Highlighted Projects Section */}
+      {/* Case Studies Section */}
       <HighlightedProjectsSection caseStudies={caseStudies} />
 
       {/* Collaboration Details Section */}

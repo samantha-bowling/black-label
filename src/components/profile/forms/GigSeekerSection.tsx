@@ -10,13 +10,6 @@ import { MultiSelectPills } from '@/components/forms/MultiSelectPills';
 import { ProjectShowcaseSection } from './ProjectShowcaseSection';
 import { ProjectShowcase } from '@/types/auth';
 
-const CORE_DISCIPLINES_OPTIONS = [
-  'Game Design', 'Level Design', 'Systems Design', 'UI/UX Design', 'Narrative Design',
-  'Programming', 'Art Direction', 'Concept Art', '3D Modeling', 'Animation',
-  'Audio Design', 'Music Composition', 'Voice Acting', 'Quality Assurance',
-  'Project Management', 'Producer', 'Marketing', 'Community Management'
-];
-
 const SPECIALTY_SKILLS_OPTIONS = [
   'Unity', 'Unreal Engine', 'C#', 'C++', 'JavaScript', 'Python',
   'Maya', 'Blender', '3ds Max', 'Photoshop', 'Illustrator', 'Figma',
@@ -52,29 +45,6 @@ export function GigSeekerSection({ form }: GigSeekerSectionProps) {
           <CardTitle className="text-white">Skills & Expertise</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <Label className="text-white text-sm">Years of Experience</Label>
-              <Input
-                type="number"
-                min="0"
-                max="50"
-                {...form.register('years_experience', { valueAsNumber: true })}
-                className="bg-white/5 border-white/20 text-white"
-                placeholder="e.g., 5"
-              />
-            </div>
-          </div>
-
-          <MultiSelectPills
-            label="Core Disciplines"
-            options={CORE_DISCIPLINES_OPTIONS}
-            selectedOptions={form.watch('core_disciplines') || []}
-            onChange={(selected) => form.setValue('core_disciplines', selected)}
-            maxSelections={3}
-            description="Your main areas of expertise (max 3)"
-          />
-
           <MultiSelectPills
             label="Specialty Skills"
             options={SPECIALTY_SKILLS_OPTIONS}

@@ -2,7 +2,15 @@
 import { UseFormReturn } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormFieldGroup } from '@/components/forms/FormFieldGroup';
+import { MultiSelectPills } from '@/components/forms/MultiSelectPills';
 import { sharedOnboardingFields } from '@/lib/forms/fieldConfigs';
+
+const CORE_DISCIPLINES_OPTIONS = [
+  'Game Design', 'Level Design', 'Systems Design', 'UI/UX Design', 'Narrative Design',
+  'Programming', 'Art Direction', 'Concept Art', '3D Modeling', 'Animation',
+  'Audio Design', 'Music Composition', 'Voice Acting', 'Quality Assurance',
+  'Project Management', 'Producer', 'Marketing', 'Community Management'
+];
 
 interface BasicInformationSectionProps {
   form: UseFormReturn<any>;
@@ -14,7 +22,7 @@ export function BasicInformationSection({ form }: BasicInformationSectionProps) 
       <CardHeader>
         <CardTitle className="text-white">Basic Information</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <FormFieldGroup
           fields={[
             ...sharedOnboardingFields,
@@ -39,6 +47,15 @@ export function BasicInformationSection({ form }: BasicInformationSectionProps) 
           ]}
           form={form}
           columns={1}
+        />
+
+        <MultiSelectPills
+          label="Core Disciplines"
+          options={CORE_DISCIPLINES_OPTIONS}
+          selectedOptions={form.watch('core_disciplines') || []}
+          onChange={(selected) => form.setValue('core_disciplines', selected)}
+          maxSelections={3}
+          description="Your main areas of expertise (max 3)"
         />
       </CardContent>
     </Card>
