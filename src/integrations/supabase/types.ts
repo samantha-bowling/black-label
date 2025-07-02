@@ -1141,6 +1141,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_auth_rate_limit: {
+        Args: { p_identifier: string }
+        Returns: boolean
+      }
+      check_invite_creation_rate_limit: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
+      check_invite_validation_rate_limit: {
+        Args: { p_identifier: string }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           p_identifier: string

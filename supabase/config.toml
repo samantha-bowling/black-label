@@ -2,4 +2,4 @@
 project_id = "huimytfsmuklbpwntlvx"
 
 [functions.validate-invite]
-verify_jwt = false
+verify_jwt = true
