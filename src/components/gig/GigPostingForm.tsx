@@ -72,14 +72,13 @@ export function GigPostingForm() {
           contract_type: data.contract_type,
           project_type_tags: data.project_type_tags,
           skills_needed: data.skills_needed,
-          brief_status: 'pending_review',
         });
 
       if (error) throw error;
 
       toast({
-        title: "Gig Brief Submitted!",
-        description: "Your gig has been submitted for admin review. You'll be notified once it's approved.",
+        title: "Gig Posted Successfully!",
+        description: "Your gig is now live and visible to talented professionals.",
       });
 
       navigate('/dashboard');
@@ -105,7 +104,7 @@ export function GigPostingForm() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Post a Gig</h1>
           <p className="text-muted-foreground">
-            Submit your project brief for review. Once approved, you'll be able to pay the $499 posting fee to make it live.
+            Post your project to connect with talented professionals. Your gig will be live immediately after submission.
           </p>
         </div>
 
@@ -222,26 +221,19 @@ export function GigPostingForm() {
             <div className="bg-muted/50 p-6 rounded-lg">
               <h3 className="font-semibold mb-2">What happens next?</h3>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Your gig brief will be reviewed by our team</li>
-                <li>Once approved, you'll receive a payment link ($499 posting fee)</li>
-                <li>After payment, your gig goes live to our curated talent network</li>
-                <li>We'll manually match qualified candidates to your project</li>
+                <li>Your gig goes live immediately to our curated talent network</li>
+                <li>Qualified professionals can contact you directly through the platform</li>
+                <li>You'll receive notifications when someone expresses interest</li>
+                <li>Connect directly with candidates to discuss your project</li>
               </ol>
             </div>
 
-            <div className="flex justify-between">
-              <ButtonSecondary
-                type="button"
-                onClick={() => navigate('/dashboard')}
-              >
-                Save as Draft
-              </ButtonSecondary>
-              
+            <div className="flex justify-end">
               <ButtonPrimary
                 type="submit"
                 isLoading={isLoading}
               >
-                Submit for Review
+                Post Gig
               </ButtonPrimary>
             </div>
           </form>

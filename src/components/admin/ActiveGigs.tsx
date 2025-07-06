@@ -1,14 +1,12 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, Check, X, Clock, MessageSquare } from "lucide-react";
+import { Eye, Users, Calendar, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 
 interface GigWithPoster {
@@ -18,10 +16,9 @@ interface GigWithPoster {
   timeline: string;
   budget_range: string;
   contract_type: string;
-  brief_status: string;
+  status: string;
   project_type_tags: string[];
   skills_needed: string[];
-  admin_notes: string;
   created_at: string;
   poster: {
     display_name: string;
@@ -31,19 +28,17 @@ interface GigWithPoster {
   };
 }
 
-export function PendingGigReviews() {
+export function ActiveGigs() {
   const [gigs, setGigs] = useState<GigWithPoster[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGig, setSelectedGig] = useState<GigWithPoster | null>(null);
-  const [adminNotes, setAdminNotes] = useState('');
-  const [actionLoading, setActionLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchPendingGigs();
+    fetchActiveGigs();
   }, []);
 
-  const fetchPendingGigs = async () => {
+  const fetchActiveGigs = async () => {
     try {
       const { data, error } = await supabase
         .from('gigs')
@@ -55,7 +50,7 @@ export function PendingGigReviews() {
             poster_type
           )
         `)
-        .eq('brief_status', 'pending_review')
+        .eq('status', 'open')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -67,57 +62,14 @@ export function PendingGigReviews() {
 
       setGigs(gigsWithPoster);
     } catch (error) {
-      console.error('Error fetching pending gigs:', error);
+      console.error('Error fetching active gigs:', error);
       toast({
         title: "Error",
-        description: "Failed to load pending gigs",
+        description: "Failed to load active gigs",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleGigAction = async (gigId: string, action: 'approve' | 'reject', notes?: string) => {
-    setActionLoading(true);
-    try {
-      const updates: any = {
-        admin_notes: notes || adminNotes,
-      };
-
-      if (action === 'approve') {
-        updates.brief_status = 'active';
-        updates.approved_at = new Date().toISOString();
-        // In a real implementation, you'd set approved_by_user_id to the current admin's ID
-      } else {
-        updates.brief_status = 'rejected';
-      }
-
-      const { error } = await supabase
-        .from('gigs')
-        .update(updates)
-        .eq('id', gigId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: `Gig ${action === 'approve' ? 'approved' : 'rejected'} successfully`,
-      });
-
-      // Refresh the list
-      fetchPendingGigs();
-      setSelectedGig(null);
-      setAdminNotes('');
-    } catch (error) {
-      console.error(`Error ${action}ing gig:`, error);
-      toast({
-        title: "Error",
-        description: `Failed to ${action} gig`,
-        variant: "destructive",
-      });
-    } finally {
-      setActionLoading(false);
     }
   };
 
@@ -150,7 +102,7 @@ export function PendingGigReviews() {
         <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-8">
             <div className="text-center">
-              <p className="text-gray-500 dark:text-gray-400">Loading pending gigs...</p>
+              <p className="text-gray-500 dark:text-gray-400">Loading active gigs...</p>
             </div>
           </CardContent>
         </Card>
@@ -162,17 +114,17 @@ export function PendingGigReviews() {
     <div className="space-y-6">
       <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-gray-900 dark:text-white">Pending Gig Reviews</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-white">Active Gigs</CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-400">
-            Review and approve gig postings from posters ({gigs.length} pending)
+            Currently live gig postings generating leads ({gigs.length} active)
           </CardDescription>
         </CardHeader>
         <CardContent>
           {gigs.length === 0 ? (
             <div className="text-center py-8">
-              <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400">
-                No pending gigs to review
+                No active gigs currently posted
               </p>
             </div>
           ) : (
@@ -183,7 +135,7 @@ export function PendingGigReviews() {
                   <TableHead>Poster</TableHead>
                   <TableHead>Budget</TableHead>
                   <TableHead>Contract</TableHead>
-                  <TableHead>Submitted</TableHead>
+                  <TableHead>Posted</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -239,20 +191,17 @@ export function PendingGigReviews() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                setSelectedGig(gig);
-                                setAdminNotes(gig.admin_notes || '');
-                              }}
+                              onClick={() => setSelectedGig(gig)}
                             >
                               <Eye className="h-4 w-4" />
-                              Review
+                              View
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                             <DialogHeader>
-                              <DialogTitle>Review Gig: {selectedGig?.title}</DialogTitle>
+                              <DialogTitle>Gig Details: {selectedGig?.title}</DialogTitle>
                               <DialogDescription>
-                                Detailed review of gig submission
+                                View complete gig information and lead generation data
                               </DialogDescription>
                             </DialogHeader>
                             {selectedGig && (
@@ -337,43 +286,11 @@ export function PendingGigReviews() {
                                   )}
                                 </div>
 
-                                {/* Admin Notes */}
-                                <div>
-                                  <label className="text-lg font-semibold mb-2 block">Admin Notes</label>
-                                  <Textarea
-                                    value={adminNotes}
-                                    onChange={(e) => setAdminNotes(e.target.value)}
-                                    placeholder="Add notes about this gig review..."
-                                    className="min-h-[100px]"
-                                  />
-                                </div>
-
                                 {/* Action Buttons */}
-                                <div className="flex justify-between pt-4 border-t">
-                                  <div className="flex space-x-3">
-                                    <Button
-                                      onClick={() => handleGigAction(selectedGig.id, 'approve')}
-                                      disabled={actionLoading}
-                                      className="bg-green-600 hover:bg-green-700"
-                                    >
-                                      <Check className="h-4 w-4 mr-2" />
-                                      Approve Gig
-                                    </Button>
-                                    <Button
-                                      onClick={() => handleGigAction(selectedGig.id, 'reject')}
-                                      disabled={actionLoading}
-                                      variant="destructive"
-                                    >
-                                      <X className="h-4 w-4 mr-2" />
-                                      Reject Gig
-                                    </Button>
-                                  </div>
+                                <div className="flex justify-end pt-4 border-t">
                                   <Button
                                     variant="outline"
-                                    onClick={() => {
-                                      setSelectedGig(null);
-                                      setAdminNotes('');
-                                    }}
+                                    onClick={() => setSelectedGig(null)}
                                   >
                                     Close
                                   </Button>

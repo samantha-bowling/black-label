@@ -45,7 +45,7 @@ export function AdminOverview() {
       // Fetch gig stats
       const { data: gigs, error: gigsError } = await supabase
         .from('gigs')
-        .select('brief_status');
+        .select('status');
 
       if (gigsError) throw gigsError;
 
@@ -66,9 +66,8 @@ export function AdminOverview() {
       // Process gig stats
       const gigStats = gigs?.reduce((acc, gig) => {
         acc.totalGigs++;
-        if (gig.brief_status === 'pending_review') acc.pendingGigs++;
-        else if (gig.brief_status === 'active') acc.activeGigs++;
-        else if (gig.brief_status === 'rejected') acc.rejectedGigs++;
+        if (gig.status === 'open') acc.activeGigs++;
+        else if (gig.status === 'completed' || gig.status === 'cancelled') acc.rejectedGigs++;
         return acc;
       }, {
         totalGigs: 0,
@@ -118,18 +117,18 @@ export function AdminOverview() {
       color: "text-gray-600",
     },
     {
-      title: "Pending Review",
-      value: stats.pendingGigs,
-      icon: Clock,
-      description: "Gigs awaiting approval",
-      color: "text-yellow-600",
-    },
-    {
-      title: "Active Gigs",
+      title: "Open Gigs",
       value: stats.activeGigs,
       icon: CheckCircle,
-      description: "Approved and live gigs",
+      description: "Currently active gigs",
       color: "text-green-600",
+    },
+    {
+      title: "Closed Gigs", 
+      value: stats.rejectedGigs,
+      icon: XCircle,
+      description: "Completed or closed gigs",
+      color: "text-gray-600",
     },
   ];
 
@@ -192,7 +191,7 @@ export function AdminOverview() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Gig Approval Rate</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Active Gig Rate</span>
                 <Badge variant="secondary">
                   {stats.totalGigs > 0 
                     ? `${Math.round((stats.activeGigs / stats.totalGigs) * 100)}%`
@@ -201,9 +200,9 @@ export function AdminOverview() {
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Pending Reviews</span>
-                <Badge variant={stats.pendingGigs > 0 ? "destructive" : "secondary"}>
-                  {stats.pendingGigs}
+                <span className="text-sm text-gray-600 dark:text-gray-400">Total Inquiries</span>
+                <Badge variant="secondary">
+                  Active leads system
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
@@ -231,15 +230,9 @@ export function AdminOverview() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <Clock className="h-4 w-4 text-yellow-600" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {stats.pendingGigs} gigs awaiting review
-                </span>
-              </div>
-              <div className="flex items-center space-x-3">
                 <CheckCircle className="h-4 w-4 text-green-600" />
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {stats.activeGigs} active gigs on platform
+                  {stats.activeGigs} open gigs on platform
                 </span>
               </div>
               <div className="flex items-center space-x-3">
@@ -250,9 +243,9 @@ export function AdminOverview() {
               </div>
               {stats.rejectedGigs > 0 && (
                 <div className="flex items-center space-x-3">
-                  <XCircle className="h-4 w-4 text-red-600" />
+                  <XCircle className="h-4 w-4 text-gray-600" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {stats.rejectedGigs} gigs rejected
+                    {stats.rejectedGigs} closed gigs
                   </span>
                 </div>
               )}
