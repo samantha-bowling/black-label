@@ -27,6 +27,7 @@ export function getRoleCapabilities(user: AuthUser | null): RoleCapabilities {
     needsOnboarding: user.role ? !user.onboarding_completed : false,
   };
 
+  // Simplified role system - anyone can post gigs or contact talent
   switch (user.role) {
     case 'admin':
       return {
@@ -38,28 +39,13 @@ export function getRoleCapabilities(user: AuthUser | null): RoleCapabilities {
       };
     
     case 'gig_poster':
+    case 'gig_seeker':
+    default:
+      // All users can both post gigs and contact others
       return {
         ...baseCapabilities,
         canPostGigs: true,
-        canApplyToGigs: false,
-        canAccessAdmin: false,
-        hasFullAccess: false,
-      };
-    
-    case 'gig_seeker':
-      return {
-        ...baseCapabilities,
-        canPostGigs: false,
-        canApplyToGigs: true,
-        canAccessAdmin: false,
-        hasFullAccess: false,
-      };
-    
-    default:
-      return {
-        ...baseCapabilities,
-        canPostGigs: false,
-        canApplyToGigs: false,
+        canApplyToGigs: true, // This now means "can contact/inquire"
         canAccessAdmin: false,
         hasFullAccess: false,
       };
@@ -79,17 +65,8 @@ export function isOnboardingComplete(user: AuthUser | null, role?: UserRole): bo
   // Basic onboarding completion check
   if (!user.onboarding_completed) return false;
 
-  // Role-specific completion checks
-  switch (userRole) {
-    case 'gig_poster':
-      return !!(user.displayName && user.bio && user.company_name);
-    case 'gig_seeker':
-      return !!(user.displayName && user.bio);
-    case 'admin':
-      return !!(user.displayName);
-    default:
-      return false;
-  }
+  // Simplified completion check - just basic profile info needed
+  return !!(user.displayName && user.bio);
 }
 
 export function getRequiredOnboardingSteps(user: AuthUser | null): string[] {
@@ -97,14 +74,9 @@ export function getRequiredOnboardingSteps(user: AuthUser | null): string[] {
 
   const missingSteps: string[] = [];
 
-  // Check basic fields
+  // Simplified requirements - just basic profile info
   if (!user.displayName) missingSteps.push('Display name');
   if (!user.bio) missingSteps.push('Bio');
-
-  // Role-specific checks
-  if (user.role === 'gig_poster' && !user.company_name) {
-    missingSteps.push('Company information');
-  }
 
   return missingSteps;
 }

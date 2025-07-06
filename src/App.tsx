@@ -13,6 +13,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Onboarding from "./pages/Onboarding";
 import PostGig from "./pages/PostGig";
+import BrowseOpportunities from "./pages/BrowseOpportunities";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -51,6 +52,14 @@ const App = () => (
               element={
                 <AuthGuard requireAuth>
                   <PostGig />
+                </AuthGuard>
+              } 
+            />
+            <Route 
+              path="/browse-opportunities" 
+              element={
+                <AuthGuard requireAuth>
+                  <BrowseOpportunities />
                 </AuthGuard>
               } 
             />

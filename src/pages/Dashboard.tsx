@@ -22,9 +22,8 @@ const Dashboard = () => {
     );
   }
 
-  const isGigPoster = user.role === 'gig_poster';
   const isAdmin = user.role === 'admin';
-  const showInvites = !isGigPoster; // Hide invites for gig posters
+  const showInvites = true; // All users can invite others
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
@@ -84,28 +83,33 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              {isGigPoster && (
-                <Card className="bg-white/5 border-white/10">
-                  <CardHeader>
-                    <CardTitle className="text-white">Quick Actions</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <Button 
-                      onClick={() => navigate('/post-a-gig')}
-                      className="w-full"
-                    >
-                      Post a New Gig
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => navigate('/' + user.smart_url_slug)}
-                      className="w-full"
-                    >
-                      View Public Profile
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
+              <Card className="bg-white/5 border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    onClick={() => navigate('/post-a-gig')}
+                    className="w-full"
+                  >
+                    Post an Opportunity
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/browse-opportunities')}
+                    className="w-full"
+                  >
+                    Browse Opportunities
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/' + user.smart_url_slug)}
+                    className="w-full"
+                  >
+                    View Public Profile
+                  </Button>
+                </CardContent>
+              </Card>
 
               {showInvites && (
                 <Card className="bg-white/5 border-white/10">
