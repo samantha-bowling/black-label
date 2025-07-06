@@ -27,7 +27,7 @@ export function getRoleCapabilities(user: AuthUser | null): RoleCapabilities {
     needsOnboarding: user.role ? !user.onboarding_completed : false,
   };
 
-  // Simplified role system - anyone can post gigs or contact talent
+  // Role-based system with proper restrictions
   switch (user.role) {
     case 'admin':
       return {
@@ -39,13 +39,28 @@ export function getRoleCapabilities(user: AuthUser | null): RoleCapabilities {
       };
     
     case 'gig_poster':
-    case 'gig_seeker':
-    default:
-      // All users can both post gigs and contact others
       return {
         ...baseCapabilities,
         canPostGigs: true,
-        canApplyToGigs: true, // This now means "can contact/inquire"
+        canApplyToGigs: false,
+        canAccessAdmin: false,
+        hasFullAccess: false,
+      };
+    
+    case 'gig_seeker':
+      return {
+        ...baseCapabilities,
+        canPostGigs: false,
+        canApplyToGigs: true,
+        canAccessAdmin: false,
+        hasFullAccess: false,
+      };
+    
+    default:
+      return {
+        ...baseCapabilities,
+        canPostGigs: false,
+        canApplyToGigs: false,
         canAccessAdmin: false,
         hasFullAccess: false,
       };

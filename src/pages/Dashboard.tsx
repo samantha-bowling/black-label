@@ -91,15 +91,16 @@ const Dashboard = () => {
                   <Button 
                     onClick={() => navigate('/post-a-gig')}
                     className="w-full"
+                    disabled={!user.role || user.role !== 'gig_poster'}
                   >
-                    Post an Opportunity
+                    Post a Gig
                   </Button>
                   <Button 
-                    variant="outline" 
                     onClick={() => navigate('/browse-opportunities')}
                     className="w-full"
+                    disabled={!user.role || user.role !== 'gig_seeker'}
                   >
-                    Browse Opportunities
+                    Browse & Apply to Gigs
                   </Button>
                   <Button 
                     variant="outline" 

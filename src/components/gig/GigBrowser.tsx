@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { GigContactModal } from './GigContactModal';
+import { GigApplicationModal } from './GigApplicationModal';
 import { useToast } from '@/hooks/use-toast';
 import { Briefcase, MapPin, Clock, DollarSign, Search, Users, Building2 } from 'lucide-react';
 
@@ -261,7 +261,7 @@ export function GigBrowser() {
                       onClick={() => setSelectedGig(gig)}
                       disabled={gig.poster_id === user?.id}
                     >
-                      {gig.poster_id === user?.id ? 'Your Post' : 'Get In Touch'}
+                      {gig.poster_id === user?.id ? 'Your Post' : 'Apply Now'}
                     </Button>
                   </div>
                 </CardContent>
@@ -272,7 +272,7 @@ export function GigBrowser() {
       </div>
 
       {selectedGig && (
-        <GigContactModal
+        <GigApplicationModal
           gig={selectedGig}
           isOpen={!!selectedGig}
           onClose={() => setSelectedGig(null)}

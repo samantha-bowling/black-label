@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminLayout } from './AdminLayout';
 import { AdminOverview } from './AdminOverview';
-import { ActiveGigs } from './ActiveGigs';
+import { PendingGigApprovals } from './PendingGigApprovals';
 import { TalentManagement } from './TalentManagement';
 import { CollaborationRequests } from './CollaborationRequests';
 import { PlatformAnalytics } from './PlatformAnalytics';
@@ -29,7 +29,7 @@ export function AdminDashboard() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-6 mb-8">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="gig-reviews">Active Gigs</TabsTrigger>
+              <TabsTrigger value="gig-approvals">Gig Approvals</TabsTrigger>
               <TabsTrigger value="talent">Talent</TabsTrigger>
               <TabsTrigger value="moderation">Moderation</TabsTrigger>
               <TabsTrigger value="collaborations">Collaborations</TabsTrigger>
@@ -40,8 +40,8 @@ export function AdminDashboard() {
               <AdminOverview />
             </TabsContent>
 
-            <TabsContent value="gig-reviews" className="space-y-6">
-              <ActiveGigs />
+            <TabsContent value="gig-approvals" className="space-y-6">
+              <PendingGigApprovals />
             </TabsContent>
 
             <TabsContent value="talent" className="space-y-6">

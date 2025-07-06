@@ -72,13 +72,14 @@ export function GigPostingForm() {
           contract_type: data.contract_type,
           project_type_tags: data.project_type_tags,
           skills_needed: data.skills_needed,
+          status: 'draft'
         });
 
       if (error) throw error;
 
       toast({
-        title: "Gig Posted Successfully!",
-        description: "Your gig is now live and visible to talented professionals.",
+        title: "Gig Submitted for Review!",
+        description: "Your gig has been submitted for admin review and will be visible to talent once approved.",
       });
 
       navigate('/dashboard');
@@ -104,7 +105,7 @@ export function GigPostingForm() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Post a Gig</h1>
           <p className="text-muted-foreground">
-            Post your project to connect with talented professionals. Your gig will be live immediately after submission.
+            Post your project to connect with talented professionals. Your gig will be reviewed by our team before going live.
           </p>
         </div>
 
@@ -221,10 +222,11 @@ export function GigPostingForm() {
             <div className="bg-muted/50 p-6 rounded-lg">
               <h3 className="font-semibold mb-2">What happens next?</h3>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Your gig goes live immediately to our curated talent network</li>
-                <li>Qualified professionals can contact you directly through the platform</li>
-                <li>You'll receive notifications when someone expresses interest</li>
-                <li>Connect directly with candidates to discuss your project</li>
+                <li>Your gig is submitted for admin review</li>
+                <li>Once approved, it becomes visible to our curated talent network</li>
+                <li>Qualified professionals can apply to your project</li>
+                <li>You review applications and select the best candidates</li>
+                <li>Connect directly with selected talent to start your project</li>
               </ol>
             </div>
 

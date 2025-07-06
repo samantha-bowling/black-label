@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const PostGig = () => {
   const { user } = useAuth();
-  const { canPostGigs, needsOnboarding } = useRoleAccess();
+  const { canPostGigs, canApplyToGigs, needsOnboarding } = useRoleAccess();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 

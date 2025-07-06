@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, Users, Calendar, DollarSign } from "lucide-react";
+import { Eye, Check, X, Clock } from "lucide-react";
 import { format } from "date-fns";
 
 interface GigWithPoster {
@@ -28,17 +28,17 @@ interface GigWithPoster {
   };
 }
 
-export function ActiveGigs() {
+export function PendingGigApprovals() {
   const [gigs, setGigs] = useState<GigWithPoster[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGig, setSelectedGig] = useState<GigWithPoster | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchActiveGigs();
+    fetchPendingGigs();
   }, []);
 
-  const fetchActiveGigs = async () => {
+  const fetchPendingGigs = async () => {
     try {
       const { data, error } = await supabase
         .from('gigs')
@@ -50,7 +50,7 @@ export function ActiveGigs() {
             poster_type
           )
         `)
-        .eq('status', 'open')
+        .eq('status', 'draft')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -62,14 +62,64 @@ export function ActiveGigs() {
 
       setGigs(gigsWithPoster);
     } catch (error) {
-      console.error('Error fetching active gigs:', error);
+      console.error('Error fetching pending gigs:', error);
       toast({
         title: "Error",
-        description: "Failed to load active gigs",
+        description: "Failed to load pending gigs",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApproveGig = async (gigId: string) => {
+    try {
+      const { error } = await supabase
+        .from('gigs')
+        .update({ status: 'open' })
+        .eq('id', gigId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Gig Approved",
+        description: "The gig has been approved and is now visible to applicants.",
+      });
+
+      fetchPendingGigs();
+    } catch (error) {
+      console.error('Error approving gig:', error);
+      toast({
+        title: "Error",
+        description: "Failed to approve gig",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRejectGig = async (gigId: string) => {
+    try {
+      const { error } = await supabase
+        .from('gigs')
+        .update({ status: 'cancelled' })
+        .eq('id', gigId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Gig Rejected",
+        description: "The gig has been rejected and the poster will be notified.",
+      });
+
+      fetchPendingGigs();
+    } catch (error) {
+      console.error('Error rejecting gig:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reject gig",
+        variant: "destructive",
+      });
     }
   };
 
@@ -102,7 +152,7 @@ export function ActiveGigs() {
         <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-8">
             <div className="text-center">
-              <p className="text-gray-500 dark:text-gray-400">Loading active gigs...</p>
+              <p className="text-gray-500 dark:text-gray-400">Loading pending gigs...</p>
             </div>
           </CardContent>
         </Card>
@@ -114,17 +164,17 @@ export function ActiveGigs() {
     <div className="space-y-6">
       <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-gray-900 dark:text-white">Active Gigs</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-white">Pending Gig Approvals</CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-400">
-            Currently live gig postings generating leads ({gigs.length} active)
+            Review and approve gig postings from posters ({gigs.length} pending)
           </CardDescription>
         </CardHeader>
         <CardContent>
           {gigs.length === 0 ? (
             <div className="text-center py-8">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400">
-                No active gigs currently posted
+                No pending gigs to review
               </p>
             </div>
           ) : (
@@ -135,7 +185,7 @@ export function ActiveGigs() {
                   <TableHead>Poster</TableHead>
                   <TableHead>Budget</TableHead>
                   <TableHead>Contract</TableHead>
-                  <TableHead>Posted</TableHead>
+                  <TableHead>Submitted</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -161,11 +211,6 @@ export function ActiveGigs() {
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             {gig.poster.company_name}
                           </p>
-                        )}
-                        {gig.poster?.poster_type && (
-                          <Badge variant="outline" className="mt-1">
-                            {gig.poster.poster_type}
-                          </Badge>
                         )}
                       </div>
                     </TableCell>
@@ -194,14 +239,14 @@ export function ActiveGigs() {
                               onClick={() => setSelectedGig(gig)}
                             >
                               <Eye className="h-4 w-4" />
-                              View
+                              Review
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                             <DialogHeader>
-                              <DialogTitle>Gig Details: {selectedGig?.title}</DialogTitle>
+                              <DialogTitle>Review Gig: {selectedGig?.title}</DialogTitle>
                               <DialogDescription>
-                                View complete gig information and lead generation data
+                                Review this gig posting for approval or rejection
                               </DialogDescription>
                             </DialogHeader>
                             {selectedGig && (
@@ -242,12 +287,6 @@ export function ActiveGigs() {
                                           <p className="text-gray-900 dark:text-white">{selectedGig.poster.company_name}</p>
                                         </div>
                                       )}
-                                      {selectedGig.poster?.poster_type && (
-                                        <div>
-                                          <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Type</label>
-                                          <p className="text-gray-900 dark:text-white">{selectedGig.poster.poster_type}</p>
-                                        </div>
-                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -262,7 +301,7 @@ export function ActiveGigs() {
                                   </div>
                                 </div>
 
-                                {/* Tags and Skills */}
+                                {/* Skills and Tags */}
                                 <div className="grid grid-cols-2 gap-6">
                                   {selectedGig.project_type_tags && selectedGig.project_type_tags.length > 0 && (
                                     <div>
@@ -287,13 +326,34 @@ export function ActiveGigs() {
                                 </div>
 
                                 {/* Action Buttons */}
-                                <div className="flex justify-end pt-4 border-t">
+                                <div className="flex justify-between pt-4 border-t">
                                   <Button
                                     variant="outline"
                                     onClick={() => setSelectedGig(null)}
                                   >
                                     Close
                                   </Button>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant="destructive"
+                                      onClick={() => {
+                                        handleRejectGig(selectedGig.id);
+                                        setSelectedGig(null);
+                                      }}
+                                    >
+                                      <X className="h-4 w-4 mr-2" />
+                                      Reject
+                                    </Button>
+                                    <Button
+                                      onClick={() => {
+                                        handleApproveGig(selectedGig.id);
+                                        setSelectedGig(null);
+                                      }}
+                                    >
+                                      <Check className="h-4 w-4 mr-2" />
+                                      Approve
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
                             )}
