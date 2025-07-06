@@ -96,7 +96,7 @@ export function CustomBannerHeader({ user, isOwner = false }: CustomBannerHeader
     <div className="relative">
       {/* Banner */}
       <div 
-        className="h-48 md:h-64 bg-gradient-to-r from-purple-900 to-blue-900 bg-cover bg-center relative"
+        className="h-48 md:h-64 bg-surface bg-cover bg-center relative"
         style={bannerStyle}
       >
         {/* Banner Overlay */}

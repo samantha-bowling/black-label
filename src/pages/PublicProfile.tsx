@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { AuthUser, UserId } from '@/types/auth';
 import { useCaseStudies } from '@/hooks/useCaseStudies';
 import { EditorialProfileView } from '@/components/profile/editorial/EditorialProfileView';
+import { GigSeekerProfileView } from '@/components/profile/GigSeekerProfileView';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 
@@ -96,6 +97,12 @@ export default function PublicProfile() {
         location: userData.location || undefined,
         website_url: socialLinks?.website || userData.website_url || undefined,
         linkedin_url: socialLinks?.linkedin || userData.linkedin_url || undefined,
+        // Additional fields for gig seeker profile
+        years_experience: userData.years_experience || undefined,
+        core_disciplines: userData.core_disciplines || undefined,
+        available_for: userData.available_for || undefined,
+        work_style: userData.work_style || undefined,
+        awards: userData.awards || undefined,
       };
 
       return { user, inviter: inviterInfo };
@@ -110,7 +117,7 @@ export default function PublicProfile() {
       <div className="min-h-screen bg-background">
         <div className="animate-pulse">
           {/* Hero Loading */}
-          <div className="h-[60vh] bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800" />
+          <div className="h-[60vh] bg-surface" />
           
           {/* Content Loading */}
           <div className="max-w-6xl mx-auto px-6 py-16">
@@ -141,6 +148,18 @@ export default function PublicProfile() {
     );
   }
 
+  // Route based on user role (same as ProfileRouteHandler)
+  if (profileData.user.role === 'gig_seeker') {
+    return (
+      <GigSeekerProfileView 
+        user={profileData.user} 
+        caseStudies={caseStudies}
+        inviter={profileData.inviter}
+      />
+    );
+  }
+
+  // Use editorial view for gig posters and other roles
   return (
     <EditorialProfileView 
       user={profileData.user} 
