@@ -102,6 +102,25 @@ export interface AuthUser {
   available_for?: string[];
   work_style?: string[];
   rate_type?: 'hourly' | 'project' | 'salary' | null;
+  // Enhanced professional fields
+  professional_headline?: string;
+  current_position?: string;
+  current_company?: string;
+  industry_focus?: string[];
+  career_level?: string;
+  portfolio_website?: string;
+  demo_reel_url?: string;
+  artstation_url?: string;
+  steam_profile_url?: string;
+  education?: any[];
+  certifications?: any[];
+  languages_spoken?: string[];
+  time_zone?: string;
+  preferred_project_size?: string[];
+  collaboration_style?: string[];
+  notable_game_credits?: any[];
+  technical_proficiencies?: any;
+  profile_completion_score?: number;
 }
 
 export interface SessionStatus {

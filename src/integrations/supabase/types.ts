@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -291,6 +291,63 @@ export type Database = {
           flag_name?: string
           id?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      game_credits: {
+        Row: {
+          awards_recognition: string[] | null
+          company_studio: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          external_link: string | null
+          game_title: string
+          id: string
+          is_featured: boolean | null
+          metacritic_score: number | null
+          platform: string[] | null
+          release_year: number | null
+          role: string
+          sales_figures: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          awards_recognition?: string[] | null
+          company_studio?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          external_link?: string | null
+          game_title: string
+          id?: string
+          is_featured?: boolean | null
+          metacritic_score?: number | null
+          platform?: string[] | null
+          release_year?: number | null
+          role: string
+          sales_figures?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          awards_recognition?: string[] | null
+          company_studio?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          external_link?: string | null
+          game_title?: string
+          id?: string
+          is_featured?: boolean | null
+          metacritic_score?: number | null
+          platform?: string[] | null
+          release_year?: number | null
+          role?: string
+          sales_figures?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -600,6 +657,51 @@ export type Database = {
           },
         ]
       }
+      professional_recommendations: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_verified: boolean | null
+          is_visible: boolean | null
+          project_context: string | null
+          recommendation_text: string
+          recommender_company: string | null
+          recommender_name: string
+          recommender_title: string | null
+          relationship: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_verified?: boolean | null
+          is_visible?: boolean | null
+          project_context?: string | null
+          recommendation_text: string
+          recommender_company?: string | null
+          recommender_name: string
+          recommender_title?: string | null
+          relationship: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_verified?: boolean | null
+          is_visible?: boolean | null
+          project_context?: string | null
+          recommendation_text?: string
+          recommender_company?: string | null
+          recommender_name?: string
+          recommender_title?: string | null
+          relationship?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profile_tags: {
         Row: {
           category: Database["public"]["Enums"]["tag_category"]
@@ -789,6 +891,51 @@ export type Database = {
           },
         ]
       }
+      technical_skills: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          endorsement_count: number | null
+          id: string
+          is_primary_skill: boolean | null
+          last_used_date: string | null
+          proficiency_level: string
+          skill_category: string
+          skill_name: string
+          updated_at: string | null
+          user_id: string
+          years_experience: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          endorsement_count?: number | null
+          id?: string
+          is_primary_skill?: boolean | null
+          last_used_date?: string | null
+          proficiency_level: string
+          skill_category: string
+          skill_name: string
+          updated_at?: string | null
+          user_id: string
+          years_experience?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          endorsement_count?: number | null
+          id?: string
+          is_primary_skill?: boolean | null
+          last_used_date?: string | null
+          proficiency_level?: string
+          skill_category?: string
+          skill_name?: string
+          updated_at?: string | null
+          user_id?: string
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       user_profile_tags: {
         Row: {
           created_at: string
@@ -879,6 +1026,7 @@ export type Database = {
         Row: {
           about_story: string | null
           accepts_intros: boolean | null
+          artstation_url: string | null
           availability_status: string | null
           available_for: string[] | null
           avatar_url: string | null
@@ -886,27 +1034,41 @@ export type Database = {
           banner_background_color: string | null
           banner_image_url: string | null
           bio: string | null
+          career_level: string | null
+          certifications: Json | null
+          collaboration_style: string[] | null
           company_name: string | null
           core_disciplines: string[] | null
           created_at: string | null
+          current_company: string | null
+          current_position: string | null
+          demo_reel_url: string | null
           desired_gig_types: string[] | null
           display_name: string | null
+          education: Json | null
           email: string | null
           expertise_signature: string | null
           gig_posting_restricted: boolean
           id: string
+          industry_focus: string[] | null
           invite_token_used: string | null
           invited_by_user_id: string | null
           invites_remaining: number
           is_suspended: boolean
+          languages_spoken: string[] | null
           linkedin_url: string | null
           location: string | null
           messaging_restricted: boolean
           moderation_notes: string | null
           nda_required: boolean | null
+          notable_game_credits: Json | null
           onboarding_completed: boolean
           past_credits: string | null
+          portfolio_website: string | null
           poster_type: Database["public"]["Enums"]["poster_type"] | null
+          preferred_project_size: string[] | null
+          professional_headline: string | null
+          profile_completion_score: number | null
           project_showcase: Json | null
           project_types: string[] | null
           public_profile: boolean
@@ -920,7 +1082,10 @@ export type Database = {
           skills: string[] | null
           smart_url_slug: string | null
           social_links: Json | null
+          steam_profile_url: string | null
           suspension_expires_at: string | null
+          technical_proficiencies: Json | null
+          time_zone: string | null
           timeline_expectations: string | null
           typical_budget_max: number | null
           typical_budget_min: number | null
@@ -932,6 +1097,7 @@ export type Database = {
         Insert: {
           about_story?: string | null
           accepts_intros?: boolean | null
+          artstation_url?: string | null
           availability_status?: string | null
           available_for?: string[] | null
           avatar_url?: string | null
@@ -939,27 +1105,41 @@ export type Database = {
           banner_background_color?: string | null
           banner_image_url?: string | null
           bio?: string | null
+          career_level?: string | null
+          certifications?: Json | null
+          collaboration_style?: string[] | null
           company_name?: string | null
           core_disciplines?: string[] | null
           created_at?: string | null
+          current_company?: string | null
+          current_position?: string | null
+          demo_reel_url?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
+          education?: Json | null
           email?: string | null
           expertise_signature?: string | null
           gig_posting_restricted?: boolean
           id: string
+          industry_focus?: string[] | null
           invite_token_used?: string | null
           invited_by_user_id?: string | null
           invites_remaining?: number
           is_suspended?: boolean
+          languages_spoken?: string[] | null
           linkedin_url?: string | null
           location?: string | null
           messaging_restricted?: boolean
           moderation_notes?: string | null
           nda_required?: boolean | null
+          notable_game_credits?: Json | null
           onboarding_completed?: boolean
           past_credits?: string | null
+          portfolio_website?: string | null
           poster_type?: Database["public"]["Enums"]["poster_type"] | null
+          preferred_project_size?: string[] | null
+          professional_headline?: string | null
+          profile_completion_score?: number | null
           project_showcase?: Json | null
           project_types?: string[] | null
           public_profile?: boolean
@@ -973,7 +1153,10 @@ export type Database = {
           skills?: string[] | null
           smart_url_slug?: string | null
           social_links?: Json | null
+          steam_profile_url?: string | null
           suspension_expires_at?: string | null
+          technical_proficiencies?: Json | null
+          time_zone?: string | null
           timeline_expectations?: string | null
           typical_budget_max?: number | null
           typical_budget_min?: number | null
@@ -985,6 +1168,7 @@ export type Database = {
         Update: {
           about_story?: string | null
           accepts_intros?: boolean | null
+          artstation_url?: string | null
           availability_status?: string | null
           available_for?: string[] | null
           avatar_url?: string | null
@@ -992,27 +1176,41 @@ export type Database = {
           banner_background_color?: string | null
           banner_image_url?: string | null
           bio?: string | null
+          career_level?: string | null
+          certifications?: Json | null
+          collaboration_style?: string[] | null
           company_name?: string | null
           core_disciplines?: string[] | null
           created_at?: string | null
+          current_company?: string | null
+          current_position?: string | null
+          demo_reel_url?: string | null
           desired_gig_types?: string[] | null
           display_name?: string | null
+          education?: Json | null
           email?: string | null
           expertise_signature?: string | null
           gig_posting_restricted?: boolean
           id?: string
+          industry_focus?: string[] | null
           invite_token_used?: string | null
           invited_by_user_id?: string | null
           invites_remaining?: number
           is_suspended?: boolean
+          languages_spoken?: string[] | null
           linkedin_url?: string | null
           location?: string | null
           messaging_restricted?: boolean
           moderation_notes?: string | null
           nda_required?: boolean | null
+          notable_game_credits?: Json | null
           onboarding_completed?: boolean
           past_credits?: string | null
+          portfolio_website?: string | null
           poster_type?: Database["public"]["Enums"]["poster_type"] | null
+          preferred_project_size?: string[] | null
+          professional_headline?: string | null
+          profile_completion_score?: number | null
           project_showcase?: Json | null
           project_types?: string[] | null
           public_profile?: boolean
@@ -1026,7 +1224,10 @@ export type Database = {
           skills?: string[] | null
           smart_url_slug?: string | null
           social_links?: Json | null
+          steam_profile_url?: string | null
           suspension_expires_at?: string | null
+          technical_proficiencies?: Json | null
+          time_zone?: string | null
           timeline_expectations?: string | null
           typical_budget_max?: number | null
           typical_budget_min?: number | null
@@ -1052,11 +1253,72 @@ export type Database = {
           },
         ]
       }
+      work_experience: {
+        Row: {
+          company_name: string
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          employment_type: string | null
+          end_date: string | null
+          id: string
+          is_current: boolean | null
+          key_achievements: string[] | null
+          location: string | null
+          position_title: string
+          projects_worked_on: Json | null
+          start_date: string
+          technologies_used: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          employment_type?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean | null
+          key_achievements?: string[] | null
+          location?: string | null
+          position_title: string
+          projects_worked_on?: Json | null
+          start_date: string
+          technologies_used?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          employment_type?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean | null
+          key_achievements?: string[] | null
+          location?: string | null
+          position_title?: string
+          projects_worked_on?: Json | null
+          start_date?: string
+          technologies_used?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      calculate_profile_completion_score: {
+        Args: { user_id_param: string }
+        Returns: number
+      }
       check_auth_rate_limit: {
         Args: { p_identifier: string }
         Returns: boolean
@@ -1071,8 +1333,8 @@ export type Database = {
       }
       check_rate_limit: {
         Args: {
-          p_identifier: string
           p_action_type: string
+          p_identifier: string
           p_max_attempts?: number
           p_window_minutes?: number
         }
@@ -1087,7 +1349,7 @@ export type Database = {
         Returns: boolean
       }
       ensure_user_profile: {
-        Args: { user_id_param: string; email_param: string }
+        Args: { email_param: string; user_id_param: string }
         Returns: boolean
       }
       generate_smart_url_slug: {
@@ -1104,13 +1366,13 @@ export type Database = {
       }
       log_security_event: {
         Args: {
-          p_user_id: string
           p_action_type: string
-          p_resource_type: string
-          p_resource_id?: string
           p_details?: Json
           p_ip_address?: unknown
+          p_resource_id?: string
+          p_resource_type: string
           p_user_agent?: string
+          p_user_id: string
         }
         Returns: string
       }
