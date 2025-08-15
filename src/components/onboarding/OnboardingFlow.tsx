@@ -9,7 +9,7 @@ interface OnboardingFlowProps {
 
 export function OnboardingFlow({ userRole, onComplete }: OnboardingFlowProps) {
   return (
-    <BaseOnboardingFlow 
+    <OptimizedOnboardingFlow 
       userRole={userRole}
       onComplete={onComplete}
     />
