@@ -279,9 +279,11 @@ Heading.displayName = "Heading";
 
 // Text Component
 export interface TextProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
-    VariantProps<typeof textVariants> {
+  extends React.HTMLAttributes<HTMLElement> {
   as?: "p" | "span" | "div" | "label";
+  size?: "xs" | "sm" | "base" | "lg" | "xl";
+  variant?: "primary" | "secondary" | "tertiary" | "disabled" | "success" | "warning" | "destructive";
+  weight?: "normal" | "medium" | "semibold" | "bold";
 }
 
 export const Text = React.forwardRef<HTMLElement, TextProps>(

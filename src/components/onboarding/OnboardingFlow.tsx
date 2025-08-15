@@ -1,6 +1,5 @@
-
 import { UserRole } from '@/types/auth';
-import { BaseOnboardingFlow } from './BaseOnboardingFlow';
+import { OptimizedOnboardingFlow } from './OptimizedOnboardingFlow';
 
 interface OnboardingFlowProps {
   userRole: UserRole;
