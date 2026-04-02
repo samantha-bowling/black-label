@@ -54,7 +54,7 @@ const CaseStudy = () => {
             />
             <span className="text-xs text-muted-foreground uppercase tracking-widest hidden sm:block">Case Study</span>
           </div>
-          <ButtonSecondary size="sm" onClick={() => navigate("/")}>
+          <ButtonSecondary size="sm" onClick={() => navigate("/")} className="min-w-[90px] whitespace-nowrap">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </ButtonSecondary>
