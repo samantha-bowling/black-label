@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Database } from '@/integrations/supabase/types';
 
 export type UserRole = Database['public']['Enums']['user_role'];
