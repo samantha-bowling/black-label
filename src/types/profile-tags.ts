@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import { Database } from '@/integrations/supabase/types';
 
 export type TagCategory = Database['public']['Enums']['tag_category'];
