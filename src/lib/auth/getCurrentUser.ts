@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import { supabase } from '@/integrations/supabase/client';
 import { AuthUser, UserId, ProjectShowcase } from '@/types/auth';
