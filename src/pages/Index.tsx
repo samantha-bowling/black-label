@@ -72,7 +72,7 @@ const Index = () => {
                 <div className="flex items-center justify-center gap-3">
                   <BookOpen className="w-5 h-5" />
                   <div className="text-center leading-tight">
-                    <div className="text-base font-bold">Read the Technical Case Study</div>
+                    <div className="text-base font-bold">About BLACKLABEL</div>
                     <div className="text-sm font-semibold opacity-80">Architecture, design system & lessons learned</div>
                   </div>
                 </div>
