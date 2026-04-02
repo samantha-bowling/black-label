@@ -1,41 +1,12 @@
 
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { 
-  ButtonPrimary, 
-  ButtonSecondary, 
-  CardLuxe, 
-  BadgeStatus,
-  HeadingXL,
-  HeadingLG
-} from "@/components/ui/primitives";
+import { ButtonPrimary, ButtonSecondary } from "@/components/ui/primitives";
 import { PrivacyPolicyModal, TermsOfServiceModal, AboutModal } from "@/components/legal/LegalModals";
 import { ContactModal } from "@/components/contact/ContactModal";
-import { Star, Shield, CheckCircle } from "lucide-react";
+import { Archive, BookOpen } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-
-  const handlePostGigSignup = () => {
-    navigate("/auth?role=poster");
-  };
-
-  const handleTalentSignup = () => {
-    navigate("/auth");
-  };
-
-  const handleSignIn = () => {
-    navigate("/auth?mode=signin");
-  };
-
-  const handleDashboard = () => {
-    navigate("/dashboard");
-  };
-
-  const handlePostGig = () => {
-    navigate("/post-a-gig");
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,33 +20,18 @@ const Index = () => {
               className="h-8"
             />
           </div>
-          
           <div className="flex items-center space-x-4">
-            {user ? (
-              <>
-                <span className="text-white/80 text-sm">
-                  Welcome back, {user.displayName}!
-                </span>
-                <ButtonSecondary onClick={handleDashboard}>
-                  Dashboard
-                </ButtonSecondary>
-                <ButtonSecondary onClick={signOut}>
-                  Sign Out
-                </ButtonSecondary>
-              </>
-            ) : (
-              <ButtonSecondary onClick={handleSignIn}>
-                Sign In
-              </ButtonSecondary>
-            )}
+            <ButtonSecondary onClick={() => navigate("/case-study")}>
+              Case Study
+            </ButtonSecondary>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section pt-24 md:pt-28 pb-12">
+      <section className="pt-32 md:pt-40 pb-16">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="max-w-4xl mx-auto space-y-8">
             <div className="flex justify-center animate-fade-in">
               <img 
                 src="/lovable-uploads/3928092b-3c56-44d8-ab8a-e32eab280559.png" 
@@ -83,160 +39,102 @@ const Index = () => {
                 className="h-24 md:h-32 lg:h-40"
               />
             </div>
-            
-            <div className="space-y-4">
-              <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-white uppercase tracking-wide animate-fade-in">
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-surface text-muted-foreground text-sm animate-fade-in">
+              <Archive className="w-4 h-4" />
+              <span>This project has been sunset</span>
+            </div>
+
+            <div className="space-y-4 animate-fade-in">
+              <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-foreground uppercase tracking-wide">
                 The Premier Talent Platform for Games
               </h1>
-              
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in">
-                Connect with top-tier professionals and studios for contract, consulting, and freelance work—built by veterans who know what it takes to ship.
+
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                BLACKLABEL.gg was an invite-only platform connecting top-tier gaming professionals 
+                with studios for contract, consulting, and freelance work—built by veterans who 
+                know what it takes to ship.
               </p>
-              
-              <p className="text-lg text-white font-medium animate-fade-in">
-                Where verified creators and real opportunities meet.
+
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Active from 2024–2025, the platform featured role-branching onboarding, 
+                editorial profiles, curated gig matching, and a full moderation system. 
+                It has since been archived as a technical portfolio piece.
               </p>
             </div>
-            
-            <div className="flex flex-col justify-center items-center space-y-4 animate-fade-in">
-              {user ? (
-                // Show different CTAs for authenticated users
-                <>
-                  {user.role === 'gig_poster' ? (
-                    <ButtonPrimary 
-                      size="lg" 
-                      onClick={handlePostGig}
-                      className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
-                    >
-                      <div className="text-center leading-tight">
-                        <div className="text-base font-bold">Post a New Gig</div>
-                        <div className="text-sm font-semibold">Find the perfect talent</div>
-                      </div>
-                    </ButtonPrimary>
-                  ) : (
-                    <ButtonPrimary 
-                      size="lg" 
-                      onClick={handleDashboard}
-                      className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
-                    >
-                      <div className="text-center leading-tight">
-                        <div className="text-base font-bold">Go to Dashboard</div>
-                        <div className="text-sm font-semibold">Manage your profile</div>
-                      </div>
-                    </ButtonPrimary>
-                  )}
-                  
-                  <ButtonSecondary 
-                    size="lg" 
-                    onClick={handleDashboard}
-                    className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
-                  >
-                    View Profile & Settings
-                  </ButtonSecondary>
-                </>
-              ) : (
-                // Show signup CTAs for non-authenticated users
-                <>
-                  <ButtonPrimary 
-                    size="lg" 
-                    onClick={handlePostGigSignup}
-                    className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
-                  >
-                    <div className="text-center leading-tight">
-                      <div className="text-base font-bold">Looking for Talent?</div>
-                      <div className="text-sm font-semibold">Sign Up to Post Opportunities</div>
-                    </div>
-                  </ButtonPrimary>
-                  
-                  <ButtonSecondary 
-                    size="lg" 
-                    onClick={handleTalentSignup}
-                    className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm"
-                  >
-                    I have an invite
-                  </ButtonSecondary>
-                </>
-              )}
-            </div>
-            
-            {/* Trust Indicators */}
-            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground animate-fade-in pt-4">
-              <div className="flex items-center space-x-2">
-                <Star className="w-4 h-4 text-white" />
-                <span>Verified Talent</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4 text-white" />
-                <span>Real Opportunities</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                <span>By Referral</span>
-              </div>
+
+            <div className="flex flex-col items-center gap-4 animate-fade-in pt-4">
+              <ButtonPrimary 
+                size="lg" 
+                onClick={() => navigate("/case-study")}
+                className="group hover:shadow-glow transition-all duration-300 w-full max-w-sm h-auto py-4"
+              >
+                <div className="flex items-center justify-center gap-3">
+                  <BookOpen className="w-5 h-5" />
+                  <div className="text-center leading-tight">
+                    <div className="text-base font-bold">Read the Technical Case Study</div>
+                    <div className="text-sm font-semibold opacity-80">Architecture, design system & lessons learned</div>
+                  </div>
+                </div>
+              </ButtonPrimary>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-12">
+      {/* What It Was Section */}
+      <section className="py-16 border-t border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12 space-y-4">
-            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-white uppercase tracking-wide">
-              Built for Gaming Excellence
+          <div className="max-w-4xl mx-auto">
+            <h2 className="font-display font-bold text-2xl md:text-3xl text-foreground uppercase tracking-wide text-center mb-12">
+              What BLACKLABEL.gg Was
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              A curated ecosystem where proven game professionals connect with ambitious teams.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <CardLuxe className="text-center group hover:glow-primary transition-all duration-300">
-              <div className="w-12 h-12 bg-white rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <Star className="w-6 h-6 text-black" />
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center space-y-3">
+                <div className="w-12 h-12 bg-foreground rounded-xl mx-auto flex items-center justify-center">
+                  <span className="text-background text-xl font-bold">1</span>
+                </div>
+                <h3 className="font-display font-semibold text-lg text-foreground">Invite-Only Access</h3>
+                <p className="text-muted-foreground text-sm">
+                  A curated ecosystem where verified game professionals joined by referral, 
+                  ensuring quality and trust in every connection.
+                </p>
               </div>
-              <h3 className="font-display font-semibold text-xl mb-4">Verified Talent</h3>
-              <p className="text-muted-foreground mb-4">
-                Work with trusted experts from AAA studios to indie gems.
-              </p>
-              <BadgeStatus variant="success">Verified</BadgeStatus>
-            </CardLuxe>
-            
-            <CardLuxe className="text-center group hover:glow-primary transition-all duration-300">
-              <div className="w-12 h-12 bg-white rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-black" />
+              <div className="text-center space-y-3">
+                <div className="w-12 h-12 bg-foreground rounded-xl mx-auto flex items-center justify-center">
+                  <span className="text-background text-xl font-bold">2</span>
+                </div>
+                <h3 className="font-display font-semibold text-lg text-foreground">Editorial Profiles</h3>
+                <p className="text-muted-foreground text-sm">
+                  Rich, narrative-driven profiles with project showcases, game credits, 
+                  collaboration preferences, and "Profile DNA" tags.
+                </p>
               </div>
-              <h3 className="font-display font-semibold text-xl mb-4">Real Opportunities</h3>
-              <p className="text-muted-foreground mb-4">
-                Only active, funded, and well-scoped gigs. No filler, no ghost jobs.
-              </p>
-              <BadgeStatus variant="info">Curated</BadgeStatus>
-            </CardLuxe>
-            
-            <CardLuxe className="text-center group hover:glow-primary transition-all duration-300">
-              <div className="w-12 h-12 bg-white rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-black" />
+              <div className="text-center space-y-3">
+                <div className="w-12 h-12 bg-foreground rounded-xl mx-auto flex items-center justify-center">
+                  <span className="text-background text-xl font-bold">3</span>
+                </div>
+                <h3 className="font-display font-semibold text-lg text-foreground">Curated Gig Matching</h3>
+                <p className="text-muted-foreground text-sm">
+                  Only active, funded, and well-scoped opportunities. Admin-approved postings 
+                  with role-based access for seekers and posters.
+                </p>
               </div>
-              <h3 className="font-display font-semibold text-xl mb-4">Trusted Access</h3>
-              <p className="text-muted-foreground mb-4">
-                Invite-only platform to ensure meaningful matches and lasting collaborations.
-              </p>
-              <BadgeStatus variant="warning">By Referral</BadgeStatus>
-            </CardLuxe>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Closing Brand Statement */}
+      {/* Closing */}
       <section className="py-16 relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/5 to-transparent"></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-3xl mx-auto space-y-4">
-            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-white uppercase tracking-wide">
+            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-foreground uppercase tracking-wide">
               WHITEGLOVE. BLACKLABEL.
             </h2>
             <p className="text-muted-foreground text-lg">
-              Where credibility meets craft.
+              Where credibility met craft. — 2024–2025
             </p>
           </div>
         </div>
@@ -253,16 +151,14 @@ const Index = () => {
                 className="h-6"
               />
             </div>
-            
             <div className="flex items-center space-x-6">
               <AboutModal />
               <PrivacyPolicyModal />
               <TermsOfServiceModal />
               <ContactModal />
             </div>
-            
             <div className="text-sm text-muted-foreground">
-              © 2024 BLACKLABEL.gg. The premier talent platform for games.
+              © 2024–2025 BLACKLABEL.gg. Archived.
             </div>
           </div>
         </div>

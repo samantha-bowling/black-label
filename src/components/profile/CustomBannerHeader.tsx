@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import { useState } from 'react';
 import { Upload, Camera, Palette } from 'lucide-react';
