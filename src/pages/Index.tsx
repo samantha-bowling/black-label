@@ -57,7 +57,7 @@ const Index = () => {
               </p>
 
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Active from 2024–2025, the platform featured role-branching onboarding, 
+                BLACKLABEL.gg featured role-branching onboarding, 
                 editorial profiles, curated gig matching, and a full moderation system. 
                 It has since been archived as a technical portfolio piece.
               </p>
